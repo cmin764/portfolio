@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script>
+      (function() {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else if (theme === 'light') {
+          document.documentElement.classList.remove('dark');
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfolio | Cosmin Poieana</title>
+    <meta name="description" content="Fractional AI Product Strategist. 13+ years Python. Two exits. Building intelligent products for B2B companies." />
+    <meta name="author" content="Cosmin Poieana" />
+    <link rel="canonical" href="https://cmin764.github.io/portfolio" />
+
+    <link rel="icon" type="image/svg+xml" href="/portfolio/favicon.svg" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Portfolio | Cosmin Poieana" />
+    <meta property="og:description" content="Fractional AI Product Strategist. 13+ years Python. Two exits. Building intelligent products for B2B companies." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://cmin764.github.io/portfolio/og-image.png" />
+    <meta property="og:url" content="https://cmin764.github.io/portfolio" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Portfolio | Cosmin Poieana" />
+    <meta name="twitter:description" content="Fractional AI Product Strategist. 13+ years Python. Two exits. Building intelligent products for B2B companies." />
+    <meta name="twitter:image" content="https://cmin764.github.io/portfolio/og-image.png" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

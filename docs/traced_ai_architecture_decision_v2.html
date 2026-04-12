@@ -1,0 +1,368 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap');
+
+:root {
+  --ink: #0f0f0e;
+  --ink2: #3a3935;
+  --ink3: #7a7870;
+  --rule: #e2e0d8;
+  --accent: #1a3a2a;
+  --accent-bright: #2d6e4e;
+  --accent-glow: #3d9e72;
+  --amber: #c47a2a;
+  --amber-light: #f5e6cc;
+  --purple: #3d2d6e;
+  --purple-light: #ede8f5;
+  --teal: #1a4a5a;
+  --teal-light: #e2f0f4;
+  --paper: #faf9f6;
+  --card: #ffffff;
+  --mono: 'DM Mono', monospace;
+  --sans: 'DM Sans', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  padding: 48px 40px;
+  max-width: 900px;
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-glow);
+  margin-bottom: 16px;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+h1 strong { font-weight: 500; }
+
+.meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink3);
+  margin-bottom: 40px;
+  display: flex;
+  gap: 24px;
+}
+
+.meta span::before { content: '// '; opacity: 0.5; }
+
+hr { border: none; border-top: 1px solid var(--rule); margin-bottom: 40px; }
+
+.premise {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ink2);
+  max-width: 680px;
+  margin-bottom: 40px;
+  font-weight: 300;
+}
+
+.premise strong { color: var(--ink); font-weight: 500; }
+
+.diagram-wrap {
+  background: var(--ink);
+  border-radius: 12px;
+  padding: 36px;
+  margin-bottom: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.diagram-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 50%, rgba(45,110,78,0.12) 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 20%, rgba(61,45,110,0.10) 0%, transparent 50%);
+}
+
+.diagram-inner { position: relative; z-index: 1; }
+
+svg.arch { width: 100%; font-family: var(--mono); }
+
+.decisions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.decision-card {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 20px 24px;
+}
+
+.decision-card .number {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink3);
+  margin-bottom: 10px;
+  letter-spacing: 0.08em;
+}
+
+.decision-card h3 { font-size: 13px; font-weight: 500; margin-bottom: 8px; color: var(--ink); }
+
+.decision-card p { font-size: 13px; line-height: 1.6; color: var(--ink2); font-weight: 300; }
+
+.decision-card.highlight { border-color: var(--accent-bright); background: #f0f7f3; }
+.decision-card.highlight h3 { color: var(--accent); }
+
+.moat-box {
+  background: var(--ink);
+  color: #e8e5dc;
+  border-radius: 10px;
+  padding: 28px 32px;
+  margin-bottom: 40px;
+}
+
+.moat-box .moat-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-glow);
+  margin-bottom: 14px;
+}
+
+.moat-box p { font-size: 14px; line-height: 1.7; font-weight: 300; color: #c8c5bc; }
+.moat-box p strong { color: #e8e5dc; font-weight: 500; }
+
+.tiers {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.tier {
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 18px 20px;
+  background: var(--card);
+}
+
+.tier .tier-name {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  margin-bottom: 10px;
+}
+
+.tier h4 { font-size: 13px; font-weight: 500; margin-bottom: 8px; }
+
+.tier ul { list-style: none; padding: 0; }
+
+.tier ul li {
+  font-size: 12px;
+  color: var(--ink2);
+  font-weight: 300;
+  padding: 2px 0;
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.tier ul li::before {
+  content: '→';
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink3);
+  flex-shrink: 0;
+}
+
+.tier.enterprise { border-color: var(--accent-bright); background: #f0f7f3; }
+.tier.enterprise .tier-name { color: var(--accent-glow); }
+.tier.enterprise h4 { color: var(--accent); }
+
+.footer-note {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink3);
+  border-top: 1px solid var(--rule);
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+</style>
+
+<div class="eyebrow">Architecture Decision Record — ADR-001</div>
+<h1><strong>Traced AI</strong> — Core Architecture</h1>
+<div class="meta">
+  <span>audit &amp; compliance infrastructure</span>
+  <span>April 2026</span>
+  <span>v1.0</span>
+</div>
+<hr>
+
+<p class="premise">
+  Traced AI captures the <strong>why</strong> behind every AI decision in production. Not the raw data — the proof it existed, when, under which rule, and who signed off. Built for regulated industries where "the AI decided" is not an acceptable answer.
+</p>
+
+<div class="diagram-wrap">
+  <div class="diagram-inner">
+    <svg class="arch" viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="#3d9e72" stroke-width="1.5" stroke-linecap="round"/>
+        </marker>
+        <marker id="arr-w" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="#5a5850" stroke-width="1.5" stroke-linecap="round"/>
+        </marker>
+        <marker id="arr-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="#c47a2a" stroke-width="1.5" stroke-linecap="round"/>
+        </marker>
+      </defs>
+
+      <!-- CLIENT ZONE -->
+      <rect x="12" y="30" width="330" height="280" rx="10" fill="none" stroke="#2a2a26" stroke-width="1"/>
+      <text x="28" y="22" fill="#3d9e72" font-size="9" letter-spacing="0.12em" font-weight="500">CLIENT PERIMETER</text>
+
+      <!-- AI App + Library -->
+      <rect x="32" y="52" width="145" height="64" rx="6" fill="#1c1c18" stroke="#2d6e4e" stroke-width="1"/>
+      <text x="104" y="77" fill="#e8e5dc" font-size="11" font-weight="500" text-anchor="middle">AI application</text>
+      <text x="104" y="94" fill="#7a7870" font-size="10" text-anchor="middle">+ traced-ai library</text>
+      <text x="104" y="108" fill="#3d9e72" font-size="9" text-anchor="middle">auto-patches LLM clients</text>
+
+      <!-- Local SQLite -->
+      <rect x="32" y="140" width="145" height="64" rx="6" fill="#1c1c18" stroke="#3d2d6e" stroke-width="1"/>
+      <text x="104" y="165" fill="#e8e5dc" font-size="11" font-weight="500" text-anchor="middle">local SQLite</text>
+      <text x="104" y="181" fill="#7a7870" font-size="10" text-anchor="middle">raw input + output</text>
+      <text x="104" y="196" fill="#9d8de0" font-size="9" text-anchor="middle">never leaves perimeter</text>
+
+      <!-- Self-hosted dashboard -->
+      <rect x="32" y="228" width="145" height="64" rx="6" fill="#1c1c18" stroke="#1a4a5a" stroke-width="1"/>
+      <text x="104" y="253" fill="#e8e5dc" font-size="11" font-weight="500" text-anchor="middle">dashboard (Docker)</text>
+      <text x="104" y="269" fill="#7a7870" font-size="10" text-anchor="middle">self-hosted, on-prem</text>
+      <text x="104" y="284" fill="#6ab8d0" font-size="9" text-anchor="middle">queries local store only</text>
+
+      <!-- arrows within client zone -->
+      <line x1="104" y1="116" x2="104" y2="138" stroke="#2d6e4e" stroke-width="1" marker-end="url(#arr-g)"/>
+      <text x="114" y="130" fill="#3d9e72" font-size="8">raw I/O</text>
+      <line x1="104" y1="204" x2="104" y2="226" stroke="#1a4a5a" stroke-width="1" marker-end="url(#arr-w)"/>
+      <text x="114" y="218" fill="#5a8898" font-size="8">reads</text>
+
+      <!-- TRACED AI CLOUD ZONE -->
+      <rect x="418" y="30" width="330" height="280" rx="10" fill="none" stroke="#2a2a26" stroke-width="1"/>
+      <text x="434" y="22" fill="#c47a2a" font-size="9" letter-spacing="0.12em" font-weight="500">TRACEDAI.CO CLOUD</text>
+
+      <!-- Ingest API -->
+      <rect x="438" y="52" width="145" height="64" rx="6" fill="#1c1c18" stroke="#2d6e4e" stroke-width="1"/>
+      <text x="510" y="77" fill="#e8e5dc" font-size="11" font-weight="500" text-anchor="middle">ingest API</text>
+      <text x="510" y="93" fill="#7a7870" font-size="10" text-anchor="middle">key auth, rate-limited</text>
+      <text x="510" y="108" fill="#3d9e72" font-size="9" text-anchor="middle">receives hashes only</text>
+
+      <!-- Ledger -->
+      <rect x="438" y="140" width="145" height="64" rx="6" fill="#1c1c18" stroke="#c47a2a" stroke-width="1"/>
+      <text x="510" y="165" fill="#e8e5dc" font-size="11" font-weight="500" text-anchor="middle">chained ledger</text>
+      <text x="510" y="181" fill="#7a7870" font-size="10" text-anchor="middle">append-only, signed</text>
+      <text x="510" y="196" fill="#e8a83a" font-size="9" text-anchor="middle">independent proof</text>
+
+      <!-- Rule registry -->
+      <rect x="438" y="228" width="145" height="64" rx="6" fill="#1c1c18" stroke="#6a3a6e" stroke-width="1"/>
+      <text x="510" y="253" fill="#e8e5dc" font-size="11" font-weight="500" text-anchor="middle">rule registry</text>
+      <text x="510" y="269" fill="#7a7870" font-size="10" text-anchor="middle">EU AI Act, ISO, SOC 2</text>
+      <text x="510" y="284" fill="#c89ad0" font-size="9" text-anchor="middle">the moat</text>
+
+      <!-- arrows within cloud zone -->
+      <line x1="510" y1="116" x2="510" y2="138" stroke="#c47a2a" stroke-width="1" marker-end="url(#arr-a)"/>
+      <line x1="510" y1="204" x2="510" y2="226" stroke="#5a5850" stroke-width="1" marker-end="url(#arr-w)"/>
+
+      <!-- CROSS-ZONE: hashes outbound -->
+      <path d="M177 75 Q300 56 436 75" fill="none" stroke="#3d9e72" stroke-width="1" marker-end="url(#arr-g)" stroke-dasharray="4 3"/>
+      <text x="300" y="50" fill="#3d9e72" font-size="9" text-anchor="middle">hash(in) + hash(out) + rationale</text>
+      <text x="300" y="62" fill="#3d9e72" font-size="8" text-anchor="middle">outbound only</text>
+
+      <!-- CROSS-ZONE: rule updates inbound -->
+      <path d="M436 258 Q300 302 177 258" fill="none" stroke="#9d8de0" stroke-width="1" marker-end="url(#arr-w)" stroke-dasharray="4 3"/>
+      <text x="300" y="316" fill="#7a6090" font-size="9" text-anchor="middle">rule updates (signed packages)</text>
+      <text x="300" y="328" fill="#7a6090" font-size="8" text-anchor="middle">outbound from cloud only</text>
+    </svg>
+  </div>
+</div>
+
+<div class="decisions">
+  <div class="decision-card">
+    <div class="number">DECISION 01</div>
+    <h3>Raw I/O never leaves the client</h3>
+    <p>The library writes actual inputs and outputs to a local SQLite store. Nothing crosses the network. "We can't see your data" is an architectural constraint, not a policy promise.</p>
+  </div>
+  <div class="decision-card">
+    <div class="number">DECISION 02</div>
+    <h3>Hashes go to the cloud ledger</h3>
+    <p>SHA-256 hashes of every input and output, plus the rationale, are sent to Traced AI's append-only chained ledger. Independent tamper-evident proof. 32 bytes per event, not kilobytes.</p>
+  </div>
+  <div class="decision-card highlight">
+    <div class="number">DECISION 03</div>
+    <h3>Dashboard ships as a Docker image</h3>
+    <p>Enterprise clients run the full UI on their own infrastructure. It reads from local SQLite. No inbound ports. Outbound only: hashes to the ledger, rule updates from the registry.</p>
+  </div>
+  <div class="decision-card highlight">
+    <div class="number">DECISION 04</div>
+    <h3>Rule registry stays in the cloud</h3>
+    <p>The compliance intelligence, what to log for a loan decision vs. a medical extraction, which Article governs it, what format the auditor expects, is served on subscription. No subscription, no compliance artifact. Just a log.</p>
+  </div>
+</div>
+
+<div class="moat-box">
+  <div class="moat-label">The moat</div>
+  <p>The code is copyable. The Docker image is inspectable. The export format is reverse-engineerable. <strong>None of that is the moat.</strong> The moat is the versioned mapping of regulatory text to concrete logging requirements, built from real auditor interactions, updated as regulations move, and accepted by the notified bodies that sign off on conformity assessments. A competitor who copies the PDF layout still doesn't know what Bureau Veritas will push back on in a real EU AI Act review. That knowledge is the company.</p>
+</div>
+
+<div class="tiers">
+  <div class="tier">
+    <div class="tier-name">Cloud tier</div>
+    <h4>Startups &amp; teams</h4>
+    <ul>
+      <li>Dashboard on tracedai.co</li>
+      <li>Raw I/O in local SQLite</li>
+      <li>Hashes in cloud ledger</li>
+      <li>Rule registry included</li>
+    </ul>
+  </div>
+  <div class="tier enterprise">
+    <div class="tier-name">Enterprise / self-hosted</div>
+    <h4>Banks, hospitals, regulated</h4>
+    <ul>
+      <li>Dashboard Docker image</li>
+      <li>Everything on-prem</li>
+      <li>Hashes still to cloud ledger</li>
+      <li>Rule updates outbound-only</li>
+    </ul>
+  </div>
+  <div class="tier">
+    <div class="tier-name">Air-gapped (future)</div>
+    <h4>Defense, sovereign clouds</h4>
+    <ul>
+      <li>Zero internet required</li>
+      <li>Signed rule packages offline</li>
+      <li>Manual ledger verification</li>
+      <li>Custom support SLA</li>
+    </ul>
+  </div>
+</div>
+
+<div class="footer-note">
+  <span>tracedai.co — audit infrastructure for AI systems</span>
+  <span>ADR-001 / April 2026</span>
+</div>
