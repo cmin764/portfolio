@@ -2,6 +2,10 @@ import { useState, useEffect } from "react";
 
 type Theme = "light" | "dark" | "system";
 
+function getSystemTheme(): "light" | "dark" {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window !== "undefined") {
@@ -10,34 +14,37 @@ export function useTheme() {
     return "system";
   });
 
+  // Stored in state so the Header icon updates when the OS theme changes while in system mode
+  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">(() => {
+    if (typeof window === "undefined") return "light";
+    const stored = localStorage.getItem("theme") as Theme | null;
+    if (stored === "light" || stored === "dark") return stored;
+    return getSystemTheme();
+  });
+
   useEffect(() => {
     const root = window.document.documentElement;
 
-    const applyTheme = (resolvedTheme: "light" | "dark") => {
+    const applyTheme = (resolved: "light" | "dark") => {
       root.classList.remove("light", "dark");
-      root.classList.add(resolvedTheme);
+      root.classList.add(resolved);
+      setResolvedTheme(resolved);
     };
 
     if (theme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light";
-      applyTheme(systemTheme);
+      applyTheme(getSystemTheme());
       localStorage.removeItem("theme");
+
+      // Only subscribe to OS changes when in system mode
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      const handleChange = (e: MediaQueryListEvent) =>
+        applyTheme(e.matches ? "dark" : "light");
+      mediaQuery.addEventListener("change", handleChange);
+      return () => mediaQuery.removeEventListener("change", handleChange);
     } else {
       applyTheme(theme);
       localStorage.setItem("theme", theme);
     }
-
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleChange = (e: MediaQueryListEvent) => {
-      if (theme === "system") {
-        applyTheme(e.matches ? "dark" : "light");
-      }
-    };
-
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
   }, [theme]);
 
   const toggleTheme = () => {
@@ -47,13 +54,6 @@ export function useTheme() {
       return "light";
     });
   };
-
-  const resolvedTheme =
-    theme === "system"
-      ? window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light"
-      : theme;
 
   return { theme, setTheme, toggleTheme, resolvedTheme };
 }

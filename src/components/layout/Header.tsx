@@ -45,7 +45,6 @@ export function Header() {
             onClick={toggleTheme}
             className="p-2 text-muted-foreground hover:text-foreground transition-colors"
             aria-label={`Current theme: ${theme}. Click to toggle.`}
-            title={`Theme: ${theme}`}
           >
             <ThemeIcon className="h-5 w-5" />
           </button>

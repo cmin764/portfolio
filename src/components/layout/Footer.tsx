@@ -1,8 +1,9 @@
 import { Github, Linkedin, Mail, ArrowUpRight } from "lucide-react";
 import { LINKS } from "@/lib/constants";
 
+const CURRENT_YEAR = new Date().getFullYear();
+
 export function Footer() {
-  const currentYear = new Date().getFullYear();
 
   return (
     <footer className="border-t border-border bg-secondary/30">
@@ -59,7 +60,7 @@ export function Footer() {
         </div>
 
         <p className="mt-8 text-center text-xs text-muted-foreground">
-          &copy; {currentYear} Cosmin Poieana
+          &copy; {CURRENT_YEAR} Cosmin Poieana
         </p>
       </div>
     </footer>
