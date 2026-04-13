@@ -6,5 +6,6 @@ export const LINKS = {
   linkedinUrl: 'https://linkedin.com/in/cmin764',
   githubUrl: 'https://github.com/cmin764',
   hobbyProjectsUrl: 'https://github.com/stars/cmin764/lists/portfolio',
+  mediumUrl: 'https://cmin764.medium.com',
   email: 'cmin764@gmail.com',
 };
