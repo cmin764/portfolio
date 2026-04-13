@@ -1,5 +1,5 @@
 export const LINKS = {
-  portfolioUrl: 'https://cmin764.github.io/portfolio',
+  portfolioUrl: 'https://cmin764.github.io/portfolio/',
   cvPdfUrl: 'https://cmin764.github.io/cmin764/cv.pdf',
   wandercodeUrl: 'https://wandercode.ltd',
   calUrl: 'https://cal.com/wandercode/discovery-call',
