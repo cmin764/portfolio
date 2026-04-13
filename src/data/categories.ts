@@ -23,7 +23,7 @@ export const CATEGORIES: CategoryMeta[] = [
   {
     id: 'professional',
     label: 'Professional Work',
-    description: 'Client engagements — no source code, architecture diagrams tell the story',
+    description: 'Client engagements: no source code, architecture diagrams tell the story',
     order: 3,
   },
   {

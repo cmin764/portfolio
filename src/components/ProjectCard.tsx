@@ -66,7 +66,7 @@ export function ProjectCard({ project }: Props) {
           <CardContent className="pt-0 space-y-4">
             <p className="text-sm text-muted-foreground leading-relaxed">{project.description}</p>
 
-            {/* Diagram placeholder — iteration 2 will replace this */}
+            {/* Diagram placeholder: iteration 2 will replace this */}
             {!project.diagramFile && project.architectureNotes && (
               <div className="rounded-md border border-dashed border-border bg-muted/30 p-4 text-xs text-muted-foreground text-center">
                 Architecture diagram coming in iteration 2
