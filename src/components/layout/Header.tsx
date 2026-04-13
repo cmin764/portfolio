@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Sun, Moon, Monitor } from "lucide-react";
+import { Sun, Moon, Monitor, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/hooks/useTheme";
+import { LINKS } from "@/lib/constants";
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -41,6 +42,14 @@ export function Header() {
           >
             Portfolio
           </span>
+          <a
+            href={LINKS.wandercodeUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-0.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Wandercode <ArrowUpRight className="h-3.5 w-3.5" />
+          </a>
           <button
             onClick={toggleTheme}
             className="p-2 text-muted-foreground hover:text-foreground transition-colors"
