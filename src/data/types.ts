@@ -3,7 +3,8 @@ export type Category =
   | 'startup-trial'
   | 'professional'
   | 'oss-hobby'
-  | 'frontend-brand';
+  | 'frontend-brand'
+  | 'writing';
 
 export type Complexity = 'low' | 'medium' | 'high';
 

@@ -29,7 +29,7 @@ export default function Index() {
         </h1>
         <p className="text-lg text-muted-foreground max-w-2xl">
           Fractional AI Product Strategist helping B2B companies build intelligent products.
-          Here&apos;s the work: architecture diagrams over README excerpts.
+          Discover my work below, diagrams included.
         </p>
         <div className="flex flex-wrap gap-3 pt-2">
           <Button asChild className="bg-cta text-cta-foreground hover:bg-cta/90">

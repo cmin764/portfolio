@@ -9,7 +9,7 @@ export const PROJECTS: ProjectData[] = [
     description:
       'Owner and operator of Wandercode, an embedded consulting practice helping B2B startups build intelligent products and adopt AI-driven engineering. Methodology: Blugen (blueprint-first code generation). Services: technical audits, AI product development, workshops. Results-based pricing, not hourly.',
     category: 'active-venture',
-    complexity: 'high',
+    complexity: 'medium',
     status: 'active',
     tags: ['TypeScript', 'React', 'Vite', 'Tailwind', 'AI Strategy', 'Consulting'],
     links: [
@@ -30,7 +30,8 @@ export const PROJECTS: ProjectData[] = [
     tags: ['Community', 'HR Tech', 'Claude Code', 'Automation', 'TypeScript'],
     links: [
       { label: 'Site', url: 'https://nomoreapply.com' },
-      { label: 'Services', url: 'https://github.com/NoMoreApply/services' },
+      { label: 'Services', url: 'https://nomoreapply.github.io/services/' },
+      { label: 'Org', url: 'https://github.com/NoMoreApply' },
     ],
     architectureNotes: undefined,
   },
@@ -41,29 +42,29 @@ export const PROJECTS: ProjectData[] = [
     title: 'Traced AI',
     tagline: 'AI audit trail for compliance: proof that the AI decided correctly, when, and under which rule',
     description:
-      'Built for regulated industries (banking, healthcare, defense) where "the AI decided" is not an acceptable answer. The traced-ai library auto-patches LLM clients (OpenAI, Anthropic, etc.) at import time. Raw inputs and outputs are written to a local SQLite store that never leaves the client perimeter. SHA-256 hashes of every I/O pair, plus the rationale string, are sent to an append-only chained ledger in the cloud. The rule registry (EU AI Act, ISO 42001, SOC 2 mappings) is the moat: it translates regulatory text into concrete logging requirements per decision type, updated from real auditor interactions.',
+      'Built for regulated industries (banking, healthcare, defense) where "the AI decided" is not an acceptable answer. The traced-ai library auto-patches LLM clients (OpenAI, Anthropic, etc.) at import time. Raw inputs and outputs are written to a local SQLite store that never leaves the client perimeter. SHA-256 hashes of every I/O pair, plus the rationale string, are sent to an append-only chained ledger in the cloud. The dashboard is a Next.js + shadcn/ui app deployed on Vercel, backed by Supabase for managed Postgres, Upstash for Redis, and Clerk for auth. The rule registry (EU AI Act, ISO 42001, SOC 2 mappings) is the moat: it translates regulatory text into concrete logging requirements per decision type, updated from real auditor interactions.',
     category: 'startup-trial',
     complexity: 'high',
     status: 'stealth',
-    tags: ['Python', 'FastAPI', 'SQLite', 'Cryptography', 'Compliance', 'EU AI Act', 'TypeScript', 'Docker'],
+    tags: ['Python', 'FastAPI', 'PostgreSQL', 'Redis', 'Next.js', 'TypeScript', 'Fly.io', 'Vercel', 'Supabase', 'Clerk', 'Compliance', 'EU AI Act'],
     links: [
       { label: 'In stealth. Talk to me.', url: 'https://cal.com/wandercode/discovery-call' },
     ],
     architectureNotes:
-      'Client perimeter: AI application + traced-ai library → local SQLite (raw I/O) → self-hosted dashboard (Docker, reads local store only). Cloud: ingest API (receives hashes only, key auth) → chained ledger (append-only, signed) → rule registry (EU AI Act / ISO / SOC 2). Cross-zone outbound only: hash(in) + hash(out) + rationale string. Raw data never crosses the network. Three deployment tiers: cloud (SaaS dashboard on tracedai.co), enterprise (self-hosted Docker, no inbound ports), air-gapped (signed rule packages offline).',
+      'Client perimeter: AI application + traced-ai library → local SQLite (raw I/O) → self-hosted dashboard (Next.js on Vercel, reads local store only). Backend on Fly.io: FastAPI ingest API (receives hashes only) → append-only chained ledger → rule registry (EU AI Act / ISO / SOC 2). Data stores: Supabase (Postgres), Upstash (Redis). Auth: Clerk. Cross-zone outbound only: hash(in) + hash(out) + rationale string. Raw data never crosses the network.',
   },
   {
     id: 'truestory',
     title: 'TrueStory',
     tagline: 'News aggregator surfacing contradictory stories to incentivize critical thinking',
     description:
-      'Co-founded at Startup Weekend Iași 2014. Won Best Marketing award. Built a Flask app on Google Cloud Platform exposing a REST API consumed by a Chrome extension (Bootstrap + jQuery). The extension surfaced conflicting news sources side-by-side for the same topic. Designed the full architecture, deployed infrastructure, built the API. Shut down due to monetization challenges and market timing, but the experience shaped how I think about information asymmetry and media bias.',
+      'Co-founded in April 2019 with a team of four (AI, math, FE, and BE backgrounds). The idea: a Chrome extension surfacing contradicting news articles side-by-side for the same topic, letting readers be their own journalists without trusting a single source. Built a Flask app on Google Cloud Platform with a REST API powering the extension. Qualified for Innovation Labs Iași, then for the national Bucharest phase. Shut down in 2020 due to monetization challenges and market timing, but the process reshaped how I think about information asymmetry, product validation, and why "why" matters more than "how".',
     category: 'startup-trial',
     complexity: 'medium',
     status: 'discontinued',
     tags: ['Python', 'Flask', 'GCP', 'REST API', 'Chrome Extension', 'Bootstrap', 'jQuery'],
     links: [
-      { label: 'Repo', url: 'https://github.com/savvybit/TrueStory' },
+      { label: 'Org', url: 'https://github.com/savvybit' },
       { label: 'Deck', url: 'https://slides.com/cmin/truestory-venturecup' },
       { label: 'Blog', url: 'https://cosminslife.wordpress.com/2020/08/16/truestory-app-or-how-i-learned-to-stop-worrying-and-love-the-process/' },
     ],
@@ -76,11 +77,11 @@ export const PROJECTS: ProjectData[] = [
     title: 'Meeting Assistant',
     tagline: 'AI agent that joins Google Meet interviews, analyzes conversations, and gives private live insights to interviewers',
     description:
-      'VONQ is a recruitment marketing platform distributing jobs to 5,000+ channels. This feature was the first of its kind at VONQ. Integrated Recall.ai to join active Google Meet calls as a passive participant. The agent analyzed recruiter-candidate dialogue in real time, detected blocking moments (candidate too quiet, topic drift, answer quality signals), and delivered private hints to the interviewer without disrupting the call. Optionally could intervene to unblock dialogue. Backend in Python/Django, frontend signals via React.',
+      'VONQ is a recruitment marketing platform distributing jobs to 5,000+ channels. This feature was the first of its kind at VONQ. Recall.ai connects to Google Meet as a bot participant and streams real-time transcripts via webhooks to the Django backend. OpenAI API analyzes the conversation and generates a live reply when the agent decides to intervene. ElevenLabs converts that text to speech, which streams back through Recall\'s listened page into the active call. The result: private live hints for the interviewer and optional unblocking dialogue, all without disrupting the session.',
     category: 'professional',
     complexity: 'high',
     status: 'shipped',
-    tags: ['Python', 'Django', 'Recall.ai', 'Google Meet', 'NLP', 'WebSocket', 'React', 'AI Agents'],
+    tags: ['Python', 'Django', 'Recall.ai', 'Google Meet', 'OpenAI', 'ElevenLabs', 'WebSocket', 'AI Agents'],
     company: 'VONQ',
     period: '2025-2026',
     links: [],
@@ -92,11 +93,11 @@ export const PROJECTS: ProjectData[] = [
     title: 'Knowledge Base & Careers Agent',
     tagline: 'Automatic career site crawler feeding an AI agent that recommends jobs from uploaded CVs',
     description:
-      'Built a Firecrawl-powered crawler that ingests company career pages and indexes job listings into a vector store. On top of this, a Careers Agent accepts candidate CV uploads and chat input, runs retrieval-augmented generation to match candidates to relevant open roles, and routes them to origin job pages with high-confidence matches. Reduced time-to-application for candidates by removing the need to manually browse job boards.',
+      'Built a Firecrawl-powered crawler that ingests company career pages on a cron schedule and indexes job listings into Pinecone. The Careers Agent is delivered as an embeddable chat widget on the client\'s career site: candidates upload their CV and chat, RAG narrows down matching roles based on the conversation, and high-confidence matches route them directly to the right job URL on the client\'s site. Removed the need to manually browse job boards.',
     category: 'professional',
     complexity: 'high',
     status: 'shipped',
-    tags: ['Python', 'Django', 'Firecrawl', 'RAG', 'Vector Store', 'LLM', 'React', 'AI Agents'],
+    tags: ['Python', 'Django', 'Firecrawl', 'RAG', 'Pinecone', 'LLM', 'React', 'AI Agents'],
     company: 'VONQ',
     period: '2025-2026',
     links: [],
@@ -108,11 +109,11 @@ export const PROJECTS: ProjectData[] = [
     title: 'Candidate Assessment & Language Evaluator',
     tagline: 'Agentic pipeline for evaluating candidate quality, including a live language assessment MVP',
     description:
-      'Built an agentic automation system to evaluate candidates across multiple criteria (skills alignment, communication quality, role fit). Delivered a language assessment MVP for a major European client: candidates complete a structured interview and receive a language proficiency score with justification. Reduced manual screening time significantly. Full FE/BE delivery including failure state tracking and candidate stage transitions.',
+      'Built an agentic automation system to evaluate candidates across multiple criteria (skills alignment, communication quality, role fit). Added retry capability for audio web interviews via Retell: when a connection drops or the candidate cannot be heard, the session recovers gracefully. Delivered a language assessment MVP for a major European client, from initial chat-based screening through to a final PDF dossier for the recruiter with embedded language scores (vocabulary, speech fluency, semantics, coherence) exportable and shareable directly.',
     category: 'professional',
     complexity: 'high',
     status: 'shipped',
-    tags: ['Python', 'Django', 'AI Agents', 'Audio Processing', 'NLP', 'React', 'Assessment'],
+    tags: ['Python', 'Django', 'Retell', 'AI Agents', 'Audio Processing', 'React', 'Assessment', 'PDF'],
     company: 'VONQ',
     period: '2025-2026',
     links: [],
@@ -132,6 +133,7 @@ export const PROJECTS: ProjectData[] = [
     company: 'Sema4.ai',
     period: '2023-2024',
     links: [
+      { label: 'Server', url: 'https://github.com/Sema4AI/actions' },
       { label: 'Gallery', url: 'https://github.com/Sema4AI/gallery' },
     ],
     architectureNotes:
@@ -142,11 +144,11 @@ export const PROJECTS: ProjectData[] = [
     title: 'GTO / Reinforcement Learning Poker Engine',
     tagline: 'ML/AI system combining game theory optimal play and RL strategies for competitive online poker',
     description:
-      'A5 Labs builds AI for competitive online gaming. Designed and built the Python/FastAPI API layer on top of a C++ inference server running GTO (Game Theory Optimal) and reinforcement learning poker models. The system takes game state as input (hole cards, board, pot, player actions) and returns recommended actions with EV calculations. Low-latency is critical: the C++ layer handles the compute, Python handles orchestration and external communication.',
+      'A5 Labs builds AI for competitive online gaming. Maintained and contributed to a micro-service mesh combining a Python/FastAPI orchestration layer with a C++ RL inference server (Drogon framework). The Python side has three services: a GTO service, a Strategy service, and a glue service routing between them under response-time constraints. Built an analysis benchmark for detecting regressions and measuring quality of strategy improvements, automated via Bitbucket CI data-science scripting.',
     category: 'professional',
     complexity: 'high',
     status: 'shipped',
-    tags: ['Python', 'FastAPI', 'C++', 'gRPC', 'Reinforcement Learning', 'GTO', 'ML Inference', 'Low Latency'],
+    tags: ['Python', 'FastAPI', 'C++', 'Drogon', 'Reinforcement Learning', 'GTO', 'ML Inference', 'Bitbucket CI'],
     company: 'A5 Labs',
     period: '2025',
     links: [],
@@ -162,21 +164,40 @@ export const PROJECTS: ProjectData[] = [
     category: 'professional',
     complexity: 'high',
     status: 'shipped',
-    tags: ['Python', 'Robot Framework', 'RPA', 'Selenium', 'OCR', 'Automation', 'PyPI', 'Open Source'],
+    tags: ['Python', 'Robot Framework', 'RPA', 'Selenium', 'Playwright', 'OCR', 'Automation', 'PyPI', 'Open Source'],
     company: 'Robocorp / Sema4.ai',
     period: '2021-2024',
     links: [
       { label: 'Org', url: 'https://github.com/robocorp' },
+      { label: 'Portal', url: 'https://robocorp.com/portal' },
     ],
     architectureNotes:
       'Robot/task definition → robocorp runtime → library layer (web/desktop/OCR/docs) → target systems → execution log + artifacts',
+  },
+  {
+    id: 'gorgias-appstore',
+    title: 'Gorgias App Store',
+    tagline: 'OAuth2 developer platform enabling third-party apps inside e-commerce support automation',
+    description:
+      'Gorgias is an e-commerce helpdesk targeting Shopify merchants. Led the Developer Experience team and laid the technical foundation for an App Store: OAuth2 Authorization Code Grant flow (via Flask + authlib + Auth0), enabling external developers to publish and monetize integrations inside Gorgias. Improved the REST API and developer docs. Fast-paced startup environment with direct exposure to DX leadership and partner ecosystem building.',
+    category: 'professional',
+    complexity: 'medium',
+    status: 'shipped',
+    tags: ['Python', 'Flask', 'OAuth2', 'Auth0', 'PostgreSQL', 'REST API', 'E-commerce'],
+    company: 'Gorgias',
+    period: '2021',
+    links: [
+      { label: 'Docs', url: 'https://developers.gorgias.com/docs/private-vs-public-app' },
+    ],
+    architectureNotes:
+      'External developer → OAuth2 Authorization Code Grant (Flask + authlib + Auth0) → Gorgias API access token → third-party app installed in merchant account',
   },
   {
     id: 'comfy-grpc',
     title: 'gRPC Smart Building APIs',
     tagline: 'Language-agnostic microservices backbone for IoT smart building systems via gRPC with reverse-proxy transcoding',
     description:
-      'Comfy (acquired by Siemens ~2020) built software for smart buildings. Designed and implemented a gRPC-based API layer with a reverse-proxy transcoder (gRPC-gateway pattern) allowing HTTP/REST clients to consume gRPC services without rewriting. Enabled polyglot microservices: services written in Go, Python, and Node.js all communicated through a single typed interface. Served as the data transport backbone for occupancy sensing, HVAC control, and workspace management features.',
+      'Comfy (acquired by Siemens ~2020) built software for smart buildings. Designed and implemented a gRPC-based API layer with a reverse-proxy transcoder (gRPC-gateway pattern) allowing HTTP/REST clients to consume gRPC services without rewriting. Enabled polyglot microservices: services written in Go, Python, and Node.js all communicated through a single typed interface. Protobuf spec-first development let FE and BE teams work in parallel, with mock data returned from the gateway until backend logic was ready. Also built a geolocation service for BMW campus navigation in Germany, with Mapbox-compliant APIs backed by PostGIS.',
     category: 'professional',
     complexity: 'high',
     status: 'shipped',
@@ -187,36 +208,17 @@ export const PROJECTS: ProjectData[] = [
     architectureNotes:
       'REST clients → gRPC-gateway (reverse proxy) → gRPC services (Go/Python/Node) → IoT devices + DB → responses transcoded back to JSON',
   },
-  {
-    id: 'cloudbase-cloud-init',
-    title: 'Windows Cloud-Init Service',
-    tagline: 'VM initialization agent for Windows on OpenStack IaaS, the cloud-init equivalent for Windows',
-    description:
-      'Cloudbase Solutions specialized in OpenStack deployments for Windows environments. Built the Windows cloud-init service that runs at VM first boot, reads the OpenStack metadata API, and configures the instance: hostname, network interfaces, SSH keys, user accounts, and custom scripts. A critical piece of infrastructure for enterprise OpenStack operators who needed Windows workloads alongside Linux VMs.',
-    category: 'professional',
-    complexity: 'medium',
-    status: 'shipped',
-    tags: ['Python', 'Windows', 'OpenStack', 'IaaS', 'Cloud-Init', 'Infrastructure', 'DevOps'],
-    company: 'Cloudbase Solutions',
-    period: '2014-2015',
-    links: [
-      { label: 'Org', url: 'https://github.com/cloudbase' },
-    ],
-    architectureNotes:
-      'VM boot → cloud-init agent → OpenStack metadata API → instance configuration (hostname / network / SSH keys / user accounts) → ready state',
-  },
-
   // OSS / Hobby
   {
     id: 'deep-ice',
     title: 'DeepIce',
     tagline: 'Idiomatic async Python web server template, showing how I approach backend development from scratch',
     description:
-      'A reference implementation of a production-grade FastAPI application. Shows the full stack: async request handling, SQLAlchemy 2.0 with async sessions, Pydantic v2 schema validation, Alembic migrations, Poetry dependency management, Docker Compose setup, and pytest with async test fixtures. Built to answer the question "what does well-structured Python API code look like" with a concrete, runnable example rather than a tutorial.',
+      'A reference implementation of a production-grade FastAPI application. Shows the full stack: async request handling, SQLModel for combined Pydantic + SQLAlchemy ORM, Alembic migrations, uv for dependency management, invoke for task automation, Redis for caching, Docker Compose setup, and pytest with async test fixtures. Built to answer "what does well-structured Python API code look like" with a concrete, runnable example rather than a tutorial.',
     category: 'oss-hobby',
     complexity: 'medium',
     status: 'shipped',
-    tags: ['Python', 'FastAPI', 'SQLAlchemy', 'PostgreSQL', 'Pydantic', 'Docker', 'asyncio', 'pytest'],
+    tags: ['Python', 'FastAPI', 'SQLModel', 'PostgreSQL', 'Redis', 'Pydantic', 'Docker', 'asyncio', 'pytest'],
     links: [
       { label: 'Repo', url: 'https://github.com/cmin764/deep-ice' },
     ],
@@ -243,14 +245,14 @@ export const PROJECTS: ProjectData[] = [
   // Frontend & Brand
   {
     id: 'wandercode-site',
-    title: 'Wandercode Site',
+    title: 'Wandercode website',
     tagline: 'Company site for the consultancy, built with the same stack I recommend to clients',
     description:
-      'The public-facing site for Wandercode. Built to practice what I preach: fast, accessible, and maintainable. Same stack as my client recommendations: Vite + React + TypeScript + Tailwind + shadcn/ui.',
+      'The public-facing site for Wandercode, deployed on Vercel. Built to practice what I preach: fast, accessible, and maintainable. Stack: Vite + React + TypeScript + Tailwind + shadcn/ui, managed with bun. Uses a /frontend-review skill for agentic self-review before merging.',
     category: 'frontend-brand',
     complexity: 'medium',
     status: 'active',
-    tags: ['TypeScript', 'React', 'Vite', 'Tailwind', 'shadcn/ui', 'React Router'],
+    tags: ['TypeScript', 'React', 'Vite', 'Tailwind', 'shadcn/ui', 'React Router', 'Vercel'],
     links: [
       { label: 'Site', url: 'https://www.wandercode.ltd/' },
       { label: 'Repo', url: 'https://github.com/cmin764/wandercode' },
@@ -258,17 +260,33 @@ export const PROJECTS: ProjectData[] = [
   },
   {
     id: 'nomads-nest',
-    title: "Nomad's Nest",
+    title: "Nomad's Nest website",
     tagline: 'Short-term rental site for a self-catering apartment in Cyprus, built for digital nomads',
     description:
-      'A Next.js site for a short-term rental property in Cyprus. Built for SEO and performance: static generation, responsive design, Tailwind + shadcn/ui. Deployed on Vercel.',
+      'A Next.js site for a short-term rental property in Cyprus. 10+ page types: marketing, gallery with per-room sub-pages, booking, check-in guide, and legal. Framer Motion for scroll-triggered animations, lightbox gallery, reviews carousel, transport modal. Deployed on Vercel, managed with bun. Uses a /frontend-review skill for agentic self-review before merging.',
     category: 'frontend-brand',
-    complexity: 'low',
+    complexity: 'medium',
     status: 'active',
-    tags: ['TypeScript', 'Next.js', 'Tailwind', 'shadcn/ui', 'Vercel'],
+    tags: ['TypeScript', 'Next.js', 'Tailwind', 'shadcn/ui', 'Framer Motion', 'Vercel Analytics', 'Vercel'],
     links: [
       { label: 'Site', url: 'https://www.nomadsnest.live/' },
       { label: 'Repo', url: 'https://github.com/cmin764/nomads-nest' },
+    ],
+  },
+
+  // Writing
+  {
+    id: 'alchemy-entrepreneurship',
+    title: 'The Alchemy of Entrepreneurship',
+    tagline: 'An essay on startup failure as personal transformation, not loss',
+    description:
+      'Published on Medium. A reflection on the TrueStory startup journey: what a year of building a failed startup actually produces, why the process compounds even when the product does not, and how asking "why" more than "how" reshapes how you approach problems and people.',
+    category: 'writing',
+    complexity: 'low',
+    status: 'shipped',
+    tags: ['Writing', 'Entrepreneurship', 'Startups', 'Medium'],
+    links: [
+      { label: 'Read', url: 'https://cmin764.medium.com/the-alchemy-of-entrepreneurship-5de670f27fa2' },
     ],
   },
 ];

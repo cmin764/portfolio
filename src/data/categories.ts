@@ -38,4 +38,10 @@ export const CATEGORIES: CategoryMeta[] = [
     description: 'Product and design builds',
     order: 5,
   },
+  {
+    id: 'writing',
+    label: 'Writing',
+    description: 'Published essays on tech, AI, engineering, and entrepreneurship',
+    order: 6,
+  },
 ];
