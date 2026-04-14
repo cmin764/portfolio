@@ -121,6 +121,22 @@ export const PROJECTS: ProjectData[] = [
       'Candidate input (text/audio) → assessment agent → multi-criteria scoring → human review queue → ATS stage update',
   },
   {
+    id: 'a5-gto-engine',
+    title: 'GTO / Reinforcement Learning Poker Engine',
+    tagline: 'ML/AI system combining game theory optimal play and RL strategies for competitive online poker',
+    description:
+      'A5 Labs builds AI for competitive online gaming. Maintained and contributed to a micro-service mesh combining a Python/FastAPI orchestration layer with a C++ RL inference server (Drogon framework). The Python side has three services: a GTO service, a Strategy service, and a glue service routing between them under response-time constraints. Built an analysis benchmark for detecting regressions and measuring quality of strategy improvements, automated via Bitbucket CI data-science scripting.',
+    category: 'professional',
+    complexity: 'high',
+    status: 'shipped',
+    tags: ['Python', 'FastAPI', 'C++', 'Drogon', 'Reinforcement Learning', 'GTO', 'ML Inference', 'Bitbucket CI'],
+    company: 'A5 Labs',
+    period: '2025',
+    links: [],
+    architectureNotes:
+      'Game state input → FastAPI (Python) → C++ inference server (GTO/RL model) → action recommendation + EV output → client application',
+  },
+  {
     id: 'sema4ai-action-server',
     title: 'Action Server + AI Actions',
     tagline: 'MCP-like FastAPI server giving GPT "hands and legs": pluggable business logic executed post-reasoning',
@@ -138,22 +154,6 @@ export const PROJECTS: ProjectData[] = [
     ],
     architectureNotes:
       'GPT / LLM → Action Server (FastAPI + action registry) → AI Action (Python function with schema) → external system (DB, API, file, etc.) → response back to LLM',
-  },
-  {
-    id: 'a5-gto-engine',
-    title: 'GTO / Reinforcement Learning Poker Engine',
-    tagline: 'ML/AI system combining game theory optimal play and RL strategies for competitive online poker',
-    description:
-      'A5 Labs builds AI for competitive online gaming. Maintained and contributed to a micro-service mesh combining a Python/FastAPI orchestration layer with a C++ RL inference server (Drogon framework). The Python side has three services: a GTO service, a Strategy service, and a glue service routing between them under response-time constraints. Built an analysis benchmark for detecting regressions and measuring quality of strategy improvements, automated via Bitbucket CI data-science scripting.',
-    category: 'professional',
-    complexity: 'high',
-    status: 'shipped',
-    tags: ['Python', 'FastAPI', 'C++', 'Drogon', 'Reinforcement Learning', 'GTO', 'ML Inference', 'Bitbucket CI'],
-    company: 'A5 Labs',
-    period: '2025',
-    links: [],
-    architectureNotes:
-      'Game state input → FastAPI (Python) → C++ inference server (GTO/RL model) → action recommendation + EV output → client application',
   },
   {
     id: 'robocorp-rpa',
