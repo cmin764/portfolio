@@ -2,6 +2,11 @@ import { Mail, ArrowUpRight } from "lucide-react";
 import { LINKS } from "@/lib/constants";
 
 const CURRENT_YEAR = new Date().getFullYear();
+const BUILD_DATE = new Date(__BUILD_DATE__).toLocaleDateString('en-US', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+});
 
 export function Footer() {
 
@@ -79,7 +84,7 @@ export function Footer() {
         </div>
 
         <p className="mt-8 text-center text-xs text-muted-foreground">
-          &copy; {CURRENT_YEAR} Cosmin Poieana
+          &copy; {CURRENT_YEAR} Cosmin Poieana &middot; Updated {BUILD_DATE}
         </p>
       </div>
     </footer>
