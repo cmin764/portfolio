@@ -5,7 +5,6 @@ const CURRENT_YEAR = new Date().getFullYear();
 const BUILD_DATE = new Date(__BUILD_DATE__).toLocaleDateString('en-US', {
   month: 'short',
   day: 'numeric',
-  year: 'numeric',
 });
 
 export function Footer() {
