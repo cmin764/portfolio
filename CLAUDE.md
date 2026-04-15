@@ -76,6 +76,15 @@ src/
 
 The `architectureNotes` field on `ProjectData` is for diagram generation only. Never render it in the UI.
 
+## Diagram Skill
+
+Run `/diagram "Project Name"` to generate a C4 architecture diagram for any project card. The skill reads `docs/diagram-briefs.md`, `src/data/projects.ts`, and `docs/system-design.md`, iterates with you in Mermaid, then exports to SVG or directly to Excalidraw via MCP.
+
+- Mermaid source files live in `src/diagrams/<id>.mmd` (committed)
+- Exported SVGs go in `public/diagrams/<id>.svg` (committed)
+- Preview files (`*-preview.md`, `*-preview.html`) are gitignored
+- Learnings from corrections are saved in `.claude/skills/diagram/learnings/` and applied on the next run
+
 ## Do Not
 
 - Add error boundaries, loading spinners, or suspense (data is synchronous)
