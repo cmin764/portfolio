@@ -223,7 +223,7 @@ export const PROJECTS: ProjectData[] = [
       { label: 'Repo', url: 'https://github.com/cmin764/deep-ice' },
     ],
     architectureNotes:
-      'HTTP request → FastAPI router → service layer → SQLAlchemy async session → PostgreSQL → Pydantic response schema',
+      'HTTP request → FastAPI router → service layer → SQLModel async session → PostgreSQL → Pydantic response schema',
   },
   {
     id: 'pulsr',
