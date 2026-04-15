@@ -15,6 +15,7 @@ export function FilterBar({ active, onChange }: Props) {
         variant={active === 'all' ? 'default' : 'outline'}
         size="sm"
         onClick={() => onChange('all')}
+        aria-pressed={active === 'all'}
         className={cn(active === 'all' && "bg-cta text-cta-foreground hover:bg-cta/90")}
       >
         All
@@ -25,6 +26,7 @@ export function FilterBar({ active, onChange }: Props) {
           variant={active === cat.id ? 'default' : 'outline'}
           size="sm"
           onClick={() => onChange(cat.id)}
+          aria-pressed={active === cat.id}
           className={cn(active === cat.id && "bg-cta text-cta-foreground hover:bg-cta/90")}
         >
           {cat.label}
