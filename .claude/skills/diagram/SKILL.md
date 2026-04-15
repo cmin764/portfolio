@@ -211,6 +211,16 @@ Then: `open src/diagrams/<id>-preview.html`
 - If it's project-specific (e.g., "add the Redis cache node here"): apply it but don't save.
 - If ambiguous: ask "Should I remember this rule for future diagrams?"
 
+**Learning quality bar — apply before saving:**
+Learnings must be project-agnostic principles, not records of what happened on a specific diagram. Before writing, ask: "Would this rule apply unchanged to a completely different project?" If the answer requires substituting project names, it's too specific. Generalize or don't save.
+
+- Good: "Never use `System_Boundary` with directional Rel hints — it collapses layout."
+- Bad: "For TrueStory, removed System_Boundary because layout broke."
+- Good: "For pull-based relationships, draw arrows FROM initiator TO dependency."
+- Bad: "Reversed the news→api arrow because TrueStory's API initiates the crawl."
+
+Do not include project-specific node names, code, or identifiers in the rule body. Use generic placeholders (`ServiceA`, `externalSource`, `callerService`) if an example is needed to illustrate the rule.
+
 **Learning file format** (save to `.claude/skills/diagram/learnings/<topic>-NNN.md`):
 
 ```markdown
@@ -219,11 +229,13 @@ topic: layout | styling | mermaid-syntax | labeling | edge-semantics | integrati
 source: <project name> session (<date>)
 ---
 
-<One-sentence rule.>
+<Universal rule — one or two sentences. Must apply to any diagram, not just the source project.>
 
-**Before:** <what was generated>
-**After:** <what was corrected to>
-**Why:** <why this matters for diagram quality>
+**Why:** <reasoning that holds for any diagram — no project names>
+
+**Anti-pattern:** <generic description of what to avoid>
+
+**Fix:** <generic description of the correct approach, with placeholder names if an example helps>
 ```
 
 After saving any learning, update `.claude/skills/diagram/learnings/_index.md` to add a one-line entry:

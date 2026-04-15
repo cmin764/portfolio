@@ -8,3 +8,5 @@ Auto-maintained index. Each entry links to a learning file with context and rati
 - [mermaid-syntax-001 — Never switch to flowchart LR; stay with C4Container](mermaid-syntax-001.md) — source: TrueStory, 2026-04-15
 - [edge-semantics-001 — Combine request-response into one edge; pull arrows point from initiator](edge-semantics-001.md) — source: TrueStory, 2026-04-15
 - [integration-001 — Excalidraw export needs bound text elements with containerId, not inline label](integration-001.md) — source: TrueStory, 2026-04-15
+- [edge-semantics-002 — Four arrow styles: solid+filled=sync, solid+open=async, dashed+filled=cron/dependency, dashed+open=rare](edge-semantics-002.md) — source: TrueStory, 2026-04-15
+- [edge-semantics-003 — Never draw bidirectional arrows; use one edge with combined label for request-response pairs](edge-semantics-003.md) — source: TrueStory, 2026-04-15

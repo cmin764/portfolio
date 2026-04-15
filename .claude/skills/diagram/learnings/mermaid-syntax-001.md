@@ -3,10 +3,10 @@ topic: mermaid-syntax
 source: TrueStory session (2026-04-15)
 ---
 
-Never switch from `C4Container` to `flowchart LR` to fix layout or styling issues. `flowchart LR` is worse on both counts.
+Never switch from `C4Container` to `flowchart LR` (or any other flowchart type) to work around layout or styling limitations. It makes both problems worse.
 
-**Before:** Switched to `flowchart LR` to gain dashed edge styles and layout control. Used `<br/>` for line breaks in node labels.
+**Why:** Two compounding failures: (1) `<br/>` renders as literal text in flowchart nodes — labels become unreadable strings. (2) `LR` places every node on one horizontal row with no row-break mechanism, producing an unusably wide single-line diagram. `C4Container` with `UpdateLayoutConfig` and `UpdateElementStyle` is always the better path, even when it feels more constrained.
 
-**After:** Reverted to `C4Container`. Used short labels and `$c4ShapeInRow` instead.
+**Anti-pattern:** Switching diagram type when facing frustrating Mermaid C4 layout or color issues.
 
-**Why:** Two compounding problems with `flowchart LR`: (1) `<br/>` tags render literally as text — not as line breaks — so all node content collapses to a single unreadable line. (2) LR direction places every node on one horizontal row when there is no explicit row-break mechanism, making the diagram unusably wide. C4Container's `UpdateLayoutConfig` wraps rows reliably and renders correctly in both Cursor preview and Excalidraw export.
+**Fix:** Stay with `C4Container`. For layout: `UpdateLayoutConfig($c4ShapeInRow="N")`. For colors: `UpdateElementStyle(alias, $bgColor=..., $fontColor=..., $borderColor=...)`. For styles Mermaid cannot express (dashed edges, open arrowheads): note the intent with a label suffix (`[cron]`, `[async]`) in the Mermaid source and apply proper styles only in the Excalidraw export.

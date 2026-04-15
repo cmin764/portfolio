@@ -3,10 +3,10 @@ topic: layout
 source: TrueStory session (2026-04-15)
 ---
 
-Remove `System_Boundary` for small diagrams and use `$c4ShapeInRow="2"` to get a readable 2×2 grid instead of a single wide row.
+In Mermaid C4, `System_Boundary` combined with directional `Rel` hints (`Rel_D`, `Rel_R`, `Rel_L`) collapses all nodes into a single row. For diagrams with ≤6 nodes, skip boundary wrappers and use `$c4ShapeInRow` for grid control instead.
 
-**Before:** `System_Boundary` wrapping containers + `Rel_R`/`Rel_D` directional hints → all nodes squeezed into one row, cut-off person nodes, overlapping arrow labels.
+**Why:** The layout engine treats a boundary block as one layout unit. Directional hints then override row wrapping entirely, collapsing everything horizontally regardless of node count.
 
-**After:** No boundary wrapper, plain `Container` and `System_Ext` at top level, `UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="1")` → 2-column grid, nodes fully visible, labels readable.
+**Anti-pattern:** `Boundary(b, "label") { Container(...) ... }` combined with directional `Rel_D`/`Rel_R` calls.
 
-**Why:** Mermaid C4's auto-layout algorithm treats `System_Boundary` as a single layout unit. When combined with directional hints it overrides row wrapping and collapses everything horizontally. Removing the boundary lets `$c4ShapeInRow` control wrapping correctly. For diagrams with 3–5 nodes, `$c4ShapeInRow="2"` gives the most balanced square layout.
+**Fix:** Place all nodes at the top level. Use `UpdateLayoutConfig($c4ShapeInRow="N", $c4BoundaryInRow="1")` where N ≈ `ceil(sqrt(node_count))` — e.g. 2 for 4 nodes, 3 for 6–9 nodes. If showing boundaries matters for the diagram's meaning, use a separate non-Mermaid Excalidraw export where you control layout manually.

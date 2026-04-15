@@ -3,10 +3,10 @@ topic: edge-semantics
 source: TrueStory session (2026-04-15)
 ---
 
-Combine request-response pairs into a single edge label rather than drawing two reverse arrows. For pull/cron relationships, draw the arrow FROM the initiator (the service doing the pulling) TO the dependency.
+Arrow direction represents dependency, not data travel. For pull-based relationships (cron jobs, polling, scheduled fetches), draw the arrow FROM the service doing the pulling TO the thing being pulled from.
 
-**Before:** Separate `Rel_R(ext, api, "article URL")` + `Rel_L(api, ext, "3 opposing articles")` → crossing lines, overlapping labels. Also `Rel_D(news, api, "crawled articles")` with arrow going FROM news TO api, implying news pushes data.
+**Why:** C4 convention is "arrows show who depends on whom." A service that crawls or polls another depends on it — so the arrow points service→dependency. Drawing it as data-flow (source→sink) implies the dependency pushes data, which misrepresents the system's control flow and can mislead readers about who initiates the interaction.
 
-**After:** Single `Rel(ext, api, "article URL / 3 opposing articles")` combining both directions. Reversed to `Rel(api, news, "crawls on cron [async]")` since the API initiates the crawl.
+**Anti-pattern:** Modeling a cron crawl or polling relationship with an arrow pointing FROM the external source TO the internal service, as if the source is pushing.
 
-**Why:** Mermaid C4's layout engine routes reverse arrows along the same path as forward arrows — they physically overlap. One combined label eliminates this entirely without losing semantic clarity. For pull-based relationships (cron jobs, polling), C4 convention is arrows from initiator to dependency; the arrow shows who depends on whom, not where data travels.
+**Fix:** Always ask "who initiates?" and draw the arrow from initiator to target. For a scheduled crawl: `Rel(crawlerService, externalSource, "fetches on schedule [cron]")`. Label the edge with the mechanism (`[cron]`, `[polls every N min]`) so the non-interactive nature is clear without reversing the direction.
