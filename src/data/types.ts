@@ -33,6 +33,7 @@ export interface ProjectData {
   period?: string;
   links: ProjectLink[];
   diagramFile?: string;
+  diagramExcalidrawUrl?: string;
   highlights?: string[];
   architectureNotes?: string;
 }

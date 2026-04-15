@@ -84,6 +84,7 @@ Run `/diagram "Project Name"` to generate a C4 architecture diagram for any proj
 - Exported SVGs go in `public/diagrams/<id>.svg` (committed)
 - Preview files (`*-preview.md`, `*-preview.html`) are gitignored
 - Learnings from corrections are saved in `.claude/skills/diagram/learnings/` and applied on the next run
+- After the user accepts a diagram and it has been exported to Excalidraw, ask for the shareable Excalidraw URL (`https://excalidraw.com/#json=...`) and save it as `diagramExcalidrawUrl` on the project in `src/data/projects.ts`. This makes the SVG clickable and links it back to the live editable diagram.
 
 ## Do Not
 

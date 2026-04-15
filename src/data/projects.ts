@@ -69,6 +69,7 @@ export const PROJECTS: ProjectData[] = [
       { label: 'Blog', url: 'https://cosminslife.wordpress.com/2020/08/16/truestory-app-or-how-i-learned-to-stop-worrying-and-love-the-process/' },
     ],
     diagramFile: 'truestory.svg',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=H_bjzjVwgnLere2f58TW0,t5_z6jZ2DPPigMFn4N4uYw',
     architectureNotes: 'Flask/GCP → REST API → Chrome extension',
   },
 

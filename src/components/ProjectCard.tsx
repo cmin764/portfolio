@@ -68,7 +68,7 @@ export function ProjectCard({ project }: Props) {
             <p className="text-sm text-muted-foreground leading-relaxed">{project.description}</p>
 
             {project.diagramFile && (
-              <DiagramViewer diagramFile={project.diagramFile} projectTitle={project.title} />
+              <DiagramViewer diagramFile={project.diagramFile} projectTitle={project.title} excalidrawUrl={project.diagramExcalidrawUrl} />
             )}
             {!project.diagramFile && project.architectureNotes && (
               <div className="rounded-md border border-dashed border-border bg-muted/30 p-4 text-xs text-muted-foreground text-center">
