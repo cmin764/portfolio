@@ -28,6 +28,7 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between">
         <Link
           to="/"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           className="text-base font-semibold tracking-tight hover:text-foreground transition-colors"
         >
           Cosmin Poieana
