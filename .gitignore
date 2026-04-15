@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Diagram preview files (dev only)
+src/diagrams/*-preview.md
+src/diagrams/*-preview.html
