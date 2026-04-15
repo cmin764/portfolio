@@ -23,6 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 
-# Diagram preview files (dev only)
-src/diagrams/*-preview.md
+# Diagram browser preview (dev only — .md files are committed)
 src/diagrams/*-preview.html

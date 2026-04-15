@@ -94,7 +94,7 @@ The Excalidraw path (Phase 6B) is where system-design.md rules get fully applied
 - Default layout: top-to-bottom (`TB`). Switch to left-to-right only when the flow direction in the brief says LR or the diagram is clearly pipeline-shaped.
 
 **Abstraction rules**
-- Snap mixed abstractions to a single level. If the brief mixes container-level and component-level nodes, pick the level that covers more nodes and promote/demote the rest. Note the snapping decision in a comment inside the `.mmd` file.
+- Snap mixed abstractions to a single level. If the brief mixes container-level and component-level nodes, pick the level that covers more nodes and promote/demote the rest. Note the snapping decision in a comment inside the `.md` source file.
 - Cap at ~20 nodes. If the brief has more, group related services into a single aggregate container and add a note explaining the grouping.
 - Never invent components not in the brief or `architectureNotes`. If you fill a logical gap, mark the node with `(assumed)` in its description and use a dashed border via `UpdateElementStyle`.
 
@@ -145,7 +145,18 @@ Apply via `UpdateElementStyle(alias, ...)` for each non-default node.
 
 ### Output
 
-Write the diagram to `src/diagrams/<id>.mmd`. Create `src/diagrams/` if it doesn't exist.
+Write the diagram to **`src/diagrams/<id>.md`** as a Markdown file with a mermaid code block. This is the single source file — it serves as both the committed diagram source and the Cursor-previewable file. Do NOT create a separate `.mmd` file alongside it.
+
+Format:
+```markdown
+# <Project Title> — Container Diagram (<period>)
+
+```mermaid
+[MERMAID CODE]
+```
+```
+
+Create `src/diagrams/` if it doesn't exist.
 
 ---
 
@@ -153,25 +164,18 @@ Write the diagram to `src/diagrams/<id>.mmd`. Create `src/diagrams/` if it doesn
 
 **Primary method (Cursor IDE):**
 
-1. Write `src/diagrams/<id>-preview.md`:
-   ```markdown
-   # <Project Title> — Architecture Diagram Preview
-
-   ```mermaid
-   [MERMAID CODE copied verbatim from .mmd file]
-   ```
-   ```
-
-2. Open in Cursor:
+1. Open the `.md` file directly in Cursor:
    ```bash
-   cursor src/diagrams/<id>-preview.md
+   cursor src/diagrams/<id>.md
    ```
 
-3. Tell the user: "Press **Cmd+Shift+V** (or Cmd+K V for side-by-side) to see the rendered diagram in Cursor."
+2. Tell the user: "Press **Cmd+Shift+V** (or Cmd+K V for side-by-side) to preview the diagram."
+
+The `.md` file IS the source — no separate preview file needed. It is committed to git.
 
 **Fallback (browser):**
 
-If Cursor isn't available or the user prefers browser preview, write `src/diagrams/<id>-preview.html`:
+If Cursor isn't available, write `src/diagrams/<id>-preview.html` (gitignored):
 
 ```html
 <!DOCTYPE html>
@@ -193,8 +197,6 @@ If Cursor isn't available or the user prefers browser preview, write `src/diagra
 ```
 
 Then: `open src/diagrams/<id>-preview.html`
-
-Both preview files are gitignored. Never commit them.
 
 ---
 
@@ -245,10 +247,11 @@ Once the user approves the diagram, ask one question before exporting:
 
 Follow `.claude/skills/diagram/references/integration-checklist.md` step by step:
 
-1. **SVG export:**
+1. **SVG export** (source is `.md`, extract the mermaid block first):
    ```bash
    mkdir -p public/diagrams
-   bunx mmdc -i src/diagrams/<id>.mmd -o public/diagrams/<id>.svg -t default -b transparent
+   awk '/^```mermaid/{f=1;next} /^```/{f=0} f' src/diagrams/<id>.md | \
+     bunx mmdc -i /dev/stdin -o public/diagrams/<id>.svg -t default -b transparent
    ```
    Note: first run downloads Chromium via Puppeteer (~200MB). Warn the user before running.
 
@@ -309,13 +312,22 @@ Follow `.claude/skills/diagram/references/integration-checklist.md` step by step
 
 ### Option B: Excalidraw via MCP
 
+**Style rule (always apply):** All Excalidraw elements must use `"roughness": 1` and `"fontFamily": 1` (Virgil, the handwriting font). Never use `roughness: 0` — it produces a sterile CAD look. The hand-drawn sketch aesthetic is intentional and must be preserved across all diagram exports.
+
 1. Check if the `mcp__claude_ai_Excalidraw__export_to_excalidraw` tool is available. If not, tell the user: "The Excalidraw MCP is not connected in this session. Start it and re-run, or choose option (a) instead."
 
-2. If available, use `mcp__claude_ai_Excalidraw__export_to_excalidraw` to send the Mermaid code to Excalidraw.
+2. Translate the approved Mermaid diagram into Excalidraw element JSON:
+   - Use bound text elements (`containerId`) for all node labels and arrow labels — the inline `label` shorthand works in `create_view` but is stripped by `export_to_excalidraw`
+   - Apply `"roughness": 1` and `"fontFamily": 1` to every element
+   - Use pastel fills (e.g. `#a5d8ff`, `#c3fae8`) for colored containers so dark text remains readable
+   - Dashed arrows (`"strokeStyle": "dashed"`) for async/cron edges per system-design.md §9.3
+   - Set `"boundElements"` arrays on shapes pointing to their text and arrow IDs
 
-3. Tell the user: "Your diagram is now open in Excalidraw. Polish it there, then export as SVG with transparent background. Save the SVG to `public/diagrams/<id>.svg` and follow the remaining integration steps (projects.ts update, DiagramViewer, ProjectCard)."
+3. Call `mcp__claude_ai_Excalidraw__export_to_excalidraw` with the full Excalidraw JSON and return the shareable URL to the user.
 
-4. Offer to complete the integration steps (steps 3-7 from Option A) once the user has the SVG ready.
+4. Tell the user: "Polish it in Excalidraw if needed, then export as SVG with transparent background. Save to `public/diagrams/<id>.svg` and I'll wire up the integration steps."
+
+5. Offer to complete the integration steps (steps 3–7 from Option A) once the user has the SVG ready.
 
 ---
 

@@ -7,7 +7,7 @@ Step-by-step for Phase 6 (export and integrate). Run through this after the user
 ## Pre-flight
 
 - [ ] `bun run build` passes (no type errors)
-- [ ] The `.mmd` file in `src/diagrams/<id>.mmd` is the approved version
+- [ ] `src/diagrams/<id>.md` is the committed source with the approved Mermaid block
 
 ---
 
@@ -22,7 +22,8 @@ mkdir -p public/diagrams src/diagrams
 ## SVG export
 
 ```bash
-bunx mmdc -i src/diagrams/<id>.mmd -o public/diagrams/<id>.svg -t default -b transparent
+awk '/^```mermaid/{f=1;next} /^```/{f=0} f' src/diagrams/<id>.md | \
+  bunx mmdc -i /dev/stdin -o public/diagrams/<id>.svg -t default -b transparent
 ```
 
 If `mmdc` is not available:
@@ -88,18 +89,6 @@ Import `DiagramViewer` at the top. Replace the placeholder block with:
     Architecture diagram coming in iteration 2
   </div>
 )}
-```
-
----
-
-## Update `.gitignore` (first diagram only)
-
-Add these lines:
-
-```
-# Diagram preview files (dev only)
-src/diagrams/*-preview.md
-src/diagrams/*-preview.html
 ```
 
 ---
