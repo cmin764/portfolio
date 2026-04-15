@@ -68,6 +68,7 @@ export const PROJECTS: ProjectData[] = [
       { label: 'Deck', url: 'https://slides.com/cmin/truestory-venturecup' },
       { label: 'Blog', url: 'https://cosminslife.wordpress.com/2020/08/16/truestory-app-or-how-i-learned-to-stop-worrying-and-love-the-process/' },
     ],
+    diagramFile: 'truestory.svg',
     architectureNotes: 'Flask/GCP → REST API → Chrome extension',
   },
 
