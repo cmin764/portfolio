@@ -75,6 +75,14 @@ Do NOT ask about things already clear in the brief.
 
 ---
 
+## Mermaid preview vs Excalidraw export
+
+The Mermaid diagram (Phases 3–5) is an approximation. Mermaid C4 has no native support for dashed edge styles or open arrowheads, so sync/async distinction from `docs/system-design.md` §9.3 cannot be fully applied there. Use `[async]` in edge labels as a workaround.
+
+The Excalidraw path (Phase 6B) is where system-design.md rules get fully applied: dashed lines, arrowhead style (filled triangle for sync, open for async), and orthogonal routing are all controllable at the element level. When diagram accuracy matters more than a quick preview, skip straight to Phase 6B.
+
+---
+
 ## Phase 3: Draft Mermaid diagram
 
 ### Guardrails (apply before generating)
