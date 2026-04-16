@@ -76,11 +76,30 @@ src/
 
 The `architectureNotes` field on `ProjectData` is for diagram generation only. Never render it in the UI.
 
+## Content Sync Rule
+
+Four files describe each project. They must stay consistent with each other at all times:
+
+| File | What it owns |
+|------|-------------|
+| `src/data/projects.ts` | Published card copy: description, tags, period, links, `architectureNotes` |
+| `src/diagrams/<id>.md` | Mermaid diagram source — nodes, edges, styling |
+| `docs/diagram-briefs.md` | Canonical node/edge table and design constraints for diagram generation |
+| `docs/portfolio-blueprint.md` | High-level project inventory and status |
+
+When you change one, propagate to the others:
+- Remove a node or concept from the diagram? Remove it from the brief's nodes table and from the card description/tags.
+- Update the card description or tags? Check the brief and diagram for stale references.
+- Update the brief (nodes, edges, constraints)? Reflect the change in the diagram source and card copy.
+- Update the blueprint project table? Confirm the card entry in `projects.ts` matches.
+
+The brief and blueprint are the planning layer; the card and diagram are the published layer. They must tell the same story.
+
 ## Diagram Skill
 
 Run `/diagram "Project Name"` to generate a C4 architecture diagram for any project card. The skill reads `docs/diagram-briefs.md`, `src/data/projects.ts`, and `docs/system-design.md`, iterates with you in Mermaid, then exports to SVG or directly to Excalidraw via MCP.
 
-- Mermaid source files live in `src/diagrams/<id>.mmd` (committed)
+- Mermaid source files live in `src/diagrams/<id>.md` (committed)
 - Exported SVGs go in `public/diagrams/<id>.svg` (committed)
 - Preview files (`*-preview.md`, `*-preview.html`) are gitignored
 - Learnings from corrections are saved in `.claude/skills/diagram/learnings/` and applied on the next run
