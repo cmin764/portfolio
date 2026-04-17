@@ -175,11 +175,14 @@ The following is a condensed, implementation-ready set of rules for an automatio
   - `queue|topic|stream`: pill or cylinder labeled as such.
   - `external-system|external-service`: same shape as system/container but dashed border and muted color.
 - Label format: `Name – Type` on first line; optional short description underneath.
-- Color mapping (example):
-  - UI/frontends: blue.
-  - Services/APIs: green.
-  - Data stores: orange.
-  - External systems: gray.
+- Color mapping (authoritative hex values in `.claude/skills/diagram/references/color-palette.md`):
+  - UI/frontends: light blue bg `#a5d8ff`, stroke `#1971c2`.
+  - Services/APIs: light mint bg `#96f2d7`, stroke `#099268`.
+  - Data stores, caches, queues: light peach bg `#ffd8a8`, stroke `#e8590c`.
+  - External systems: near-white bg `#e9ecef`, stroke `#868e96`.
+  - Boundary/grouping boxes: neutral bronze tint `#eaddd7`, stroke `#846358` — all boundaries use this regardless of what they contain. Role distinction via title color only.
+  - Legend/annotation boxes: post-it yellow `#ffec99`, stroke `#1e1e1e`.
+- Arrow colors: near-black `#1e1e1e` by default. Color only when the semantic cannot be expressed with line style alone, and only when documented in the diagram's legend. Cross-boundary arrows are the canonical exception: red `#e03131` outbound, blue `#1971c2` inbound.
 ### 9.3 Edge rendering rules
 - For `type = call` or `data`:
   - Use solid lines.

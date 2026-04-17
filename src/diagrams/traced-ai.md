@@ -34,10 +34,10 @@ C4Container
 
   UpdateLayoutConfig($c4ShapeInRow="4", $c4BoundaryInRow="2")
 
-  UpdateElementStyle(lib, $fontColor="#FFFFFF", $bgColor="#00897B", $borderColor="#006B5E")
-  UpdateElementStyle(dash, $fontColor="#FFFFFF", $bgColor="#438DD5", $borderColor="#3C7FC0")
-  UpdateElementStyle(sqlite, $fontColor="#FFFFFF", $bgColor="#FF6D00", $borderColor="#CC5700")
-  UpdateElementStyle(ingest, $fontColor="#FFFFFF", $bgColor="#00897B", $borderColor="#006B5E")
-  UpdateElementStyle(ledger, $fontColor="#FFFFFF", $bgColor="#FF6D00", $borderColor="#CC5700")
-  UpdateElementStyle(rules, $fontColor="#FFFFFF", $bgColor="#00897B", $borderColor="#006B5E")
+  UpdateElementStyle(lib, $fontColor="#1e1e1e", $bgColor="#96f2d7", $borderColor="#099268")
+  UpdateElementStyle(dash, $fontColor="#1e1e1e", $bgColor="#a5d8ff", $borderColor="#1971c2")
+  UpdateElementStyle(sqlite, $fontColor="#1e1e1e", $bgColor="#ffd8a8", $borderColor="#e8590c")
+  UpdateElementStyle(ingest, $fontColor="#1e1e1e", $bgColor="#96f2d7", $borderColor="#099268")
+  UpdateElementStyle(ledger, $fontColor="#1e1e1e", $bgColor="#ffd8a8", $borderColor="#e8590c")
+  UpdateElementStyle(rules, $fontColor="#1e1e1e", $bgColor="#ffd8a8", $borderColor="#e8590c")
 ```
