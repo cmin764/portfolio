@@ -97,6 +97,8 @@ The Excalidraw path (Phase 6B) is where system-design.md rules get fully applied
 - Snap mixed abstractions to a single level. If the brief mixes container-level and component-level nodes, pick the level that covers more nodes and promote/demote the rest. Note the snapping decision in a comment inside the `.md` source file.
 - Cap at ~20 nodes. If the brief has more, group related services into a single aggregate container and add a note explaining the grouping.
 - Never invent components not in the brief or `architectureNotes`. If you fill a logical gap, mark the node with `(assumed)` in its description and use a dashed border via `UpdateElementStyle`.
+- **Passive-store check (mandatory):** Before finalising the edge list, scan for any arrow whose source is a database, cache, queue, or other passive store (`ContainerDb`, `ContainerQueue`, or any node described as a DB/cache/registry/index). A passive store cannot initiate a call. If found, identify the orchestrating service that actually drives the interaction and redirect the arrow from there.
+- **Pull vs push check:** For any edge labeled "periodic", "pulls", "fetches", or "syncs", confirm the arrow points from the consumer (the node that initiates) to the producer, not in the direction the data flows.
 
 **Conflict resolution (priority order, highest first)**
 1. Deployment topology beats code structure (if both are described)

@@ -42,16 +42,19 @@ export const PROJECTS: ProjectData[] = [
     title: 'Traced AI',
     tagline: 'AI audit trail for compliance: proof that the AI decided correctly, when, and under which rule',
     description:
-      'Built for regulated industries (banking, healthcare, defense) where "the AI decided" is not an acceptable answer. The traced-ai library auto-patches LLM clients (OpenAI, Anthropic, etc.) at import time. Raw inputs and outputs are written to a local SQLite store that never leaves the client perimeter. SHA-256 hashes of every I/O pair, plus the rationale string, are sent to an append-only chained ledger in the cloud. The dashboard is a Next.js + shadcn/ui app deployed on Vercel, backed by Supabase for managed Postgres, Upstash for Redis, and Clerk for auth. The rule registry (EU AI Act, ISO 42001, SOC 2 mappings) is the moat: it translates regulatory text into concrete logging requirements per decision type, updated from real auditor interactions.',
+      'Built for regulated industries (banking, healthcare, defense) where "the AI decided" is not an acceptable answer. The traced-ai library auto-patches LLM clients (OpenAI, Anthropic, etc.) at import time. Raw inputs and outputs are written to a local SQLite store that never leaves the client perimeter. SHA-256 hashes of every I/O pair, plus the rationale string, are sent to an append-only chained ledger in the cloud. The dashboard ships as a Docker image for self-hosted deployments or as a hosted app on tracedai.co, backed by Supabase for managed Postgres and Upstash for Redis. The rule registry (EU AI Act, ISO 42001, SOC 2 mappings) is the moat: it translates regulatory text into concrete logging requirements per decision type, updated from real auditor interactions.',
     category: 'startup-trial',
     complexity: 'high',
     status: 'stealth',
-    tags: ['Python', 'FastAPI', 'PostgreSQL', 'Redis', 'Next.js', 'TypeScript', 'Fly.io', 'Vercel', 'Supabase', 'Clerk', 'Compliance', 'EU AI Act'],
+    period: 'Apr 2026 – present',
+    tags: ['Python', 'FastAPI', 'PostgreSQL', 'Redis', 'Next.js', 'TypeScript', 'Fly.io', 'Vercel', 'Supabase', 'Compliance', 'EU AI Act'],
     links: [
       { label: 'In stealth. Talk to me.', url: 'https://cal.com/wandercode/discovery-call' },
     ],
     architectureNotes:
-      'Client perimeter: AI application + traced-ai library → local SQLite (raw I/O) → self-hosted dashboard (Next.js on Vercel, reads local store only). Backend on Fly.io: FastAPI ingest API (receives hashes only) → append-only chained ledger → rule registry (EU AI Act / ISO / SOC 2). Data stores: Supabase (Postgres), Upstash (Redis). Auth: Clerk. Cross-zone outbound only: hash(in) + hash(out) + rationale string. Raw data never crosses the network.',
+      'Client perimeter: AI application + traced-ai library → local SQLite (raw I/O) → self-hosted dashboard (Docker image or tracedai.co, reads local store only). Backend on Fly.io: FastAPI ingest API (receives hashes only) → a) rule lookup in rule registry (EU AI Act / ISO / SOC 2), b) appends signed entry to chained ledger. Library periodically pulls signed rule packages from rule registry. Data stores: Supabase (Postgres), Upstash (Redis). Cross-zone outbound only: hash(in) + hash(out) + rationale string. Raw data never crosses the network.',
+    diagramFile: 'traced-ai.svg',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=SbmFE1tRL0Yjwyir8d_AB,B_Syf48mjYf_8c672QG0FQ',
   },
   {
     id: 'truestory',

@@ -37,21 +37,19 @@ Each brief is complementary to `portfolio-blueprint.md` (which has the narrative
 | AI Application | External system (customer's code) | Any LLM-using app |
 | traced-ai library | Container (library/SDK) | Python, monkey-patches LLM clients at import time |
 | Local SQLite | Database | Raw I/O store; never leaves client machine |
-| Self-hosted Dashboard | Container (web app) | Next.js + shadcn/ui on Vercel (SaaS tier) or Docker (enterprise tier) |
-| Clerk | External system (auth) | User auth for dashboard; cloud-side only |
+| Self-hosted Dashboard | Container (web app) | Next.js + shadcn/ui on tracedai.co (SaaS tier) or Docker image (enterprise tier) |
 | FastAPI Ingest API | Container (API) | Python + FastAPI on Fly.io; receives hashes only |
 | Chained Ledger | Database | Append-only, cryptographically signed; Supabase (Postgres) |
 | Rule Registry | Container (service) | EU AI Act / ISO 42001 / SOC 2 mappings; Upstash (Redis) |
-| Signed Rule Packages | External (async delivery) | Outbound from cloud to client; signed bundles |
 
 ### Key edges
 
 - AI Application → traced-ai library: `LLM call intercepted` (sync, monkey-patch at import time)
 - traced-ai library → Local SQLite: `raw I/O written` (sync, append-only write)
 - traced-ai library → FastAPI Ingest API: `hash(in) + hash(out) + rationale` (async, HTTPS, outbound only, 32 bytes per event)
-- FastAPI Ingest API → Chained Ledger: `appends signed entry` (sync)
-- Chained Ledger → Rule Registry: `rule lookup on ingest` (sync)
-- Rule Registry → Signed Rule Packages: `periodic push to client` (async, signed, inbound to client)
+- FastAPI Ingest API → Rule Registry: `rule lookup on ingest` (sync)
+- FastAPI Ingest API → Chained Ledger: `appends signed entry` (sync, with rule references baked in)
+- traced-ai library → Rule Registry: `pulls signed rule packages` (async, periodic, verified on client before apply)
 - Self-hosted Dashboard → Local SQLite: `reads raw I/O` (sync, local only, no network)
 
 ### Design constraints worth showing visually
