@@ -54,7 +54,7 @@ export const PROJECTS: ProjectData[] = [
     architectureNotes:
       'Client perimeter: AI application + traced-ai library → local SQLite (raw I/O) → self-hosted dashboard (Docker image or tracedai.co, reads local store only). Backend on Fly.io: FastAPI ingest API (receives hashes only) → a) rule lookup in rule registry (EU AI Act / ISO / SOC 2), b) appends signed entry to chained ledger. Library periodically pulls signed rule packages from rule registry. Data stores: Supabase (Postgres), Upstash (Redis). Cross-zone outbound only: hash(in) + hash(out) + rationale string. Raw data never crosses the network.',
     diagramFile: 'traced-ai.svg',
-    diagramExcalidrawUrl: 'https://excalidraw.com/#json=bQYMPzrkyvKScOEdHHNn6,KuHnRY9j4KN0PL9TjNBqXw',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=SbmFE1tRL0Yjwyir8d_AB,B_Syf48mjYf_8c672QG0FQ',
   },
   {
     id: 'truestory',
