@@ -27,9 +27,9 @@ C4Container
   Rel(aiapp, lib, "LLM calls intercepted")
   Rel(lib, sqlite, "writes raw I/O")
   Rel(lib, ingest, "hash(in) + hash(out) + rationale [async]", "HTTPS")
-  Rel(ingest, ledger, "appends signed entry")
-  Rel(ledger, rules, "rule lookup on ingest")
-  Rel(rules, lib, "signed rule packages [async]")
+  Rel(ingest, rules, "a) rule lookup on ingest")
+  Rel(ingest, ledger, "b) appends signed entry")
+  Rel(lib, rules, "pulls signed rule packages [async]")
   Rel(dash, sqlite, "reads raw I/O")
 
   UpdateLayoutConfig($c4ShapeInRow="4", $c4BoundaryInRow="2")

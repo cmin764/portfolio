@@ -47,9 +47,9 @@ Each brief is complementary to `portfolio-blueprint.md` (which has the narrative
 - AI Application → traced-ai library: `LLM call intercepted` (sync, monkey-patch at import time)
 - traced-ai library → Local SQLite: `raw I/O written` (sync, append-only write)
 - traced-ai library → FastAPI Ingest API: `hash(in) + hash(out) + rationale` (async, HTTPS, outbound only, 32 bytes per event)
-- FastAPI Ingest API → Chained Ledger: `appends signed entry` (sync)
-- Chained Ledger → Rule Registry: `rule lookup on ingest` (sync)
-- Rule Registry → traced-ai library: `signed rule packages` (async, periodic pull, verified on client before apply)
+- FastAPI Ingest API → Rule Registry: `rule lookup on ingest` (sync)
+- FastAPI Ingest API → Chained Ledger: `appends signed entry` (sync, with rule references baked in)
+- traced-ai library → Rule Registry: `pulls signed rule packages` (async, periodic, verified on client before apply)
 - Self-hosted Dashboard → Local SQLite: `reads raw I/O` (sync, local only, no network)
 
 ### Design constraints worth showing visually
