@@ -247,7 +247,7 @@ Chat lane (bottom lane):
 | Retell | External system (SaaS) | Audio web interview with retry-on-drop |
 | Assessment Agent | Container (service) | Python + Django; orchestrates multi-criteria evaluation |
 | Language Scorer | Container (service) | Evaluates vocabulary, speech fluency, semantics, coherence |
-| ATS System | External system | Tracks candidate stage; receives stage updates |
+| VONQ EQO | Container (web UI) | React; VONQ's candidate journey platform for recruiters; receives stage updates from assessment pipeline |
 | Recruiter UI | Container (web UI) | React; human review queue |
 | PDF Dossier | Container (artifact) | Generated report: scores, justification, exportable |
 | Recruiter | Person | Reviews dossier; approves/rejects |
@@ -261,7 +261,7 @@ Chat lane (bottom lane):
 - Assessment Agent → Language Scorer: `transcript for scoring` (sync)
 - Language Scorer → Assessment Agent: `scores (vocabulary, fluency, semantics, coherence)` (sync)
 - Assessment Agent → PDF Dossier: `generates report` (sync)
-- Assessment Agent → ATS System: `stage update` (async)
+- Assessment Agent → VONQ EQO: `stage update` (async)
 - Assessment Agent → Recruiter UI: `queues for human review` (async)
 - Recruiter → Recruiter UI: `reviews + approves/rejects` (sync)
 - Recruiter UI → PDF Dossier: `download/share` (sync)

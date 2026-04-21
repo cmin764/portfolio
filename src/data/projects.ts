@@ -122,12 +122,12 @@ export const PROJECTS: ProjectData[] = [
     category: 'professional',
     complexity: 'high',
     status: 'shipped',
-    tags: ['Python', 'Django', 'Retell', 'AI Agents', 'Audio Processing', 'React', 'Assessment', 'PDF'],
+    tags: ['Python', 'Django', 'Retell', 'AI Agents', 'Audio Processing', 'React', 'Assessment', 'PDF', 'VONQ EQO'],
     company: 'VONQ',
     period: '2025-2026',
     links: [],
     architectureNotes:
-      'Candidate input (text/audio) → assessment agent → multi-criteria scoring → human review queue → ATS stage update',
+      'Candidate input (text/audio) → assessment agent → multi-criteria scoring → human review queue → VONQ EQO stage update',
   },
   {
     id: 'a5-gto-engine',
