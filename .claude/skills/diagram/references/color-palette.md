@@ -113,13 +113,13 @@ The portfolio uses `dark:invert` on the `<img>` tag for diagram SVGs. This means
 
 ## Mermaid C4 styling commands
 
-Mermaid renders on a dark canvas in most editors (VS Code, Cursor). Use **saturated fills with white text** — pastels wash out on dark backgrounds (see `learnings/styling-002.md`). Pastel fills are only for Excalidraw exports.
+Use the same pastel palette for both Mermaid and Excalidraw. The C4Container library renders its own light-background canvas, so pastel fills with `#1e1e1e` text remain legible regardless of editor dark mode.
 
 ```
-UpdateElementStyle(alias, $fontColor="#ffffff", $bgColor="#00897B", $borderColor="#006B5E")  // service
-UpdateElementStyle(alias, $fontColor="#ffffff", $bgColor="#E65100", $borderColor="#CC5700")  // data store
-UpdateElementStyle(alias, $fontColor="#ffffff", $bgColor="#438DD5", $borderColor="#3C7FC0")  // UI
-UpdateElementStyle(alias, $fontColor="#1e1e1e", $bgColor="#e9ecef", $borderColor="#868e96")  // external (no white needed, stays light)
+UpdateElementStyle(alias, $fontColor="#1e1e1e", $bgColor="#96f2d7", $borderColor="#099268")  // service
+UpdateElementStyle(alias, $fontColor="#1e1e1e", $bgColor="#ffd8a8", $borderColor="#e8590c")  // data store
+UpdateElementStyle(alias, $fontColor="#1e1e1e", $bgColor="#a5d8ff", $borderColor="#1971c2")  // UI
+UpdateElementStyle(alias, $fontColor="#1e1e1e", $bgColor="#e9ecef", $borderColor="#868e96")  // external
 ```
 
 Apply only when the default Mermaid C4 colors diverge from this palette. The built-in Person style is usually fine as-is.
