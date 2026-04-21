@@ -360,6 +360,54 @@ Follow `.claude/skills/diagram/references/integration-checklist.md` step by step
 
 ---
 
+## Phase 7: Review, backpropagate, and close the loop
+
+This phase runs after the user provides the final SVG path and Excalidraw URL. It closes the loop between the polished diagram and all four source-of-truth files.
+
+### Step 1 — Wire up the project entry
+
+Add `diagramFile: '<id>.svg'` and `diagramExcalidrawUrl: '<url>'` to the matching entry in `src/data/projects.ts`. Run `bun run build` to confirm no type errors.
+
+### Step 2 — Review the exported diagram against three sources
+
+Compare the final Excalidraw rendering against:
+- The approved Mermaid source (`src/diagrams/<id>.md`)
+- The diagram brief (`docs/diagram-briefs.md`)
+- The project card description (`src/data/projects.ts`)
+
+For each discrepancy ask: "Was this a deliberate correction made during Excalidraw polish, or just visual layout?" Deliberate corrections must backpropagate. Layout choices (spacing, curvature) do not.
+
+Common correction types to look for:
+- Node label or role rename (e.g., "Pinecone" → "Vector Index")
+- Edge direction or initiator change (e.g., widget→clientSite → candidate→clientSite)
+- Combined vs split edges (e.g., two req-resp arrows → one combined edge)
+- New insight surfaced during review (e.g., same embedding model constraint)
+
+### Step 3 — Backpropagate corrections to all four files
+
+Apply the CLAUDE.md Content Sync Rule. For every correction identified in Step 2:
+
+| File | What to update |
+|------|---------------|
+| `src/diagrams/<id>.md` | Node names, edge labels, intro paragraph |
+| `docs/diagram-briefs.md` | Nodes table (alias, name, role, tech), edges list, design constraints |
+| `src/data/projects.ts` | Description if a new architectural insight emerged |
+| `docs/portfolio-blueprint.md` | Only if project scope or status changed |
+
+### Step 4 — Save new learnings
+
+Evaluate every correction from Step 2 against the Phase 5 quality bar. Save any that are project-agnostic principles to `learnings/` and update `learnings/_index.md`.
+
+### Step 5 — Commit discipline
+
+Always commit in two separate commits:
+1. **Skill/learnings first**: `.claude/skills/diagram/` changes, any updated `docs/system-design.md`
+2. **Diagram artifacts second**: `public/diagrams/<id>.svg`, `src/data/projects.ts`, `src/diagrams/<id>.md`, `docs/diagram-briefs.md`
+
+This keeps learning evolution distinct from project work in git history, and ensures the skill is always in a clean state before the diagram commit references it.
+
+---
+
 ## Reference files
 
 - `.claude/skills/diagram/references/mermaid-c4-syntax.md` — C4 syntax, primitives, working TrueStory example
