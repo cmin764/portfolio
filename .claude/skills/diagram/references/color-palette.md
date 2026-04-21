@@ -15,8 +15,9 @@ Hex codes are the authoritative values — use these for all Excalidraw exports 
 | Queue / Stream | #ffd8a8 | #e8590c | #1e1e1e | Same as data stores |
 | External System / SaaS | #e9ecef | #868e96 | #1e1e1e | Near-white bg, gray border |
 | Person | #dbe4ff | #748ffc | #1e1e1e | Light indigo bg, indigo border — distinct from UI sky blue |
+| Generated artifact / file | #fef9c3 | #ca8a04 | #1e1e1e | Light amber bg, amber border — for files, exports, generated documents (not data stores) |
 
-Limit to these 4-5 fill colors. More than that reduces clarity.
+Limit to these 4-5 fill colors. More than that reduces clarity. The artifact amber is an exception: use only when a node is explicitly a generated file/export artifact, not a live data store.
 
 **Color by runtime role, not technology.** Ask: "does this node execute business logic and respond to requests, or does it passively hold data?" If the latter, use the data store palette (peach/orange) — even if it is Redis, Memcached, S3, or any product with "service" in its name. Caches, registries, indexes, and key-value stores that hold reference data are data stores. Only use teal if the node has its own endpoints and executes logic.
 
