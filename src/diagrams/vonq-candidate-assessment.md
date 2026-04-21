@@ -3,7 +3,7 @@
 <!-- Abstraction level: Container (C4)
      Four boundaries force a LR column layout: input | pipeline | lang-eval | review.
      Plain Rel() only throughout — no directional hints (layout-001).
-     Two separate agent↔scorer arrows are intentional: emphasise the additive feature split.
+     Single combined arrow between agent and scorer — sync req/resp, boundary already shows the feature split.
 -->
 
 ```mermaid
@@ -17,7 +17,7 @@ C4Container
   }
 
   Boundary(pipeline, "Assessment Pipeline", "internal") {
-    Container(agent, "Assessment Agent", "Python, Django", "Multi-criteria evaluation orchestrator")
+    Container(agent, "Assessment Agent", "Python, Django", "Skills + role-fit evaluation orchestrator")
     System_Ext(openai, "OpenAI API", "LLM prompting + embeddings")
     ContainerDb(profile, "Candidate Profile DB", "Postgres", "Scores, transcripts, stage")
   }
@@ -38,8 +38,7 @@ C4Container
   Rel(chat, agent, "text transcript")
   Rel(retell, agent, "audio transcript [async]", "webhook")
   Rel(agent, openai, "prompts + completions")
-  Rel(agent, scorer, "sends transcript")
-  Rel(scorer, agent, "language scores")
+  Rel(agent, scorer, "transcript / language scores")
   Rel(scorer, openai, "prompts + completions")
   Rel(agent, profile, "writes scores + transcripts")
   Rel(agent, ats, "stage update + queues for review [async]")
