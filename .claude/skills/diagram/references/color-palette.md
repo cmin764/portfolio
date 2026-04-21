@@ -53,13 +53,27 @@ Never color arrows to match source or destination node colors.
 
 ## Edge styles
 
-| Condition | Line | Arrowhead | Color |
-|-----------|------|-----------|-------|
-| Sync call (default) | Solid | Filled triangle | #1e1e1e |
-| Async / fire-and-forget | Solid | Open arrow | #1e1e1e |
-| Cron / polling / dependency | Dashed | Filled triangle | #1e1e1e |
-| Cross-boundary outbound | Solid | Filled triangle | #e03131 |
-| Cross-boundary inbound | Solid | Open arrow | #1971c2 |
+| Condition | Line | Arrowhead | Excalidraw JSON | Mermaid label suffix | Color |
+|-----------|------|-----------|-----------------|----------------------|-------|
+| Sync call (default) | Solid | Filled triangle | `strokeStyle:"solid"`, `endArrowhead:"triangle"` | _(none)_ | #1e1e1e |
+| Async / fire-and-forget | Solid | Open stick | `strokeStyle:"solid"`, `endArrowhead:"arrow"` | `[async]` | #1e1e1e |
+| Cron / polling / dependency | Dashed | Filled triangle | `strokeStyle:"dashed"`, `endArrowhead:"triangle"` | `[cron]` | #1e1e1e |
+| Secondary async (background, non-primary) | Dashed | Open outlined | `strokeStyle:"dashed"`, `endArrowhead:"triangle_outline"` | `[async, secondary]` | #868e96 |
+| Cross-boundary outbound | Solid | Filled triangle | `strokeStyle:"solid"`, `endArrowhead:"triangle"` | _(none)_ | #e03131 |
+| Cross-boundary inbound | Solid | Open stick | `strokeStyle:"solid"`, `endArrowhead:"arrow"` | _(none)_ | #1971c2 |
+
+**Excalidraw arrowhead key** (UML 2.5 §17.4.4.1):
+- `"triangle"` = closed filled triangle = synchronous (sender blocks waiting for return)
+- `"arrow"` = open stick = asynchronous primary runtime (sender continues immediately, no return on this channel)
+- `"triangle_outline"` = outlined open triangle = secondary async only: the path is BOTH non-primary/background (hence dashed line) AND fire-and-forget (hence open head). Rare. Use for background telemetry, async webhook callbacks, or event-replay side-channels — flows that are neither blocking nor part of the main runtime path. Never use for primary async calls; `"arrow"` is correct there.
+
+**Decision tree:**
+1. Does the sender block waiting for a return? → solid + `"triangle"`
+2. Is it fire-and-forget on the primary runtime path? → solid + `"arrow"`
+3. Is it a scheduled/cron trigger or build-time dependency? → dashed + `"triangle"`
+4. Is it both secondary/background AND fire-and-forget? → dashed + `"triangle_outline"` (rare; use gray #868e96)
+
+**Mermaid limitation:** C4Container has no native arrowhead or dash control. Use label suffixes (`[async]`, `[cron]`) to document the intent. Apply full visual styles only in Excalidraw exports.
 
 Default to sync/solid when the brief does not specify.
 
@@ -99,13 +113,15 @@ The portfolio uses `dark:invert` on the `<img>` tag for diagram SVGs. This means
 
 ## Mermaid C4 styling commands
 
-To override Mermaid's built-in C4 colors and apply this palette (use dark versions for Mermaid since it renders on white and needs contrast):
+Mermaid renders on a dark canvas in most editors (VS Code, Cursor). Use **saturated fills with white text** — pastels wash out on dark backgrounds (see `learnings/styling-002.md`). Pastel fills are only for Excalidraw exports.
 
 ```
-UpdateElementStyle(alias, $fontColor="#1e1e1e", $bgColor="#96f2d7", $borderColor="#099268")  // service
-UpdateElementStyle(alias, $fontColor="#1e1e1e", $bgColor="#ffd8a8", $borderColor="#e8590c")  // data store
-UpdateElementStyle(alias, $fontColor="#1e1e1e", $bgColor="#a5d8ff", $borderColor="#1971c2")  // UI
-UpdateElementStyle(alias, $fontColor="#1e1e1e", $bgColor="#e9ecef", $borderColor="#868e96")  // external
+UpdateElementStyle(alias, $fontColor="#ffffff", $bgColor="#00897B", $borderColor="#006B5E")  // service
+UpdateElementStyle(alias, $fontColor="#ffffff", $bgColor="#E65100", $borderColor="#CC5700")  // data store
+UpdateElementStyle(alias, $fontColor="#ffffff", $bgColor="#438DD5", $borderColor="#3C7FC0")  // UI
+UpdateElementStyle(alias, $fontColor="#1e1e1e", $bgColor="#e9ecef", $borderColor="#868e96")  // external (no white needed, stays light)
 ```
 
 Apply only when the default Mermaid C4 colors diverge from this palette. The built-in Person style is usually fine as-is.
+
+**Excalidraw node fills** use the pastel palette from the "Node colors by role" table above (light bg + dark text). Never use saturated fills in Excalidraw — they work on dark Mermaid canvas but are too heavy on Excalidraw's light canvas.

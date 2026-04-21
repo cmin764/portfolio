@@ -14,3 +14,4 @@ Auto-maintained index. Each entry links to a learning file with context and rati
 - [node-semantics-001 — Passive stores (DB, cache, queue) cannot be the source of an initiating arrow](node-semantics-001.md) — source: Traced AI, 2026-04-16
 - [styling-001 — Color by runtime role, not technology; caches and registries are orange data stores](styling-001.md) — source: Traced AI, 2026-04-16
 - [styling-002 — Use saturated fills with white text; pastels wash out on dark-mode canvas](styling-002.md) — source: Knowledge Base & Careers Agent, 2026-04-20
+- [edge-semantics-005 — Excalidraw arrowheads: "triangle" sync, "arrow" async; never "triangle_outline"](edge-semantics-005.md) — source: Knowledge Base & Careers Agent, 2026-04-21
