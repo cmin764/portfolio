@@ -128,6 +128,6 @@ Apply only when the default Mermaid C4 colors diverge from this palette. Always 
 UpdateElementStyle(alias, $fontColor="#1e1e1e", $bgColor="#dbe4ff", $borderColor="#748ffc")  // person
 ```
 
-**Note on Person shape in Mermaid C4:** The `Person` primitive renders as a fixed shape (box with person icon). Changing it to a circle via `$shape` is not supported in `C4Container`. The shape cannot be overridden.
+**Note on Person shape in Mermaid C4:** The `Person` primitive renders as a fixed rectangular shape (box with person icon). No shape override is possible: `$shape="circle"` in `UpdateElementStyle` is silently ignored, and `EightSidedShape()` is not recognized by the bundled Mermaid version. Color is the only available differentiator — use the light indigo palette above.
 
 **Excalidraw node fills** use the pastel palette from the "Node colors by role" table above (light bg + dark text). Never use saturated fills in Excalidraw — they work on dark Mermaid canvas but are too heavy on Excalidraw's light canvas.
