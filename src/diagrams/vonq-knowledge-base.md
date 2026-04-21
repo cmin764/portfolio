@@ -10,15 +10,20 @@ links back through the widget.
 Design notes that Mermaid C4 cannot fully render (preserved for the Excalidraw pass):
 - The Candidate Chat Widget is embedded inside the Client Career Site, not on a VONQ
   domain. In Excalidraw, wrap `widget` in a boundary labeled "Embedded on client career
-  site" using the bronze boundary tint.
-- Two distinct flows share Pinecone as the retrieval surface: the async crawl-and-index
-  lane (top) and the sync chat lane (bottom). Keep them visually separated.
-- The `crawler → clientSite` edge is cron-triggered: dashed + filled arrowhead per
-  docs/system-design.md §9.3 and learnings/edge-semantics-002.md.
-- Async edges carry `[async]` in the label; in Excalidraw they become solid + open
-  arrowheads per docs/system-design.md §9.3.
-- All Excalidraw elements: `roughness: 1`, `fontFamily: 1` (Virgil).
-- Use bound text via `containerId`, not inline label, per learnings/integration-001.md.
+  site" using the bronze boundary tint (#eaddd7 / #846358).
+- Two distinct flows share the Vector Index: the async crawl-and-index lane (top) and
+  the sync chat lane (bottom). Keep them visually separated.
+- Arrow styles for Excalidraw (UML 2.5 §17.4.4.1, system-design.md §9.3):
+  - Sync (9 edges, default): strokeStyle "solid", endArrowhead "triangle" (closed filled)
+  - Async (crawler → syncer, label [async]): strokeStyle "solid", endArrowhead "arrow" (open stick)
+  - Cron (crawler → clientSite, label [cron]): strokeStyle "dashed", endArrowhead "triangle" (closed filled)
+- Node fills for Excalidraw (pastel palette, text #1e1e1e):
+  - Services (crawler, syncer, agent): bg #96f2d7, stroke #099268
+  - Data stores (kb, pinecone): bg #ffd8a8, stroke #e8590c
+  - UI (widget): bg #a5d8ff, stroke #1971c2
+  - External (clientSite, openai): bg #e9ecef, stroke #868e96
+- All Excalidraw elements: roughness 1, fontFamily 1 (Virgil).
+- Use bound text via containerId, not inline label, per learnings/integration-001.md.
 
 ```mermaid
 C4Container
@@ -31,14 +36,14 @@ C4Container
   System_Ext(clientSite, "Client Career Site", "Hosts the chat widget; crawl target for job listings")
   System_Ext(openai, "OpenAI API", "Embeddings and chat completion")
 
-  Container(crawler, "Firecrawl Crawler", "Python", "Cron-triggered; scrapes job listings from client career sites")
+  Container(crawler, "Career Site Crawler", "Firecrawl, Python", "Cron-triggered; scrapes job listings from client career sites")
   ContainerDb(kb, "Knowledge Base", "PostgreSQL", "Stores crawled Documents; source of truth before vectorisation")
   Container(syncer, "Embedding Sync Worker", "Python", "Event-driven; reads Documents, embeds, upserts vectors")
-  ContainerDb(pinecone, "Pinecone", "Vector Store", "Stores and serves job embeddings for semantic retrieval")
+  ContainerDb(pinecone, "Vector Index", "Pinecone", "Stores and serves job embeddings for semantic retrieval")
   Container(agent, "Careers Agent", "Python, Django", "RAG orchestration: retrieves roles, composes reply")
   Container(widget, "Candidate Chat Widget", "React", "Embeddable UI on client career site")
 
-  Rel_U(crawler, clientSite, "crawls on cron")
+  Rel_U(crawler, clientSite, "crawls [cron]")
   Rel_R(crawler, kb, "stores Document")
   Rel_R(crawler, syncer, "doc ready [async]")
   Rel_L(syncer, kb, "reads Document")
@@ -46,11 +51,10 @@ C4Container
   Rel_D(syncer, pinecone, "upserts vectors")
 
   Rel_L(candidate, widget, "CV + message")
-  Rel_U(widget, agent, "CV + query")
+  Rel_U(widget, agent, "CV + query / matched roles + URLs")
   Rel_U(agent, openai, "embed + completion")
   Rel_L(agent, pinecone, "k-NN search")
-  Rel_D(agent, widget, "matched roles + URLs")
-  Rel_U(widget, clientSite, "routes to job URL")
+  Rel_U(candidate, clientSite, "applies to job")
 
   UpdateElementStyle(widget, $bgColor="#438DD5", $borderColor="#3C7FC0", $fontColor="#ffffff")
   UpdateElementStyle(crawler, $bgColor="#00897B", $borderColor="#006B5E", $fontColor="#ffffff")

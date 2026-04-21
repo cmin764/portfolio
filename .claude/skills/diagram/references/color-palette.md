@@ -93,10 +93,10 @@ Strip noise: "via REST API" goes in the technology annotation field, not the lab
 
 | Element | Fill | Stroke | Text |
 |---------|------|--------|------|
-| Legend box (arrow key, notes) | #ffec99 | #1e1e1e | #1e1e1e |
+| Legend box (arrow key, notes) | #ffec99 | none (borderless) | #1e1e1e |
 | Warning / callout box | #ffc9c9 | #e03131 | #1e1e1e |
 
-Legend box style: light yellow post-it (#ffec99), black border, black text. Use bold or colored text sparingly inside the legend when emphasizing a specific semantic (e.g., the red/blue cross-boundary annotation).
+Legend box style: light yellow post-it (#ffec99), **no border** (`strokeColor: "transparent"` or stroke width 0), rounded corners, **cross-hatch fill** (`fillStyle: "cross-hatch"`), black text. The cross-hatch texture on a borderless yellow box gives it the hand-drawn post-it aesthetic and distinguishes it immediately from diagram nodes (which use solid fills with borders). Use bold or colored text sparingly inside the legend when emphasizing a specific semantic (e.g., the red/blue cross-boundary annotation).
 
 ---
 

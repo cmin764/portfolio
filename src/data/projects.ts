@@ -108,6 +108,8 @@ export const PROJECTS: ProjectData[] = [
     company: 'VONQ',
     period: '2025-2026',
     links: [],
+    diagramFile: 'vonq-knowledge-base.svg',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=EUMyMuC_HLu2iiO8iTO0R,tdMbq0hOPPVxlvDOWqyHxw',
     architectureNotes:
       'Career sites → Firecrawl crawler → vector store (embeddings) → Careers Agent (RAG) → candidate chat UI → matched job links',
   },
