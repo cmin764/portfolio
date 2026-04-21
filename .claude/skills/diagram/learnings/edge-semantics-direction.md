@@ -1,6 +1,6 @@
 ---
 topic: edge-semantics
-source: merged from edge-semantics-001, edge-semantics-003, edge-semantics-004 (2026-04-21)
+source: TrueStory + Traced AI (2026-04-21); exception confirmed by Candidate Assessment (2026-04-21)
 ---
 
 Arrow direction represents who initiates, not which direction data travels. Always draw from initiator to target — for pull-based relationships this is consumer→producer, for request-response this is caller→callee.

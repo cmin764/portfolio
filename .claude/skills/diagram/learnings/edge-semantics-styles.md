@@ -1,6 +1,6 @@
 ---
 topic: edge-semantics
-source: merged from edge-semantics-002, edge-semantics-005 (2026-04-21)
+source: TrueStory + Knowledge Base session (2026-04-21); Excalidraw arrowhead key anchored by Traced AI export
 ---
 
 Four arrow styles encode distinct interaction models. Line style (solid/dashed) and arrowhead shape (filled/open) are both meaningful and must not be mixed arbitrarily.
