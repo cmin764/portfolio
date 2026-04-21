@@ -90,6 +90,8 @@ export const PROJECTS: ProjectData[] = [
     company: 'VONQ',
     period: '2025-2026',
     links: [],
+    diagramFile: 'vonq-meeting-assistant.svg',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=xbIm4bAe4sVKXbuSTg1R9,dNL8ZKhwVkkjrMvaqXEeWA',
     architectureNotes:
       'Recruiter triggers agent join → Recall.ai bot enters Meet → audio stream → speech-to-text → NLP analysis → private insight delivery to interviewer UI (WebSocket or polling) → optional agent intervention',
   },
