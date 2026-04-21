@@ -136,14 +136,14 @@ The Excalidraw path (Phase 6B) is where system-design.md rules get fully applied
 
 ### Color application
 
-Apply colors from `.claude/skills/diagram/references/color-palette.md`:
-- UI/frontend: `$bgColor="#438DD5" $borderColor="#3C7FC0" $fontColor="#FFFFFF"`
-- Service/API: `$bgColor="#00897B" $borderColor="#006B5E" $fontColor="#FFFFFF"`
-- Database/queue: `$bgColor="#FF6D00" $borderColor="#CC5700" $fontColor="#FFFFFF"`
+Apply colors from `.claude/skills/diagram/references/color-palette.md` (pastel fills, dark text `#1e1e1e`):
+- Person: `$bgColor="#dbe4ff" $borderColor="#748ffc" $fontColor="#1e1e1e"` — always override; default is dark navy
+- UI/frontend: `$bgColor="#a5d8ff" $borderColor="#1971c2" $fontColor="#1e1e1e"`
+- Service/API: `$bgColor="#96f2d7" $borderColor="#099268" $fontColor="#1e1e1e"`
+- Database/queue: `$bgColor="#ffd8a8" $borderColor="#e8590c" $fontColor="#1e1e1e"`
 - External systems: leave as Mermaid default (gray)
-- Persons: leave as Mermaid default (blue outline)
 
-Apply via `UpdateElementStyle(alias, ...)` for each non-default node.
+Apply via `UpdateElementStyle(alias, ...)` for each non-default node. Person shape in C4Container is fixed (box with icon) — no circle override is possible via the API.
 
 ### Output
 

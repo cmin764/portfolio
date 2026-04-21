@@ -14,7 +14,7 @@ Hex codes are the authoritative values — use these for all Excalidraw exports 
 | Database / Data Store / Cache | #ffd8a8 | #e8590c | #1e1e1e | Light peach bg, dark orange border |
 | Queue / Stream | #ffd8a8 | #e8590c | #1e1e1e | Same as data stores |
 | External System / SaaS | #e9ecef | #868e96 | #1e1e1e | Near-white bg, gray border |
-| Person | transparent | #1971c2 | #1971c2 | Built-in Excalidraw person style |
+| Person | #dbe4ff | #748ffc | #1e1e1e | Light indigo bg, indigo border — distinct from UI sky blue |
 
 Limit to these 4-5 fill colors. More than that reduces clarity.
 
@@ -122,6 +122,12 @@ UpdateElementStyle(alias, $fontColor="#1e1e1e", $bgColor="#a5d8ff", $borderColor
 UpdateElementStyle(alias, $fontColor="#1e1e1e", $bgColor="#e9ecef", $borderColor="#868e96")  // external
 ```
 
-Apply only when the default Mermaid C4 colors diverge from this palette. The built-in Person style is usually fine as-is.
+Apply only when the default Mermaid C4 colors diverge from this palette. Always override Person nodes explicitly — the default is a dark navy that clashes with dark text.
+
+```
+UpdateElementStyle(alias, $fontColor="#1e1e1e", $bgColor="#dbe4ff", $borderColor="#748ffc")  // person
+```
+
+**Note on Person shape in Mermaid C4:** The `Person` primitive renders as a fixed shape (box with person icon). Changing it to a circle via `$shape` is not supported in `C4Container`. The shape cannot be overridden.
 
 **Excalidraw node fills** use the pastel palette from the "Node colors by role" table above (light bg + dark text). Never use saturated fills in Excalidraw — they work on dark Mermaid canvas but are too heavy on Excalidraw's light canvas.

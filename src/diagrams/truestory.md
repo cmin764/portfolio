@@ -9,11 +9,12 @@ C4Container
   Container(api, "Flask REST API", "Python, Flask, GCP", "Scores contradiction strength; returns top 3 matches")
   System_Ext(news, "News Sources", "RSS feeds and crawled sites")
 
-  Rel(user, ext, "opens extension / views contradictions")
+  Rel(user, ext, "opens / views")
   Rel(ext, api, "article URL / contradicting articles")
   %% api→news: dashed line + filled arrowhead in export (cron dependency, not async queue)
   Rel(api, news, "crawls articles [cron]")
 
+  UpdateElementStyle(user, $fontColor="#1e1e1e", $bgColor="#dbe4ff", $borderColor="#748ffc")
   UpdateElementStyle(ext, $fontColor="#1e1e1e", $bgColor="#a5d8ff", $borderColor="#1971c2")
   UpdateElementStyle(api, $fontColor="#1e1e1e", $bgColor="#96f2d7", $borderColor="#099268")
 
