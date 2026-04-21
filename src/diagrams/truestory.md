@@ -14,8 +14,8 @@ C4Container
   %% api→news: dashed line + filled arrowhead in export (cron dependency, not async queue)
   Rel(api, news, "crawls articles [cron]")
 
-  UpdateElementStyle(ext, $fontColor="#FFFFFF", $bgColor="#5B9BD5", $borderColor="#3C7FC0")
-  UpdateElementStyle(api, $fontColor="#FFFFFF", $bgColor="#26A69A", $borderColor="#00897B")
+  UpdateElementStyle(ext, $fontColor="#1e1e1e", $bgColor="#a5d8ff", $borderColor="#1971c2")
+  UpdateElementStyle(api, $fontColor="#1e1e1e", $bgColor="#96f2d7", $borderColor="#099268")
 
   UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="1")
 ```

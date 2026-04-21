@@ -40,7 +40,7 @@ Each brief is complementary to `portfolio-blueprint.md` (which has the narrative
 | Self-hosted Dashboard | Container (web app) | Next.js + shadcn/ui on tracedai.co (SaaS tier) or Docker image (enterprise tier) |
 | FastAPI Ingest API | Container (API) | Python + FastAPI on Fly.io; receives hashes only |
 | Chained Ledger | Database | Append-only, cryptographically signed; Supabase (Postgres) |
-| Rule Registry | Container (service) | EU AI Act / ISO 42001 / SOC 2 mappings; Upstash (Redis) |
+| Rule Registry | Database / data store | EU AI Act / ISO 42001 / SOC 2 mappings; Upstash (Redis) |
 
 ### Key edges
 
@@ -287,15 +287,12 @@ Chat lane (bottom lane):
 | Chrome Extension | Container (browser extension) | Bootstrap + jQuery; injects UI into news pages |
 | Flask REST API | Container (API) | Python + Flask on GCP; aggregates + scores news |
 | News Sources | External system | RSS feeds / crawled news sites |
-| GCP Infrastructure | External system | Hosting for Flask app |
 
 ### Key edges
 
-- User → Chrome Extension: `browser interaction` (sync)
-- Chrome Extension → Flask REST API: `query: current article URL` (sync, REST)
-- News Sources → Flask REST API: `crawled articles` (async, cron)
-- Flask REST API → Chrome Extension: `contradicting articles` (sync, JSON)
-- Chrome Extension → User: `shows side-by-side contradictions` (sync, DOM injection)
+- User → Chrome Extension: `opens extension / views contradictions` (sync)
+- Chrome Extension → Flask REST API: `article URL / contradicting articles` (sync, REST — combined req-resp)
+- Flask REST API → News Sources: `crawls articles [cron]` (cron — API initiates, dashed+filled in Excalidraw)
 
 ---
 

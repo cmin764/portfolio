@@ -73,7 +73,7 @@ export const PROJECTS: ProjectData[] = [
     ],
     diagramFile: 'truestory.svg',
     diagramExcalidrawUrl: 'https://excalidraw.com/#json=H_bjzjVwgnLere2f58TW0,t5_z6jZ2DPPigMFn4N4uYw',
-    architectureNotes: 'Flask/GCP → REST API → Chrome extension',
+    architectureNotes: 'Chrome extension → Flask REST API (GCP): article URL / contradicting articles (sync REST). Flask API → News Sources: crawls articles on cron schedule.',
   },
 
   // Professional
