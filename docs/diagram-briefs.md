@@ -247,9 +247,8 @@ Chat lane (bottom lane):
 | Retell | External system (SaaS) | Audio web interview with retry-on-drop |
 | Assessment Agent | Container (service) | Python + Django; orchestrates multi-criteria evaluation |
 | Language Scorer | Container (service) | Evaluates vocabulary, speech fluency, semantics, coherence |
-| VONQ EQO | Container (web UI) | React; VONQ's candidate journey platform for recruiters; receives stage updates from assessment pipeline |
-| Recruiter UI | Container (web UI) | React; human review queue |
-| PDF Dossier | Container (artifact) | Generated report: scores, justification, exportable |
+| VONQ EQO | Container (web UI) | React; VONQ's candidate journey platform — review queue + stage management for recruiters; Recruiter UI lives inside this product |
+| PDF Dossier | Container (artifact, amber) | Generated file; shareable snapshot of candidate profile; amber palette (#fef9c3/#ca8a04) distinguishes artifacts from data stores |
 | Recruiter | Person | Reviews dossier; approves/rejects |
 
 ### Key edges
@@ -261,10 +260,12 @@ Chat lane (bottom lane):
 - Assessment Agent → Language Scorer: `transcript for scoring` (sync)
 - Language Scorer → Assessment Agent: `scores (vocabulary, fluency, semantics, coherence)` (sync)
 - Assessment Agent → PDF Dossier: `generates report` (sync)
-- Assessment Agent → VONQ EQO: `stage update` (async)
-- Assessment Agent → Recruiter UI: `queues for human review` (async)
-- Recruiter → Recruiter UI: `reviews + approves/rejects` (sync)
-- Recruiter UI → PDF Dossier: `download/share` (sync)
+- Assessment Agent → VONQ EQO: `stage update + queues for review` (async, combined)
+- Recruiter → VONQ EQO: `reviews, approves/rejects` (sync)
+- VONQ EQO → Candidate Profile DB: `reads profile` (sync)
+- VONQ EQO → PDF Renderer: `render PDF` (sync)
+- PDF Renderer → PDF Dossier: `produces PDF` (sync)
+- Recruiter → PDF Dossier: `downloads / shares` (sync)
 
 ### Design constraints worth showing visually
 

@@ -127,7 +127,7 @@ export const PROJECTS: ProjectData[] = [
     period: '2025-2026',
     links: [],
     architectureNotes:
-      'Candidate input (text/audio) → assessment agent → multi-criteria scoring → human review queue → VONQ EQO stage update',
+      'Candidate input (text/audio) → assessment agent → multi-criteria scoring → VONQ EQO (review queue + stage update) → PDF dossier',
   },
   {
     id: 'a5-gto-engine',
