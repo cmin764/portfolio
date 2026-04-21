@@ -10,8 +10,10 @@ The candidate then navigates directly to the job URL on the client career site.
 
 Design notes that Mermaid C4 cannot fully render (preserved for the Excalidraw pass):
 - The Candidate Chat Widget is embedded inside the Client Career Site, not on a VONQ
-  domain. In Excalidraw, wrap `widget` in a boundary labeled "Embedded on client career
-  site" using the bronze boundary tint (#eaddd7 / #846358).
+  domain. `widget` is wrapped in a boundary labeled "Embedded on client career site" in
+  both Mermaid and Excalidraw. Excalidraw uses bronze boundary tint (#eaddd7 / #846358).
+  Note: this diagram uses directional Rel hints alongside the boundary (layout-001 anti-pattern);
+  layout may collapse — if so, convert Rel_* to plain Rel.
 - Two distinct flows share the Vector Index: the async crawl-and-index lane (top) and
   the sync chat lane (bottom). Keep them visually separated.
 - Arrow styles for Excalidraw (UML 2.5 §17.4.4.1, system-design.md §9.3):
@@ -42,7 +44,9 @@ C4Container
   Container(syncer, "Embedding Sync Worker", "Python", "Event-driven; reads Documents, embeds, upserts vectors")
   ContainerDb(pinecone, "Vector Index", "Pinecone", "Stores and serves job embeddings for semantic retrieval")
   Container(agent, "Careers Agent", "Python, Django", "RAG orchestration: retrieves roles, composes reply")
-  Container(widget, "Candidate Chat Widget", "React", "Embeddable UI on client career site")
+  Boundary(clientEmbed, "Embedded on client career site", "deployment") {
+    Container(widget, "Candidate Chat Widget", "React", "Embeddable UI on client career site")
+  }
 
   Rel_U(crawler, clientSite, "crawls [cron]")
   Rel_R(crawler, kb, "stores Document")
