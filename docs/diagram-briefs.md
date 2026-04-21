@@ -73,36 +73,41 @@ Each brief is complementary to `portfolio-blueprint.md` (which has the narrative
 
 ### Nodes
 
-| Name | Role | Tech |
-|------|------|------|
-| Recruiter | Person | Triggers agent join via VONQ UI |
-| Google Meet | External system | Active interview call |
-| Recall.ai Bot | External system (SaaS) | Joins Meet as passive participant; streams audio |
-| Webhook Receiver | Container (API endpoint) | Django; receives real-time transcript events |
-| Analysis Engine | Container (service) | OpenAI API; analyzes turn-by-turn dialogue |
-| TTS Service | External system (SaaS) | ElevenLabs; text-to-speech for agent voice |
-| Recall Listened Page | External system | Recall.ai's audio injection endpoint |
-| Interviewer UI | Container (web app) | React; shows private hints in real time |
-| Candidate | Person (external) | In the Meet call; cannot see/hear private hints |
+| Alias | Name | Role | Tech |
+|-------|------|------|------|
+| `recruiter` | Recruiter | Person | Triggers agent join via VONQ UI |
+| `candidate` | Candidate | Person | In the Meet call; cannot see/hear private hints |
+| `ui` | VONQ Interviewer UI | Container (web app) | React; trigger control and private live insights |
+| `webhook` | Webhook Receiver | Container (API endpoint) | Python, Django; ingests real-time transcript events |
+| `engine` | Analysis Engine | Container (service) | Python, Django; orchestrates turn-by-turn reasoning and intervention |
+| `meet` | Google Meet | External system | Live interview call, visible to all participants |
+| `bot` | Recall.ai Bot | External system (SaaS) | Joins Meet as 3rd participant; streams audio and transcripts |
+| `openai` | OpenAI API | External system | LLM reasoning over transcript turns |
+| `tts` | ElevenLabs | External system (SaaS) | Text-to-speech for agent voice |
+| `listened` | Recall Listened Page | External system | Recall.ai's audio injection endpoint back into the call |
 
 ### Key edges
 
-- Recruiter → VONQ UI: `triggers agent join` (sync)
-- VONQ UI → Recall.ai Bot: `bot join request` (sync, REST)
-- Recall.ai Bot → Google Meet: `joins as participant` (sync)
-- Google Meet → Recall.ai Bot: `audio stream` (async, continuous)
-- Recall.ai Bot → Webhook Receiver: `real-time transcript events` (async, webhook POST)
-- Webhook Receiver → Analysis Engine: `transcript turn` (sync, OpenAI API call)
-- Analysis Engine → Interviewer UI: `private insight` (async, WebSocket or polling)
-- Analysis Engine → TTS Service: `reply text` (sync, when agent decides to speak)
-- TTS Service → Recall Listened Page: `audio stream` (async)
-- Recall Listened Page → Google Meet: `injects audio into call` (async)
+- Recruiter → VONQ Interviewer UI: `triggers agent join` (sync)
+- Recruiter → Google Meet: `joins call` (sync)
+- Candidate → Google Meet: `joins call` (sync)
+- VONQ Interviewer UI → Recall.ai Bot: `bot join request` (sync, REST)
+- Recall.ai Bot → Google Meet: `joins as 3rd participant` (sync)
+- Google Meet → Recall.ai Bot: `audio stream [async]` (async, continuous)
+- Recall.ai Bot → Webhook Receiver: `transcript events [async webhook]` (async, webhook POST)
+- Webhook Receiver → Analysis Engine: `transcript turn` (sync)
+- Analysis Engine → OpenAI API: `analyze turn` (sync)
+- Analysis Engine → VONQ Interviewer UI: `private insight [async, WebSocket]` (async)
+- Analysis Engine → ElevenLabs: `reply text on intervene` (sync, conditional)
+- ElevenLabs → Recall Listened Page: `audio stream [async]` (async)
+- Recall Listened Page → Google Meet: `injects audio [async]` (async)
 
 ### Design constraints worth showing visually
 
-- **Two outputs from Analysis Engine**: one to Interviewer UI (private, silent), one optionally to ElevenLabs → call (audible). Show the branch.
-- Candidate never receives the interviewer hint path. Can annotate with a dashed "not visible to candidate" boundary.
-- The Recall Listened Page is the injection mechanism: audio goes in via an API endpoint that Recall exposes specifically for this pattern.
+- **Two outputs from Analysis Engine**: one to VONQ Interviewer UI (private, silent hint), one optionally to ElevenLabs → Recall Listened Page → call (audible reply). Show the branch clearly.
+- Candidate never receives the private hint path. Annotate with a dashed "not visible to candidate" boundary (bronze tint).
+- The bot IS visible to all call participants (shows in Meet roster). Only the hints sent to the interviewer UI are private.
+- The Recall Listened Page is the audio injection mechanism: audio sent to this endpoint is injected back into the active call by Recall's infrastructure.
 
 ---
 
