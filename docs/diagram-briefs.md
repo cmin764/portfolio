@@ -184,37 +184,46 @@ Each brief is complementary to `portfolio-blueprint.md` (which has the narrative
 
 **C4 level:** Container
 **Primary concern:** Crawl-to-chat RAG pipeline with embedded widget delivery
-**Flow direction:** Top-to-bottom (data ingestion on top, candidate interaction at bottom)
+**Flow direction:** Top-to-bottom (crawl+index pipeline on top, candidate chat lane at bottom)
 
 ### Nodes
 
-| Name | Role | Tech |
-|------|------|------|
-| Client Career Site | External system | Any company careers page |
-| Firecrawl Crawler | Container (service) | Firecrawl; cron-triggered; ingests job listings |
-| Job Index | Database | Structured job data after crawling |
-| Embedding Service | Container (service) | LLM embedding; converts job text to vectors |
-| Pinecone | Database (vector store) | Stores job embeddings; powers semantic search |
-| Careers Agent | Container (service) | Python + Django; RAG pipeline; chat orchestration |
-| Candidate Chat Widget | Container (web UI) | React; embeddable on client career site |
-| Candidate | Person | Uploads CV, types chat query |
+| Alias | Name | Role | Tech |
+|-------|------|------|------|
+| `clientSite` | Client Career Site | External system | Any company careers page; crawl target and widget host |
+| `openai` | OpenAI API | External system | Embeddings and chat completion |
+| `crawler` | Career Site Crawler | Container (service) | Firecrawl, Python; cron-triggered scraper |
+| `kb` | Knowledge Base | Database | PostgreSQL; stores crawled Documents; source of truth before vectorisation |
+| `syncer` | Embedding Sync Worker | Container (service) | Python; event-driven; reads Documents, embeds, upserts vectors |
+| `pinecone` | Vector Index | Database (vector store) | Pinecone; stores job embeddings; serves k-NN search |
+| `agent` | Careers Agent | Container (service) | Python, Django; RAG orchestration; chat completion |
+| `widget` | Candidate Chat Widget | Container (web UI) | React; embeddable on client career site |
+| `candidate` | Candidate | Person | Uploads CV, types chat query |
 
 ### Key edges
 
-- Firecrawl Crawler → Client Career Site: `crawl on cron` (async, HTTP)
-- Firecrawl Crawler → Job Index: `store structured job data` (async)
-- Job Index → Embedding Service: `job text → embedding` (async)
-- Embedding Service → Pinecone: `upsert vectors` (async)
-- Candidate → Candidate Chat Widget: `uploads CV + chat message` (sync)
-- Candidate Chat Widget → Careers Agent: `CV + query` (sync, REST)
-- Careers Agent → Pinecone: `semantic search` (sync, k-NN query)
-- Careers Agent → Candidate Chat Widget: `matched roles + URLs` (sync)
-- Candidate Chat Widget → Client Career Site: `routes to job URL` (sync, link)
+Crawl + index pipeline (top lane):
+- Career Site Crawler → Client Career Site: `crawls [cron]` (dashed + filled arrowhead; cron-triggered)
+- Career Site Crawler → Knowledge Base: `stores Document` (sync)
+- Career Site Crawler → Embedding Sync Worker: `doc ready [async]` (solid + open arrowhead; fire-and-forget event)
+- Embedding Sync Worker → Knowledge Base: `reads Document` (sync)
+- Embedding Sync Worker → OpenAI API: `embed text` (sync; blocks for vector result)
+- Embedding Sync Worker → Vector Index: `upserts vectors` (sync)
+
+Chat lane (bottom lane):
+- Candidate → Candidate Chat Widget: `CV + message` (sync)
+- Candidate Chat Widget → Careers Agent: `CV + query / matched roles + URLs` (sync req-resp; combined edge, widget initiates)
+- Careers Agent → OpenAI API: `embed + completion` (sync; two sequential calls: embed query then chat completion)
+- Careers Agent → Vector Index: `k-NN search` (sync)
+- Candidate → Client Career Site: `applies to job` (sync; candidate navigates via link returned by agent — person crosses boundary, not widget)
 
 ### Design constraints worth showing visually
 
-- The widget is **embedded on the client's own career site**, not on a VONQ domain. Show the client site as the host context.
-- Two separate data flows: crawl pipeline (async, cron-based, top-down) and candidate chat loop (sync, request-response). Visually separate them.
+- The widget is **embedded on the client's own career site**, not on a VONQ domain. Wrap `widget` in a boundary labeled "Embedded on client career site" (bronze tint).
+- Two distinct lanes share the Vector Index as the retrieval surface: keep the crawl pipeline (top) and chat lane (bottom) visually separated.
+- The widget→agent interaction is a single combined req-resp edge (never split into two arrows per edge-semantics-001/003).
+- The candidate (person) navigates to the job URL — not the widget. The widget only renders the link.
+- OpenAI must appear once as an external node called by both the sync worker (embed text) and the agent (embed + completion). Same embedding model at index time and query time is an intentional constraint: vectors are only comparable within the same embedding space.
 
 ---
 

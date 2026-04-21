@@ -100,7 +100,7 @@ export const PROJECTS: ProjectData[] = [
     title: 'Knowledge Base & Careers Agent',
     tagline: 'Automatic career site crawler feeding an AI agent that recommends jobs from uploaded CVs',
     description:
-      'Built a Firecrawl-powered crawler that ingests company career pages on a cron schedule and indexes job listings into Pinecone. The Careers Agent is delivered as an embeddable chat widget on the client\'s career site: candidates upload their CV and chat, RAG narrows down matching roles based on the conversation, and high-confidence matches route them directly to the right job URL on the client\'s site. Removed the need to manually browse job boards.',
+      'Built a Firecrawl-powered crawler that ingests company career pages on a cron schedule and indexes job listings into Pinecone using OpenAI embeddings. The Careers Agent is delivered as an embeddable chat widget on the client\'s career site: candidates upload their CV and chat, the agent embeds the query with the same model used at index time, runs a k-NN search against the stored vectors, and feeds the retrieved listings into a completion call to narrow down matching roles. High-confidence matches route the candidate directly to the right job URL. Removed the need to manually browse job boards.',
     category: 'professional',
     complexity: 'high',
     status: 'shipped',

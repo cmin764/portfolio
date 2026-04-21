@@ -1,11 +1,12 @@
 # Knowledge Base & Careers Agent — Container Diagram (2025-2026)
 
-Two-lane RAG pipeline: a cron-triggered Firecrawl crawler scrapes client career sites,
+Two-lane RAG pipeline: a cron-triggered Career Site Crawler scrapes client career pages,
 stores Documents in a Postgres Knowledge Base, and publishes events that drive an async
-Embedding Sync Worker to embed and upsert into Pinecone. On the chat lane, a candidate
-interacts with a React widget embedded on the client's site; the Careers Agent runs k-NN
-retrieval against Pinecone and calls OpenAI for chat completion, returning matched role
-links back through the widget.
+Embedding Sync Worker to embed via OpenAI and upsert into the Vector Index (Pinecone).
+On the chat lane, a candidate interacts with a React widget embedded on the client's site;
+the Careers Agent embeds the query with the same OpenAI model, runs k-NN retrieval against
+the Vector Index, and feeds the results into a chat completion call to return matched roles.
+The candidate then navigates directly to the job URL on the client career site.
 
 Design notes that Mermaid C4 cannot fully render (preserved for the Excalidraw pass):
 - The Candidate Chat Widget is embedded inside the Client Career Site, not on a VONQ
