@@ -240,37 +240,51 @@ Chat lane (bottom lane):
 
 ### Nodes
 
-| Name | Role | Tech |
-|------|------|------|
-| Candidate | Person | Text or audio input |
-| Chat Interface | Container (web UI) | React; initial text-based screening |
-| Retell | External system (SaaS) | Audio web interview with retry-on-drop |
-| Assessment Agent | Container (service) | Python + Django; orchestrates multi-criteria evaluation |
-| Language Scorer | Container (service) | Evaluates vocabulary, speech fluency, semantics, coherence |
-| VONQ EQO | Container (web UI) | React; VONQ's candidate journey platform — review queue + stage management for recruiters; Recruiter UI lives inside this product |
-| PDF Dossier | Container (artifact, amber) | Generated file; shareable snapshot of candidate profile; amber palette (#fef9c3/#ca8a04) distinguishes artifacts from data stores |
-| Recruiter | Person | Reviews dossier; approves/rejects |
+| Alias | Name | Role | Tech |
+|-------|------|------|------|
+| `candidate` | Candidate | Person | Text or audio input |
+| `chat` | Chat Interface | Container (web UI) | React; initial text-based screening |
+| `retell` | Retell | External system (SaaS) | Audio web interview with retry-on-drop |
+| `agent` | Assessment Agent | Container (service) | Python + Django; orchestrates multi-criteria evaluation |
+| `openai` | OpenAI API | External system | LLM prompting |
+| `profile` | Candidate Profile DB | Container (database) | Postgres; scores, transcripts, stage |
+| `scorer` | Language Scorer | Container (service) | Evaluates vocabulary, fluency, semantics, coherence; MVP add-on |
+| `recruiter` | Recruiter | Person | Reviews dossier; approves/rejects |
+| `ats` | VONQ EQO | Container (web UI) | React; review queue + stage management |
+| `pdfService` | PDF Renderer | External system | HTML template + data to PDF |
+| `pdf` | PDF Dossier | Container (artifact, amber) | Generated file; shareable snapshot of candidate profile; amber palette (#fef9c3/#ca8a04) distinguishes artifacts from data stores |
+
+### Boundaries
+
+- `inputSide` — Candidate Input (external): candidate, retell, chat
+- `pipeline` — Assessment Pipeline (internal): agent, openai, profile
+- `langEval` — Language Evaluator (MVP add-on) (feature): scorer
+- `reviewSide` — Recruiter Review (internal): recruiter, ats, pdfService, pdf
 
 ### Key edges
 
 - Candidate → Chat Interface: `text answers` (sync)
-- Candidate → Retell: `audio interview` (sync; retry on connection drop)
+- Candidate → Retell: `audio interview` (sync)
 - Chat Interface → Assessment Agent: `text transcript` (sync)
-- Retell → Assessment Agent: `audio transcript` (async, webhook)
-- Assessment Agent → Language Scorer: `transcript for scoring` (sync)
-- Language Scorer → Assessment Agent: `scores (vocabulary, fluency, semantics, coherence)` (sync)
-- Assessment Agent → PDF Dossier: `generates report` (sync)
-- Assessment Agent → VONQ EQO: `stage update + queues for review` (async, combined)
+- Retell → Assessment Agent: `audio transcript [async]` (async, webhook)
+- Assessment Agent → OpenAI API: `prompts + completions` (sync)
+- Assessment Agent → Language Scorer: `transcript / language scores` (sync, combined req/resp)
+- Language Scorer → OpenAI API: `prompts + completions` (sync)
+- Assessment Agent → Candidate Profile DB: `writes scores + transcripts` (sync)
+- Assessment Agent → VONQ EQO: `stage update + queues for review [async]` (async)
 - Recruiter → VONQ EQO: `reviews, approves/rejects` (sync)
 - VONQ EQO → Candidate Profile DB: `reads profile` (sync)
 - VONQ EQO → PDF Renderer: `render PDF` (sync)
 - PDF Renderer → PDF Dossier: `produces PDF` (sync)
 - Recruiter → PDF Dossier: `downloads / shares` (sync)
 
-### Design constraints worth showing visually
+### Design constraints
 
-- Retell's retry logic: annotate the edge with "auto-retry on drop".
-- The PDF dossier is the final human-facing artifact. End the flow there visually.
+- Language Evaluator boundary wraps only Language Scorer to show it is an MVP add-on, not core pipeline.
+- OpenAI is shared by both the assessment agent and the language scorer; no embeddings are used — LLM prompting only.
+- The combined `agent ↔ scorer` arrow (transcript / language scores) represents a sync req/resp; the boundary already shows the feature split so two arrows are not needed.
+- PDF Dossier is a passive artifact (sink only); no arrows originate from it.
+- Plain `Rel()` throughout — no directional hints (avoids layout collapse with boundaries).
 
 ---
 

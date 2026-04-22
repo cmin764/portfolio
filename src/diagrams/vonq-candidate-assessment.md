@@ -18,7 +18,7 @@ C4Container
 
   Boundary(pipeline, "Assessment Pipeline", "internal") {
     Container(agent, "Assessment Agent", "Python, Django", "Skills + role-fit evaluation orchestrator")
-    System_Ext(openai, "OpenAI API", "LLM prompting + embeddings")
+    System_Ext(openai, "OpenAI API", "LLM prompting")
     ContainerDb(profile, "Candidate Profile DB", "Postgres", "Scores, transcripts, stage")
   }
 
