@@ -198,8 +198,10 @@ export const PROJECTS: ProjectData[] = [
       { label: 'Org', url: 'https://github.com/robocorp' },
       { label: 'Portal', url: 'https://robocorp.com/portal' },
     ],
+    diagramFile: 'robocorp-rpa.svg',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=A700XbNd1TvXyZ4A0-fL9,Uc2184W-YKO7N2aNi1C1jw',
     architectureNotes:
-      'Robot/task definition → robocorp runtime → library layer (web/desktop/OCR/docs) → target systems → execution log + artifacts',
+      'Developer → RCC CLI (builds env, rcc pull/run/cloud push) + robocorp-tasks (@task decorator) → Automation Libraries (robocorp-*: browser/windows/workitems/vault/storage/log; rpaframework-*: pdf/recognition/aws/google/openai/hubspot/windows) → Target Systems; robocorp-log → log.html + artifacts [async]; Control Room schedules + triggers RCC [async]; robocorp.com/portal feeds example-* repos to Developer + RCC',
   },
   {
     id: 'sema4ai-action-server',

@@ -378,34 +378,51 @@ Chat lane (bottom lane):
 ## 10. Robocorp RPA
 
 **C4 level:** Container
-**Primary concern:** How the library layer sits between robot definitions and target systems
+**Primary concern:** How RCC, robocorp-tasks, and two library families wire together from developer authoring to enterprise orchestration
 **Flow direction:** Top-to-bottom
 
 ### Nodes
 
-| Name | Role | Tech |
-|------|------|------|
-| Robot / Task Definition | Container | Robot Framework .robot files or Python tasks |
-| Robocorp Runtime | Container | Task execution engine; manages environment + secrets |
-| Web Automation Library | Container (library) | Selenium + Playwright; browser automation |
-| Desktop Library | Container (library) | Windows/Linux desktop automation |
-| OCR Library | Container (library) | Document reading, screen text extraction |
-| Docs / PDF Library | Container (library) | PDF parsing and generation |
-| Target Systems | External system | Web apps, desktop apps, file systems, ERPs |
-| Execution Log + Artifacts | Database | Run reports, screenshots, extracted data |
-| robocorp.com/portal | External system | Public library discovery + documentation |
+| Alias | Name | Role | Tech |
+|-------|------|------|------|
+| `dev` | Developer | Person | Automation engineer authoring robots |
+| `portal` | robocorp.com/portal + example-* repos | External system | Gallery of pullable example robots hosted on GitHub |
+| `rcc` | RCC CLI | Container | Go; OSS — self-contained Python envs; rcc pull / run / cloud push |
+| `taskPkg` | Task Package | Container | robot.yaml + conda.yaml + tasks.py; one-robot deployable unit |
+| `tasks` | robocorp-tasks | Container | Python; @task decorator, entry point + logging bootstrap |
+| `libBrowser` | Browser lib | Container (inside boundary) | robocorp-browser / rpaframework (Selenium + Playwright) |
+| `libDesktop` | Desktop lib | Container (inside boundary) | robocorp-windows / rpaframework-windows |
+| `libDocs` | Docs + OCR lib | Container (inside boundary) | rpaframework-pdf + rpaframework-recognition |
+| `libCloud` | Cloud integrations | Container (inside boundary) | rpaframework-aws / -google / -openai / -hubspot |
+| `libData` | Data plumbing | Container (inside boundary) | robocorp-workitems + -vault + -storage |
+| `libLog` | robocorp-log | Container (inside boundary) | Python; structured execution logging |
+| `artifacts` | log.html + artifacts | Database | Run report, screenshots, extracted data |
+| `controlRoom` | Control Room | External system | Enterprise orchestration: scheduling, secrets, scaling |
+
+**Boundary:** `libs` — "Automation Libraries (OSS on GitHub, published to PyPI — robocorp-* + rpaframework-*)" containing libBrowser, libDesktop, libDocs, libCloud, libData, libLog.
 
 ### Key edges
 
-- Robot / Task Definition → Robocorp Runtime: `execute task` (sync)
-- Robocorp Runtime → Web Automation Library: `dispatch web step` (sync)
-- Robocorp Runtime → Desktop Library: `dispatch desktop step` (sync)
-- Robocorp Runtime → OCR Library: `dispatch OCR step` (sync)
-- Robocorp Runtime → Docs / PDF Library: `dispatch docs step` (sync)
-- Web Automation Library → Target Systems: `browser actions` (sync)
-- Desktop Library → Target Systems: `desktop actions` (sync)
-- OCR Library → Target Systems: `screen capture + extract` (sync)
-- Robocorp Runtime → Execution Log + Artifacts: `write log + artifacts` (async)
+- dev → portal: `browses example repos` (sync)
+- dev → rcc: `rcc pull / rcc run / rcc cloud push` (sync)
+- dev → taskPkg: `authors` (sync)
+- rcc → portal: `rcc pull example-* repos` (sync; consumer→producer)
+- rcc → taskPkg: `builds env + executes` (sync)
+- rcc → controlRoom: `submits + pushes` (sync)
+- controlRoom → rcc: `schedules + triggers` (async — fire-and-forget)
+- taskPkg → tasks: `imports @task` (sync)
+- tasks → libBrowser: `dispatch` (sync)
+- tasks → libDesktop: `dispatch` (sync)
+- tasks → libDocs: `dispatch` (sync)
+- tasks → libCloud: `dispatch` (sync)
+- tasks → libData: `dispatch` (sync)
+- tasks → libLog: `writes log events` (sync)
+- libBrowser → targets: `browser actions` (sync)
+- libDesktop → targets: `desktop actions` (sync)
+- libDocs → targets: `document + screen` (sync)
+- libCloud → targets: `API calls` (sync)
+- libData → targets: `fetch/write work items + secrets` (sync)
+- libLog → artifacts: `log.html + screenshots` (async — fire-and-forget)
 
 ---
 
