@@ -148,44 +148,6 @@ export const PROJECTS: ProjectData[] = [
       'Game state input → FastAPI (Python) → C++ inference server (GTO/RL model) → action recommendation + EV output → client application',
   },
   {
-    id: 'sema4ai-action-server',
-    title: 'Action Server + AI Actions',
-    tagline: 'MCP-like FastAPI server giving GPT "hands and legs": pluggable business logic executed post-reasoning',
-    description:
-      'Before MCP was standardized, Sema4.ai (formerly Robocorp) built their own protocol for exposing callable actions to LLMs. Action Server is a FastAPI-based server that hosts AI Actions: discrete, type-safe Python functions with metadata that GPT can discover and invoke. Each action is a pluggable unit of business logic: read a spreadsheet, query a database, trigger a workflow, post to Slack. The gallery of actions became a reference implementation used by enterprise customers. Led the engineering effort from architecture to production.',
-    category: 'professional',
-    complexity: 'high',
-    status: 'shipped',
-    tags: ['Python', 'FastAPI', 'LLM', 'OpenAI', 'MCP', 'Plugin Architecture', 'Pydantic', 'Docker'],
-    company: 'Sema4.ai',
-    period: '2023-2024',
-    links: [
-      { label: 'Server', url: 'https://github.com/Sema4AI/actions' },
-      { label: 'Gallery', url: 'https://github.com/Sema4AI/gallery' },
-    ],
-    architectureNotes:
-      'GPT / LLM → Action Server (FastAPI + action registry) → AI Action (Python function with schema) → external system (DB, API, file, etc.) → response back to LLM',
-  },
-  {
-    id: 'robocorp-rpa',
-    title: 'RPA Framework & Automation Libraries',
-    tagline: 'Open-source Python automation libraries enabling enterprise RPA at scale',
-    description:
-      'Core contributor to Robocorp\'s open-source RPA framework, the Python-native successor to Robot Framework for enterprise automation. Built and maintained libraries for web automation, desktop automation, OCR, document processing, and data pipelines. These libraries are the foundation that hundreds of enterprise customers use to automate their workflows. Led library design, API surface, versioning, and contributor onboarding.',
-    category: 'professional',
-    complexity: 'high',
-    status: 'shipped',
-    tags: ['Python', 'Robot Framework', 'RPA', 'Selenium', 'Playwright', 'OCR', 'Automation', 'PyPI', 'Open Source'],
-    company: 'Robocorp / Sema4.ai',
-    period: '2021-2024',
-    links: [
-      { label: 'Org', url: 'https://github.com/robocorp' },
-      { label: 'Portal', url: 'https://robocorp.com/portal' },
-    ],
-    architectureNotes:
-      'Robot/task definition → robocorp runtime → library layer (web/desktop/OCR/docs) → target systems → execution log + artifacts',
-  },
-  {
     id: 'gorgias-appstore',
     title: 'Gorgias App Store',
     tagline: 'OAuth2 developer platform enabling third-party apps inside e-commerce support automation',
@@ -220,6 +182,44 @@ export const PROJECTS: ProjectData[] = [
       'REST clients → gRPC-gateway (reverse proxy) → gRPC services (Go/Python/Node) → IoT devices + DB → responses transcoded back to JSON',
   },
   // OSS / Hobby
+  {
+    id: 'robocorp-rpa',
+    title: 'RPA Framework & Automation Libraries',
+    tagline: 'Open-source Python automation libraries enabling enterprise RPA at scale',
+    description:
+      'Core contributor to Robocorp\'s open-source RPA framework, the Python-native successor to Robot Framework for enterprise automation. Built and maintained libraries for web automation, desktop automation, OCR, document processing, and data pipelines. These libraries are the foundation that hundreds of enterprise customers use to automate their workflows. Led library design, API surface, versioning, and contributor onboarding.',
+    category: 'oss-hobby',
+    complexity: 'high',
+    status: 'shipped',
+    tags: ['Python', 'Robot Framework', 'RPA', 'Selenium', 'Playwright', 'OCR', 'Automation', 'PyPI', 'Open Source'],
+    company: 'Robocorp / Sema4.ai',
+    period: '2021-2024',
+    links: [
+      { label: 'Org', url: 'https://github.com/robocorp' },
+      { label: 'Portal', url: 'https://robocorp.com/portal' },
+    ],
+    architectureNotes:
+      'Robot/task definition → robocorp runtime → library layer (web/desktop/OCR/docs) → target systems → execution log + artifacts',
+  },
+  {
+    id: 'sema4ai-action-server',
+    title: 'Action Server + AI Actions',
+    tagline: 'MCP-like FastAPI server giving GPT "hands and legs": pluggable business logic executed post-reasoning',
+    description:
+      'Before MCP was standardized, Sema4.ai (formerly Robocorp) built their own protocol for exposing callable actions to LLMs. Action Server is a FastAPI-based server that hosts AI Actions: discrete, type-safe Python functions with metadata that GPT can discover and invoke. Each action is a pluggable unit of business logic: read a spreadsheet, query a database, trigger a workflow, post to Slack. The gallery of actions became a reference implementation used by enterprise customers. Led the engineering effort from architecture to production.',
+    category: 'oss-hobby',
+    complexity: 'high',
+    status: 'shipped',
+    tags: ['Python', 'FastAPI', 'LLM', 'OpenAI', 'MCP', 'Plugin Architecture', 'Pydantic', 'Docker'],
+    company: 'Sema4.ai',
+    period: '2023-2024',
+    links: [
+      { label: 'Server', url: 'https://github.com/Sema4AI/actions' },
+      { label: 'Gallery', url: 'https://github.com/Sema4AI/gallery' },
+    ],
+    architectureNotes:
+      'GPT / LLM → Action Server (FastAPI + action registry) → AI Action (Python function with schema) → external system (DB, API, file, etc.) → response back to LLM',
+  },
   {
     id: 'deep-ice',
     title: 'DeepIce',
