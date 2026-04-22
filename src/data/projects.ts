@@ -73,7 +73,7 @@ export const PROJECTS: ProjectData[] = [
     ],
     diagramFile: 'truestory.svg',
     diagramExcalidrawUrl: 'https://excalidraw.com/#json=H_bjzjVwgnLere2f58TW0,t5_z6jZ2DPPigMFn4N4uYw',
-    architectureNotes: 'Flask/GCP → REST API → Chrome extension',
+    architectureNotes: 'Chrome extension → Flask REST API (GCP): article URL / contradicting articles (sync REST). Flask API → News Sources: crawls articles on cron schedule.',
   },
 
   // Professional
@@ -90,6 +90,8 @@ export const PROJECTS: ProjectData[] = [
     company: 'VONQ',
     period: '2025-2026',
     links: [],
+    diagramFile: 'vonq-meeting-assistant.svg',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=xbIm4bAe4sVKXbuSTg1R9,dNL8ZKhwVkkjrMvaqXEeWA',
     architectureNotes:
       'Recruiter triggers agent join → Recall.ai bot enters Meet → audio stream → speech-to-text → NLP analysis → private insight delivery to interviewer UI (WebSocket or polling) → optional agent intervention',
   },
@@ -98,7 +100,7 @@ export const PROJECTS: ProjectData[] = [
     title: 'Knowledge Base & Careers Agent',
     tagline: 'Automatic career site crawler feeding an AI agent that recommends jobs from uploaded CVs',
     description:
-      'Built a Firecrawl-powered crawler that ingests company career pages on a cron schedule and indexes job listings into Pinecone. The Careers Agent is delivered as an embeddable chat widget on the client\'s career site: candidates upload their CV and chat, RAG narrows down matching roles based on the conversation, and high-confidence matches route them directly to the right job URL on the client\'s site. Removed the need to manually browse job boards.',
+      'Built a Firecrawl-powered crawler that ingests company career pages on a cron schedule and indexes job listings into Pinecone using OpenAI embeddings. The Careers Agent is delivered as an embeddable chat widget on the client\'s career site: candidates upload their CV and chat, the agent embeds the query with the same model used at index time, runs a k-NN search against the stored vectors, and feeds the retrieved listings into a completion call to narrow down matching roles. High-confidence matches route the candidate directly to the right job URL. Removed the need to manually browse job boards.',
     category: 'professional',
     complexity: 'high',
     status: 'shipped',
@@ -106,6 +108,8 @@ export const PROJECTS: ProjectData[] = [
     company: 'VONQ',
     period: '2025-2026',
     links: [],
+    diagramFile: 'vonq-knowledge-base.svg',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=OF5K2y8CG7m_HinJ8gYnu,73JNhJqrqjYYLmGtdnX-lQ',
     architectureNotes:
       'Career sites → Firecrawl crawler → vector store (embeddings) → Careers Agent (RAG) → candidate chat UI → matched job links',
   },
@@ -118,12 +122,14 @@ export const PROJECTS: ProjectData[] = [
     category: 'professional',
     complexity: 'high',
     status: 'shipped',
-    tags: ['Python', 'Django', 'Retell', 'AI Agents', 'Audio Processing', 'React', 'Assessment', 'PDF'],
+    tags: ['Python', 'Django', 'Retell', 'AI Agents', 'Audio Processing', 'React', 'Assessment', 'PDF', 'VONQ EQO'],
     company: 'VONQ',
     period: '2025-2026',
     links: [],
+    diagramFile: 'vonq-candidate-assessment.svg',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=PBAn3lK2lFTiBWWCXWXCx,fgXtn3MMwr6AnTJ-TuDN7w',
     architectureNotes:
-      'Candidate input (text/audio) → assessment agent → multi-criteria scoring → human review queue → ATS stage update',
+      'Candidate input (text/audio) → assessment agent → multi-criteria scoring → VONQ EQO (review queue + stage update) → PDF dossier',
   },
   {
     id: 'a5-gto-engine',

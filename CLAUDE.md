@@ -97,13 +97,26 @@ The brief and blueprint are the planning layer; the card and diagram are the pub
 
 ## Diagram Skill
 
-Run `/diagram "Project Name"` to generate a C4 architecture diagram for any project card. The skill reads `docs/diagram-briefs.md`, `src/data/projects.ts`, and `docs/system-design.md`, iterates with you in Mermaid, then exports to SVG or directly to Excalidraw via MCP.
+Run `/diagram "Project Name"` to generate a C4 architecture diagram for any project card. The skill is a closed loop: it reads the brief and project description, produces a Mermaid draft, iterates with the user, exports to Excalidraw for polish, reviews the final result, backpropagates corrections to all source files, and saves new learnings for the next run.
 
-- Mermaid source files live in `src/diagrams/<id>.md` (committed)
-- Exported SVGs go in `public/diagrams/<id>.svg` (committed)
-- Preview files (`*-preview.md`, `*-preview.html`) are gitignored
-- Learnings from corrections are saved in `.claude/skills/diagram/learnings/` and applied on the next run
-- After the user accepts a diagram and it has been exported to Excalidraw, ask for the shareable Excalidraw URL (`https://excalidraw.com/#json=...`) and save it as `diagramExcalidrawUrl` on the project in `src/data/projects.ts`. This makes the SVG clickable and links it back to the live editable diagram.
+**Full loop (7 phases):**
+1. Research: read `docs/diagram-briefs.md`, `src/data/projects.ts`, `docs/system-design.md`, and all `learnings/`
+2. Interview: resolve ambiguities in the brief
+3. Draft Mermaid in `src/diagrams/<id>.md`
+4. Preview in Cursor (Cmd+Shift+V)
+5. Refine with user; save project-agnostic corrections as learnings
+6. Export: SVG via mermaid-cli (option a) or Excalidraw via MCP for polish (option b)
+7. Review the exported diagram against Mermaid source, brief, and card; backpropagate any corrections to all four files; commit skill/learnings first, then diagram artifacts
+
+**File locations:**
+- Mermaid source: `src/diagrams/<id>.md` (committed)
+- Exported SVGs: `public/diagrams/<id>.svg` (committed)
+- Preview files: `*-preview.html` (gitignored)
+- Learnings: `.claude/skills/diagram/learnings/` (auto-maintained, applied on next run)
+
+**After Excalidraw export:** ask for the shareable URL (`https://excalidraw.com/#json=...`) and save it as `diagramExcalidrawUrl` in `src/data/projects.ts`. This makes the SVG clickable, linking it back to the live editable diagram.
+
+**Commit discipline:** always two commits per diagram — skill/learnings changes first, then the diagram artifacts (SVG, projects.ts, diagram source, brief). Keeps learning evolution separate from project work in git history.
 
 ## Do Not
 

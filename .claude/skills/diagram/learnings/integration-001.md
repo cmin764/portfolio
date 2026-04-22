@@ -1,6 +1,6 @@
 ---
 topic: integration
-source: TrueStory session (2026-04-15)
+source: TrueStory session (2026-04-15); bound text approach first shipped successfully in Traced AI export
 ---
 
 The `label` property on shapes and arrows works in `create_view` (streaming format) but is stripped when exporting via `export_to_excalidraw`. Use explicit bound text elements with `containerId` for proper static export.

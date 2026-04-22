@@ -136,14 +136,14 @@ The Excalidraw path (Phase 6B) is where system-design.md rules get fully applied
 
 ### Color application
 
-Apply colors from `.claude/skills/diagram/references/color-palette.md`:
-- UI/frontend: `$bgColor="#438DD5" $borderColor="#3C7FC0" $fontColor="#FFFFFF"`
-- Service/API: `$bgColor="#00897B" $borderColor="#006B5E" $fontColor="#FFFFFF"`
-- Database/queue: `$bgColor="#FF6D00" $borderColor="#CC5700" $fontColor="#FFFFFF"`
+Apply colors from `.claude/skills/diagram/references/color-palette.md` (pastel fills, dark text `#1e1e1e`):
+- Person: `$bgColor="#dbe4ff" $borderColor="#748ffc" $fontColor="#1e1e1e"` — always override; default is dark navy
+- UI/frontend: `$bgColor="#a5d8ff" $borderColor="#1971c2" $fontColor="#1e1e1e"`
+- Service/API: `$bgColor="#96f2d7" $borderColor="#099268" $fontColor="#1e1e1e"`
+- Database/queue: `$bgColor="#ffd8a8" $borderColor="#e8590c" $fontColor="#1e1e1e"`
 - External systems: leave as Mermaid default (gray)
-- Persons: leave as Mermaid default (blue outline)
 
-Apply via `UpdateElementStyle(alias, ...)` for each non-default node.
+Apply via `UpdateElementStyle(alias, ...)` for each non-default node. Person shape in C4Container is fixed (box with icon) — no circle override is possible via the API.
 
 ### Output
 
@@ -330,18 +330,81 @@ Follow `.claude/skills/diagram/references/integration-checklist.md` step by step
 
 1. Check if the `mcp__claude_ai_Excalidraw__export_to_excalidraw` tool is available. If not, tell the user: "The Excalidraw MCP is not connected in this session. Start it and re-run, or choose option (a) instead."
 
-2. Translate the approved Mermaid diagram into Excalidraw element JSON:
-   - Use bound text elements (`containerId`) for all node labels and arrow labels — the inline `label` shorthand works in `create_view` but is stripped by `export_to_excalidraw`
-   - Apply `"roughness": 1` and `"fontFamily": 1` to every element
-   - Use pastel fills (e.g. `#a5d8ff`, `#c3fae8`) for colored containers so dark text remains readable
-   - Dashed arrows (`"strokeStyle": "dashed"`) for async/cron edges per system-design.md §9.3
+2. Translate the approved Mermaid diagram into Excalidraw element JSON. Apply these rules — all derived from `docs/system-design.md` §9.2–9.3 and `references/color-palette.md`:
+
+   **Node styling (boxes):**
+   - `"roughness": 1`, `"fontFamily": 1` (Virgil) on every element — non-negotiable, preserves hand-drawn aesthetic
+   - Use **pastel fills** from `color-palette.md` (not saturated): `#a5d8ff` UI, `#96f2d7` service, `#ffd8a8` data store, `#e9ecef` external
+   - Text color `#1e1e1e` (dark) — pastels on Excalidraw's white canvas need dark text
+   - Use bound text elements (`containerId`) for all node labels — inline `label` shorthand is stripped by `export_to_excalidraw`
    - Set `"boundElements"` arrays on shapes pointing to their text and arrow IDs
+
+   **Arrow styling (edges):**
+
+   | Interaction type | `strokeStyle` | `endArrowhead` | When |
+   |-----------------|--------------|----------------|------|
+   | Sync call (default) | `"solid"` | `"triangle"` | Blocking request/response; no `[async]` or `[cron]` label |
+   | Async / fire-and-forget | `"solid"` | `"arrow"` | Edge label contains `[async]` |
+   | Cron / dependency | `"dashed"` | `"triangle"` | Edge label contains `[cron]` or "on cron" |
+
+   **Why these values (UML 2.5 §17.4.4.1):** `"triangle"` = closed filled arrowhead = sender blocks for return. `"arrow"` = open stick arrowhead = sender continues immediately, no return expected. Never use `"triangle_outline"` — it is the outlined large triangle, not the UML async stick arrowhead.
+
+   - Arrow stroke color: `#1e1e1e` (near-black) for all edges unless a cross-boundary semantic applies (see `color-palette.md`)
+   - Arrow label: bound text element with `containerId` pointing to the arrow id
 
 3. Call `mcp__claude_ai_Excalidraw__export_to_excalidraw` with the full Excalidraw JSON and return the shareable URL to the user.
 
 4. Tell the user: "Polish it in Excalidraw if needed, then export as SVG with transparent background. Save to `public/diagrams/<id>.svg` and I'll wire up the integration steps."
 
 5. Offer to complete the integration steps (steps 3–7 from Option A) once the user has the SVG ready.
+
+---
+
+## Phase 7: Review, backpropagate, and close the loop
+
+This phase runs after the user provides the final SVG path and Excalidraw URL. It closes the loop between the polished diagram and all four source-of-truth files.
+
+### Step 1 — Wire up the project entry
+
+Add `diagramFile: '<id>.svg'` and `diagramExcalidrawUrl: '<url>'` to the matching entry in `src/data/projects.ts`. Run `bun run build` to confirm no type errors.
+
+### Step 2 — Review the exported diagram against three sources
+
+Compare the final Excalidraw rendering against:
+- The approved Mermaid source (`src/diagrams/<id>.md`)
+- The diagram brief (`docs/diagram-briefs.md`)
+- The project card description (`src/data/projects.ts`)
+
+For each discrepancy ask: "Was this a deliberate correction made during Excalidraw polish, or just visual layout?" Deliberate corrections must backpropagate. Layout choices (spacing, curvature) do not.
+
+Common correction types to look for:
+- Node label or role rename (e.g., "Pinecone" → "Vector Index")
+- Edge direction or initiator change (e.g., widget→clientSite → candidate→clientSite)
+- Combined vs split edges (e.g., two req-resp arrows → one combined edge)
+- New insight surfaced during review (e.g., same embedding model constraint)
+
+### Step 3 — Backpropagate corrections to all four files
+
+Apply the CLAUDE.md Content Sync Rule. For every correction identified in Step 2:
+
+| File | What to update |
+|------|---------------|
+| `src/diagrams/<id>.md` | Node names, edge labels, intro paragraph |
+| `docs/diagram-briefs.md` | Nodes table (alias, name, role, tech), edges list, design constraints |
+| `src/data/projects.ts` | Description if a new architectural insight emerged |
+| `docs/portfolio-blueprint.md` | Only if project scope or status changed |
+
+### Step 4 — Save new learnings
+
+Evaluate every correction from Step 2 against the Phase 5 quality bar. Save any that are project-agnostic principles to `learnings/` and update `learnings/_index.md`.
+
+### Step 5 — Commit discipline
+
+Always commit in two separate commits:
+1. **Skill/learnings first**: `.claude/skills/diagram/` changes, any updated `docs/system-design.md`
+2. **Diagram artifacts second**: `public/diagrams/<id>.svg`, `src/data/projects.ts`, `src/diagrams/<id>.md`, `docs/diagram-briefs.md`
+
+This keeps learning evolution distinct from project work in git history, and ensures the skill is always in a clean state before the diagram commit references it.
 
 ---
 

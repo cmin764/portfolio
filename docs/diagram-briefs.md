@@ -40,7 +40,7 @@ Each brief is complementary to `portfolio-blueprint.md` (which has the narrative
 | Self-hosted Dashboard | Container (web app) | Next.js + shadcn/ui on tracedai.co (SaaS tier) or Docker image (enterprise tier) |
 | FastAPI Ingest API | Container (API) | Python + FastAPI on Fly.io; receives hashes only |
 | Chained Ledger | Database | Append-only, cryptographically signed; Supabase (Postgres) |
-| Rule Registry | Container (service) | EU AI Act / ISO 42001 / SOC 2 mappings; Upstash (Redis) |
+| Rule Registry | Database / data store | EU AI Act / ISO 42001 / SOC 2 mappings; Upstash (Redis) |
 
 ### Key edges
 
@@ -73,36 +73,41 @@ Each brief is complementary to `portfolio-blueprint.md` (which has the narrative
 
 ### Nodes
 
-| Name | Role | Tech |
-|------|------|------|
-| Recruiter | Person | Triggers agent join via VONQ UI |
-| Google Meet | External system | Active interview call |
-| Recall.ai Bot | External system (SaaS) | Joins Meet as passive participant; streams audio |
-| Webhook Receiver | Container (API endpoint) | Django; receives real-time transcript events |
-| Analysis Engine | Container (service) | OpenAI API; analyzes turn-by-turn dialogue |
-| TTS Service | External system (SaaS) | ElevenLabs; text-to-speech for agent voice |
-| Recall Listened Page | External system | Recall.ai's audio injection endpoint |
-| Interviewer UI | Container (web app) | React; shows private hints in real time |
-| Candidate | Person (external) | In the Meet call; cannot see/hear private hints |
+| Alias | Name | Role | Tech |
+|-------|------|------|------|
+| `recruiter` | Recruiter | Person | Triggers agent join via VONQ UI |
+| `candidate` | Candidate | Person | In the Meet call; cannot see/hear private hints |
+| `ui` | VONQ Interviewer UI | Container (web app) | React; trigger control and private live insights |
+| `webhook` | Webhook Receiver | Container (API endpoint) | Python, Django; ingests real-time transcript events |
+| `engine` | Analysis Engine | Container (service) | Python, Django; orchestrates turn-by-turn reasoning and intervention |
+| `meet` | Google Meet | External system | Live interview call, visible to all participants |
+| `bot` | Recall.ai Bot | External system (SaaS) | Joins Meet as 3rd participant; streams audio and transcripts |
+| `openai` | OpenAI API | External system | LLM reasoning over transcript turns |
+| `tts` | ElevenLabs | External system (SaaS) | Text-to-speech for agent voice |
+| `listened` | Recall Listened Page | External system | Recall.ai's audio injection endpoint back into the call |
 
 ### Key edges
 
-- Recruiter → VONQ UI: `triggers agent join` (sync)
-- VONQ UI → Recall.ai Bot: `bot join request` (sync, REST)
-- Recall.ai Bot → Google Meet: `joins as participant` (sync)
-- Google Meet → Recall.ai Bot: `audio stream` (async, continuous)
-- Recall.ai Bot → Webhook Receiver: `real-time transcript events` (async, webhook POST)
-- Webhook Receiver → Analysis Engine: `transcript turn` (sync, OpenAI API call)
-- Analysis Engine → Interviewer UI: `private insight` (async, WebSocket or polling)
-- Analysis Engine → TTS Service: `reply text` (sync, when agent decides to speak)
-- TTS Service → Recall Listened Page: `audio stream` (async)
-- Recall Listened Page → Google Meet: `injects audio into call` (async)
+- Recruiter → VONQ Interviewer UI: `triggers agent join` (sync)
+- Recruiter → Google Meet: `joins call` (sync)
+- Candidate → Google Meet: `joins call` (sync)
+- VONQ Interviewer UI → Recall.ai Bot: `bot join request` (sync, REST)
+- Recall.ai Bot → Google Meet: `joins as 3rd participant` (sync)
+- Google Meet → Recall.ai Bot: `audio stream [async]` (async, continuous)
+- Recall.ai Bot → Webhook Receiver: `transcript events [async webhook]` (async, webhook POST)
+- Webhook Receiver → Analysis Engine: `transcript turn` (sync)
+- Analysis Engine → OpenAI API: `analyze turn` (sync)
+- Analysis Engine → VONQ Interviewer UI: `private insight [async, WebSocket]` (async)
+- Analysis Engine → ElevenLabs: `reply text on intervene` (sync, conditional)
+- ElevenLabs → Recall Listened Page: `audio stream [async]` (async)
+- Recall Listened Page → Google Meet: `injects audio [async]` (async)
 
 ### Design constraints worth showing visually
 
-- **Two outputs from Analysis Engine**: one to Interviewer UI (private, silent), one optionally to ElevenLabs → call (audible). Show the branch.
-- Candidate never receives the interviewer hint path. Can annotate with a dashed "not visible to candidate" boundary.
-- The Recall Listened Page is the injection mechanism: audio goes in via an API endpoint that Recall exposes specifically for this pattern.
+- **Two outputs from Analysis Engine**: one to VONQ Interviewer UI (private, silent hint), one optionally to ElevenLabs → Recall Listened Page → call (audible reply). Show the branch clearly.
+- Candidate never receives the private hint path. Annotate with a dashed "not visible to candidate" boundary (bronze tint).
+- The bot IS visible to all call participants (shows in Meet roster). Only the hints sent to the interviewer UI are private.
+- The Recall Listened Page is the audio injection mechanism: audio sent to this endpoint is injected back into the active call by Recall's infrastructure.
 
 ---
 
@@ -184,37 +189,46 @@ Each brief is complementary to `portfolio-blueprint.md` (which has the narrative
 
 **C4 level:** Container
 **Primary concern:** Crawl-to-chat RAG pipeline with embedded widget delivery
-**Flow direction:** Top-to-bottom (data ingestion on top, candidate interaction at bottom)
+**Flow direction:** Top-to-bottom (crawl+index pipeline on top, candidate chat lane at bottom)
 
 ### Nodes
 
-| Name | Role | Tech |
-|------|------|------|
-| Client Career Site | External system | Any company careers page |
-| Firecrawl Crawler | Container (service) | Firecrawl; cron-triggered; ingests job listings |
-| Job Index | Database | Structured job data after crawling |
-| Embedding Service | Container (service) | LLM embedding; converts job text to vectors |
-| Pinecone | Database (vector store) | Stores job embeddings; powers semantic search |
-| Careers Agent | Container (service) | Python + Django; RAG pipeline; chat orchestration |
-| Candidate Chat Widget | Container (web UI) | React; embeddable on client career site |
-| Candidate | Person | Uploads CV, types chat query |
+| Alias | Name | Role | Tech |
+|-------|------|------|------|
+| `clientSite` | Client Career Site | External system | Any company careers page; crawl target and widget host |
+| `openai` | OpenAI API | External system | Embeddings and chat completion |
+| `crawler` | Career Site Crawler | Container (service) | Firecrawl, Python; cron-triggered scraper |
+| `kb` | Knowledge Base | Database | PostgreSQL; stores crawled Documents; source of truth before vectorisation |
+| `syncer` | Embedding Sync Worker | Container (service) | Python; event-driven; reads Documents, embeds, upserts vectors |
+| `pinecone` | Vector Index | Database (vector store) | Pinecone; stores job embeddings; serves k-NN search |
+| `agent` | Careers Agent | Container (service) | Python, Django; RAG orchestration; chat completion |
+| `widget` | Candidate Chat Widget | Container (web UI) | React; embeddable on client career site |
+| `candidate` | Candidate | Person | Uploads CV, types chat query |
 
 ### Key edges
 
-- Firecrawl Crawler → Client Career Site: `crawl on cron` (async, HTTP)
-- Firecrawl Crawler → Job Index: `store structured job data` (async)
-- Job Index → Embedding Service: `job text → embedding` (async)
-- Embedding Service → Pinecone: `upsert vectors` (async)
-- Candidate → Candidate Chat Widget: `uploads CV + chat message` (sync)
-- Candidate Chat Widget → Careers Agent: `CV + query` (sync, REST)
-- Careers Agent → Pinecone: `semantic search` (sync, k-NN query)
-- Careers Agent → Candidate Chat Widget: `matched roles + URLs` (sync)
-- Candidate Chat Widget → Client Career Site: `routes to job URL` (sync, link)
+Crawl + index pipeline (top lane):
+- Career Site Crawler → Client Career Site: `crawls [cron]` (dashed + filled arrowhead; cron-triggered)
+- Career Site Crawler → Knowledge Base: `stores Document` (sync)
+- Career Site Crawler → Embedding Sync Worker: `doc ready [async]` (solid + open arrowhead; fire-and-forget event)
+- Embedding Sync Worker → Knowledge Base: `reads Document` (sync)
+- Embedding Sync Worker → OpenAI API: `embed text` (sync; blocks for vector result)
+- Embedding Sync Worker → Vector Index: `upserts vectors` (sync)
+
+Chat lane (bottom lane):
+- Candidate → Candidate Chat Widget: `CV + message` (sync)
+- Candidate Chat Widget → Careers Agent: `CV + query / matched roles + URLs` (sync req-resp; combined edge, widget initiates)
+- Careers Agent → OpenAI API: `embed + completion` (sync; two sequential calls: embed query then chat completion)
+- Careers Agent → Vector Index: `k-NN search` (sync)
+- Candidate → Client Career Site: `applies to job` (sync; candidate navigates via link returned by agent — person crosses boundary, not widget)
 
 ### Design constraints worth showing visually
 
-- The widget is **embedded on the client's own career site**, not on a VONQ domain. Show the client site as the host context.
-- Two separate data flows: crawl pipeline (async, cron-based, top-down) and candidate chat loop (sync, request-response). Visually separate them.
+- The widget is **embedded on the client's own career site**, not on a VONQ domain. Wrap `widget` in a boundary labeled "Embedded on client career site" (bronze tint).
+- Two distinct lanes share the Vector Index as the retrieval surface: keep the crawl pipeline (top) and chat lane (bottom) visually separated.
+- The widget→agent interaction is a single combined req-resp edge (never split into two arrows per edge-semantics-001/003).
+- The candidate (person) navigates to the job URL — not the widget. The widget only renders the link.
+- OpenAI must appear once as an external node called by both the sync worker (embed text) and the agent (embed + completion). Same embedding model at index time and query time is an intentional constraint: vectors are only comparable within the same embedding space.
 
 ---
 
@@ -226,36 +240,51 @@ Each brief is complementary to `portfolio-blueprint.md` (which has the narrative
 
 ### Nodes
 
-| Name | Role | Tech |
-|------|------|------|
-| Candidate | Person | Text or audio input |
-| Chat Interface | Container (web UI) | React; initial text-based screening |
-| Retell | External system (SaaS) | Audio web interview with retry-on-drop |
-| Assessment Agent | Container (service) | Python + Django; orchestrates multi-criteria evaluation |
-| Language Scorer | Container (service) | Evaluates vocabulary, speech fluency, semantics, coherence |
-| ATS System | External system | Tracks candidate stage; receives stage updates |
-| Recruiter UI | Container (web UI) | React; human review queue |
-| PDF Dossier | Container (artifact) | Generated report: scores, justification, exportable |
-| Recruiter | Person | Reviews dossier; approves/rejects |
+| Alias | Name | Role | Tech |
+|-------|------|------|------|
+| `candidate` | Candidate | Person | Text or audio input |
+| `chat` | Chat Interface | Container (web UI) | React; initial text-based screening |
+| `retell` | Retell | External system (SaaS) | Audio web interview with retry-on-drop |
+| `agent` | Assessment Agent | Container (service) | Python + Django; orchestrates multi-criteria evaluation |
+| `openai` | OpenAI API | External system | LLM prompting |
+| `profile` | Candidate Profile DB | Container (database) | Postgres; scores, transcripts, stage |
+| `scorer` | Language Scorer | Container (service) | Evaluates vocabulary, fluency, semantics, coherence; MVP add-on |
+| `recruiter` | Recruiter | Person | Reviews dossier; approves/rejects |
+| `ats` | VONQ EQO | Container (web UI) | React; review queue + stage management |
+| `pdfService` | PDF Renderer | External system | HTML template + data to PDF |
+| `pdf` | PDF Dossier | Container (artifact, amber) | Generated file; shareable snapshot of candidate profile; amber palette (#fef9c3/#ca8a04) distinguishes artifacts from data stores |
+
+### Boundaries
+
+- `inputSide` — Candidate Input (external): candidate, retell, chat
+- `pipeline` — Assessment Pipeline (internal): agent, openai, profile
+- `langEval` — Language Evaluator (MVP add-on) (feature): scorer
+- `reviewSide` — Recruiter Review (internal): recruiter, ats, pdfService, pdf
 
 ### Key edges
 
 - Candidate → Chat Interface: `text answers` (sync)
-- Candidate → Retell: `audio interview` (sync; retry on connection drop)
+- Candidate → Retell: `audio interview` (sync)
 - Chat Interface → Assessment Agent: `text transcript` (sync)
-- Retell → Assessment Agent: `audio transcript` (async, webhook)
-- Assessment Agent → Language Scorer: `transcript for scoring` (sync)
-- Language Scorer → Assessment Agent: `scores (vocabulary, fluency, semantics, coherence)` (sync)
-- Assessment Agent → PDF Dossier: `generates report` (sync)
-- Assessment Agent → ATS System: `stage update` (async)
-- Assessment Agent → Recruiter UI: `queues for human review` (async)
-- Recruiter → Recruiter UI: `reviews + approves/rejects` (sync)
-- Recruiter UI → PDF Dossier: `download/share` (sync)
+- Retell → Assessment Agent: `audio transcript [async]` (async, webhook)
+- Assessment Agent → OpenAI API: `prompts + completions` (sync)
+- Assessment Agent → Language Scorer: `transcript / language scores` (sync, combined req/resp)
+- Language Scorer → OpenAI API: `prompts + completions` (sync)
+- Assessment Agent → Candidate Profile DB: `writes scores + transcripts` (sync)
+- Assessment Agent → VONQ EQO: `stage update + queues for review [async]` (async)
+- Recruiter → VONQ EQO: `reviews, approves/rejects` (sync)
+- VONQ EQO → Candidate Profile DB: `reads profile` (sync)
+- VONQ EQO → PDF Renderer: `render PDF` (sync)
+- PDF Renderer → PDF Dossier: `produces PDF` (sync)
+- Recruiter → PDF Dossier: `downloads / shares` (sync)
 
-### Design constraints worth showing visually
+### Design constraints
 
-- Retell's retry logic: annotate the edge with "auto-retry on drop".
-- The PDF dossier is the final human-facing artifact. End the flow there visually.
+- Language Evaluator boundary wraps only Language Scorer to show it is an MVP add-on, not core pipeline.
+- OpenAI is shared by both the assessment agent and the language scorer; no embeddings are used — LLM prompting only.
+- The combined `agent ↔ scorer` arrow (transcript / language scores) represents a sync req/resp; the boundary already shows the feature split so two arrows are not needed.
+- PDF Dossier is a passive artifact (sink only); no arrows originate from it.
+- Plain `Rel()` throughout — no directional hints (avoids layout collapse with boundaries).
 
 ---
 
@@ -273,15 +302,12 @@ Each brief is complementary to `portfolio-blueprint.md` (which has the narrative
 | Chrome Extension | Container (browser extension) | Bootstrap + jQuery; injects UI into news pages |
 | Flask REST API | Container (API) | Python + Flask on GCP; aggregates + scores news |
 | News Sources | External system | RSS feeds / crawled news sites |
-| GCP Infrastructure | External system | Hosting for Flask app |
 
 ### Key edges
 
-- User → Chrome Extension: `browser interaction` (sync)
-- Chrome Extension → Flask REST API: `query: current article URL` (sync, REST)
-- News Sources → Flask REST API: `crawled articles` (async, cron)
-- Flask REST API → Chrome Extension: `contradicting articles` (sync, JSON)
-- Chrome Extension → User: `shows side-by-side contradictions` (sync, DOM injection)
+- User → Chrome Extension: `opens extension / views contradictions` (sync)
+- Chrome Extension → Flask REST API: `article URL / contradicting articles` (sync, REST — combined req-resp)
+- Flask REST API → News Sources: `crawls articles [cron]` (cron — API initiates, dashed+filled in Excalidraw)
 
 ---
 
