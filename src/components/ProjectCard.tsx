@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,11 +23,27 @@ const STATUS_LABEL: Record<ProjectData['status'], string> = {
 };
 
 export function ProjectCard({ project }: Props) {
-  const [open, setOpen] = useState(false);
+  const { hash } = useLocation();
+  const navigate = useNavigate();
+  const isActive = hash === `#${project.id}`;
+  const [open, setOpen] = useState(isActive);
+
+  useEffect(() => {
+    if (isActive) setOpen(true);
+  }, [isActive]);
+
+  function handleOpenChange(next: boolean) {
+    setOpen(next);
+    if (next) {
+      navigate(`#${project.id}`, { replace: true });
+    } else if (isActive) {
+      navigate({ hash: '' }, { replace: true });
+    }
+  }
 
   return (
-    <Collapsible open={open} onOpenChange={setOpen}>
-      <Card className={cn("transition-shadow", open && "shadow-md")}>
+    <Collapsible id={project.id} open={open} onOpenChange={handleOpenChange}>
+      <Card className={cn("transition-shadow", open && "shadow-md", isActive && "ring-2 ring-primary/40")}>
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-1 min-w-0">

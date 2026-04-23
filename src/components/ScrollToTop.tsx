@@ -5,16 +5,14 @@ export function ScrollToTop() {
   const { pathname, hash } = useLocation();
 
   useEffect(() => {
-    if (hash) {
-      requestAnimationFrame(() => {
-        const element = document.getElementById(hash.slice(1));
-        if (element) {
-          element.scrollIntoView({ behavior: "smooth" });
-        }
-      });
-    } else {
+    if (!hash) {
       window.scrollTo(0, 0);
+      return;
     }
+    const raf = requestAnimationFrame(() => {
+      document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: "smooth" });
+    });
+    return () => cancelAnimationFrame(raf);
   }, [pathname, hash]);
 
   return null;
