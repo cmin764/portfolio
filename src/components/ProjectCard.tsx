@@ -34,16 +34,12 @@ export function ProjectCard({ project }: Props) {
 
   function handleOpenChange(next: boolean) {
     setOpen(next);
-    if (next) {
-      navigate(`#${project.id}`, { replace: true });
-    } else if (isActive) {
-      navigate({ hash: '' }, { replace: true });
-    }
+    if (next) navigate(`#${project.id}`, { replace: true });
   }
 
   return (
     <Collapsible id={project.id} open={open} onOpenChange={handleOpenChange}>
-      <Card className={cn("transition-shadow", open && "shadow-md", isActive && "ring-2 ring-primary/40")}>
+      <Card className={cn("transition-shadow", open && "shadow-md", isActive && open && "ring-2 ring-primary/40")}>
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-1 min-w-0">
