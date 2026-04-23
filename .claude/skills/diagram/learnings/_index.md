@@ -13,3 +13,4 @@ Auto-maintained index. Each entry links to a learning file with context and rati
 - [styling-001 — Color by runtime role, not technology; caches and registries are orange data stores](styling-001.md) — source: Traced AI, 2026-04-16
 - [styling-002 — Pastel fills + paired text (text=border color) for both Mermaid and Excalidraw; C4Container provides its own light canvas](styling-002.md) — source: Knowledge Base & Careers Agent, 2026-04-21; revised 2026-04-22
 - [node-semantics-002 — Only annotate LLM external with "embeddings" when a vector store appears in the diagram](node-semantics-002.md) — source: Candidate Assessment, 2026-04-21
+- [labeling-001 — `/` = req/resp split on edges; `|` = logical OR; never mix](labeling-001.md) — source: Sema4.ai Action Server, 2026-04-22
