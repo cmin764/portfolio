@@ -61,11 +61,11 @@ C4Container
   Rel_L(agent, pinecone, "k-NN search")
   Rel_U(candidate, clientSite, "applies to job")
 
-  UpdateElementStyle(candidate, $fontColor="#1e1e1e", $bgColor="#dbe4ff", $borderColor="#748ffc")
-  UpdateElementStyle(widget, $fontColor="#1e1e1e", $bgColor="#a5d8ff", $borderColor="#1971c2")
-  UpdateElementStyle(crawler, $fontColor="#1e1e1e", $bgColor="#96f2d7", $borderColor="#099268")
-  UpdateElementStyle(syncer, $fontColor="#1e1e1e", $bgColor="#96f2d7", $borderColor="#099268")
-  UpdateElementStyle(agent, $fontColor="#1e1e1e", $bgColor="#96f2d7", $borderColor="#099268")
-  UpdateElementStyle(kb, $fontColor="#1e1e1e", $bgColor="#ffd8a8", $borderColor="#e8590c")
-  UpdateElementStyle(pinecone, $fontColor="#1e1e1e", $bgColor="#ffd8a8", $borderColor="#e8590c")
+  UpdateElementStyle(candidate, $fontColor="#748ffc", $bgColor="#dbe4ff", $borderColor="#748ffc")
+  UpdateElementStyle(widget, $fontColor="#1971c2", $bgColor="#a5d8ff", $borderColor="#1971c2")
+  UpdateElementStyle(crawler, $fontColor="#099268", $bgColor="#96f2d7", $borderColor="#099268")
+  UpdateElementStyle(syncer, $fontColor="#099268", $bgColor="#96f2d7", $borderColor="#099268")
+  UpdateElementStyle(agent, $fontColor="#099268", $bgColor="#96f2d7", $borderColor="#099268")
+  UpdateElementStyle(kb, $fontColor="#e8590c", $bgColor="#ffd8a8", $borderColor="#e8590c")
+  UpdateElementStyle(pinecone, $fontColor="#e8590c", $bgColor="#ffd8a8", $borderColor="#e8590c")
 ```

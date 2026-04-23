@@ -7,15 +7,17 @@ Hex codes are the authoritative values — use these for all Excalidraw exports 
 
 ## Node colors by role
 
+Each role has three paired values: a pastel fill, a darker border, and a matching text color that equals the border color. Text and border are always the same value — they form the "dark" half of the pair, the fill is the "light" half.
+
 | Role | Fill (bg) | Stroke | Text | Notes |
 |------|-----------|--------|------|-------|
-| UI / Frontend / Web App | #a5d8ff | #1971c2 | #1e1e1e | Light blue bg, dark blue border |
-| Service / API / Worker | #96f2d7 | #099268 | #1e1e1e | Light mint bg, dark teal border |
-| Database / Data Store / Cache | #ffd8a8 | #e8590c | #1e1e1e | Light peach bg, dark orange border |
-| Queue / Stream | #ffd8a8 | #e8590c | #1e1e1e | Same as data stores |
-| External System / SaaS | #e9ecef | #868e96 | #1e1e1e | Near-white bg, gray border |
-| Person | #dbe4ff | #748ffc | #1e1e1e | Light indigo bg, indigo border — distinct from UI sky blue |
-| Generated artifact / file | #fef9c3 | #ca8a04 | #1e1e1e | Light amber bg, amber border — for files, exports, generated documents (not data stores) |
+| UI / Frontend / Web App | #a5d8ff | #1971c2 | #1971c2 | Light blue bg, dark blue border + text |
+| Service / API / Worker | #96f2d7 | #099268 | #099268 | Light mint bg, dark teal border + text |
+| Database / Data Store / Cache | #ffd8a8 | #e8590c | #e8590c | Light peach bg, dark orange border + text |
+| Queue / Stream | #ffd8a8 | #e8590c | #e8590c | Same as data stores |
+| External System / SaaS | #e9ecef | #868e96 | #868e96 | Near-white bg, gray border + text |
+| Person | #dbe4ff | #748ffc | #748ffc | Light indigo bg, indigo border + text — distinct from UI sky blue |
+| Generated artifact / file | #fef9c3 | #ca8a04 | #ca8a04 | Light amber bg, amber border + text — for files, exports, generated documents (not data stores) |
 
 Limit to these 4-5 fill colors. More than that reduces clarity. The artifact amber is an exception: use only when a node is explicitly a generated file/export artifact, not a live data store.
 
@@ -117,16 +119,16 @@ The portfolio uses `dark:invert` on the `<img>` tag for diagram SVGs. This means
 Use the same pastel palette for both Mermaid and Excalidraw. The C4Container library renders its own light-background canvas, so pastel fills with `#1e1e1e` text remain legible regardless of editor dark mode.
 
 ```
-UpdateElementStyle(alias, $fontColor="#1e1e1e", $bgColor="#96f2d7", $borderColor="#099268")  // service
-UpdateElementStyle(alias, $fontColor="#1e1e1e", $bgColor="#ffd8a8", $borderColor="#e8590c")  // data store
-UpdateElementStyle(alias, $fontColor="#1e1e1e", $bgColor="#a5d8ff", $borderColor="#1971c2")  // UI
-UpdateElementStyle(alias, $fontColor="#1e1e1e", $bgColor="#e9ecef", $borderColor="#868e96")  // external
+UpdateElementStyle(alias, $fontColor="#099268", $bgColor="#96f2d7", $borderColor="#099268")  // service
+UpdateElementStyle(alias, $fontColor="#e8590c", $bgColor="#ffd8a8", $borderColor="#e8590c")  // data store
+UpdateElementStyle(alias, $fontColor="#1971c2", $bgColor="#a5d8ff", $borderColor="#1971c2")  // UI
+UpdateElementStyle(alias, $fontColor="#868e96", $bgColor="#e9ecef", $borderColor="#868e96")  // external
 ```
 
 Apply only when the default Mermaid C4 colors diverge from this palette. Always override Person nodes explicitly — the default is a dark navy that clashes with dark text.
 
 ```
-UpdateElementStyle(alias, $fontColor="#1e1e1e", $bgColor="#dbe4ff", $borderColor="#748ffc")  // person
+UpdateElementStyle(alias, $fontColor="#748ffc", $bgColor="#dbe4ff", $borderColor="#748ffc")  // person
 ```
 
 **Note on Person shape in Mermaid C4:** The `Person` primitive renders as a fixed rectangular shape (box with person icon). No shape override is possible: `$shape="circle"` in `UpdateElementStyle` is silently ignored, and `EightSidedShape()` is not recognized by the bundled Mermaid version. Color is the only available differentiator — use the light indigo palette above.

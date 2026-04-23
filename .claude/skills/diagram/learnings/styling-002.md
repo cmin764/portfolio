@@ -1,15 +1,19 @@
 ---
 topic: styling
-source: Knowledge Base & Careers Agent session (2026-04-20); revised 2026-04-21
+source: Knowledge Base & Careers Agent session (2026-04-20); revised 2026-04-22
 ---
 
-Use the same pastel palette for both Mermaid C4 and Excalidraw exports. The C4Container library renders its own light-background canvas around nodes, so pastel fills with `$fontColor="#1e1e1e"` remain legible regardless of editor dark mode.
+Use the same pastel palette for both Mermaid C4 and Excalidraw exports. Each node has a three-value color pair: pastel fill, a darker border, and a text color that equals the border color. Text and border are always the same value.
 
-**Why:** The earlier assumption — that pastels wash out on dark-mode canvas — only holds if Mermaid renders directly on the editor background. C4Container does not; it draws a framed internal canvas. The traced-ai diagram (first shipped, always correct) uses pastels in Mermaid and is the evidence this works.
+**Why:** The fill is the "light" half of the pair; the border/text is the "dark" half. Using the border color as text color creates visual coherence — each node looks like a self-contained branded element rather than black text floating on a colored background. The robocorp-rpa.svg export confirms this: teal service nodes have `#099268` text, indigo person nodes have `#748ffc` text, gray external nodes have `#868e96` text. Generic `#1e1e1e` text breaks this pairing and is visually flatter.
 
-**Anti-pattern:** Switching to saturated fills + white text (`$fontColor="#ffffff"`) in Mermaid while reserving pastels for Excalidraw. This creates a two-palette split with no visual benefit and makes Mermaid previews look inconsistent with exported diagrams.
+**Anti-pattern 1:** Using `$fontColor="#1e1e1e"` (generic black) instead of the border color. This is the old default and produces visually inconsistent nodes.
 
-**Fix:** Use the pastel palette in both contexts:
-- Service: `$bgColor="#96f2d7" $borderColor="#099268" $fontColor="#1e1e1e"`
-- Data store: `$bgColor="#ffd8a8" $borderColor="#e8590c" $fontColor="#1e1e1e"`
-- UI/frontend: `$bgColor="#a5d8ff" $borderColor="#1971c2" $fontColor="#1e1e1e"`
+**Anti-pattern 2:** Switching to saturated fills + white text (`$fontColor="#ffffff"`) in Mermaid. This creates a two-palette split with no visual benefit.
+
+**Fix:** Use border color as text color in both Mermaid and Excalidraw:
+- Service: `$bgColor="#96f2d7" $borderColor="#099268" $fontColor="#099268"`
+- Data store: `$bgColor="#ffd8a8" $borderColor="#e8590c" $fontColor="#e8590c"`
+- UI/frontend: `$bgColor="#a5d8ff" $borderColor="#1971c2" $fontColor="#1971c2"`
+- Person: `$bgColor="#dbe4ff" $borderColor="#748ffc" $fontColor="#748ffc"`
+- External: `$bgColor="#e9ecef" $borderColor="#868e96" $fontColor="#868e96"`

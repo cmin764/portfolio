@@ -50,12 +50,12 @@ C4Container
 
   UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="4")
 
-  UpdateElementStyle(candidate, $fontColor="#1e1e1e", $bgColor="#dbe4ff", $borderColor="#748ffc")
-  UpdateElementStyle(recruiter, $fontColor="#1e1e1e", $bgColor="#dbe4ff", $borderColor="#748ffc")
-  UpdateElementStyle(chat, $fontColor="#1e1e1e", $bgColor="#a5d8ff", $borderColor="#1971c2")
-  UpdateElementStyle(ats, $fontColor="#1e1e1e", $bgColor="#a5d8ff", $borderColor="#1971c2")
-  UpdateElementStyle(agent, $fontColor="#1e1e1e", $bgColor="#96f2d7", $borderColor="#099268")
-  UpdateElementStyle(scorer, $fontColor="#1e1e1e", $bgColor="#96f2d7", $borderColor="#099268")
-  UpdateElementStyle(profile, $fontColor="#1e1e1e", $bgColor="#ffd8a8", $borderColor="#e8590c")
-  UpdateElementStyle(pdf, $fontColor="#1e1e1e", $bgColor="#fef9c3", $borderColor="#ca8a04")
+  UpdateElementStyle(candidate, $fontColor="#748ffc", $bgColor="#dbe4ff", $borderColor="#748ffc")
+  UpdateElementStyle(recruiter, $fontColor="#748ffc", $bgColor="#dbe4ff", $borderColor="#748ffc")
+  UpdateElementStyle(chat, $fontColor="#1971c2", $bgColor="#a5d8ff", $borderColor="#1971c2")
+  UpdateElementStyle(ats, $fontColor="#1971c2", $bgColor="#a5d8ff", $borderColor="#1971c2")
+  UpdateElementStyle(agent, $fontColor="#099268", $bgColor="#96f2d7", $borderColor="#099268")
+  UpdateElementStyle(scorer, $fontColor="#099268", $bgColor="#96f2d7", $borderColor="#099268")
+  UpdateElementStyle(profile, $fontColor="#e8590c", $bgColor="#ffd8a8", $borderColor="#e8590c")
+  UpdateElementStyle(pdf, $fontColor="#ca8a04", $bgColor="#fef9c3", $borderColor="#ca8a04")
 ```

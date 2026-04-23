@@ -53,9 +53,9 @@ C4Container
   Rel(tts, listened, "audio stream [async]")
   Rel(listened, meet, "injects audio [async]")
 
-  UpdateElementStyle(recruiter, $fontColor="#1e1e1e", $bgColor="#dbe4ff", $borderColor="#748ffc")
-  UpdateElementStyle(candidate, $fontColor="#1e1e1e", $bgColor="#dbe4ff", $borderColor="#748ffc")
-  UpdateElementStyle(ui, $fontColor="#1e1e1e", $bgColor="#a5d8ff", $borderColor="#1971c2")
-  UpdateElementStyle(webhook, $fontColor="#1e1e1e", $bgColor="#96f2d7", $borderColor="#099268")
-  UpdateElementStyle(engine, $fontColor="#1e1e1e", $bgColor="#96f2d7", $borderColor="#099268")
+  UpdateElementStyle(recruiter, $fontColor="#748ffc", $bgColor="#dbe4ff", $borderColor="#748ffc")
+  UpdateElementStyle(candidate, $fontColor="#748ffc", $bgColor="#dbe4ff", $borderColor="#748ffc")
+  UpdateElementStyle(ui, $fontColor="#1971c2", $bgColor="#a5d8ff", $borderColor="#1971c2")
+  UpdateElementStyle(webhook, $fontColor="#099268", $bgColor="#96f2d7", $borderColor="#099268")
+  UpdateElementStyle(engine, $fontColor="#099268", $bgColor="#96f2d7", $borderColor="#099268")
 ```

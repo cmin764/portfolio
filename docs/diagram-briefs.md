@@ -114,36 +114,53 @@ Each brief is complementary to `portfolio-blueprint.md` (which has the narrative
 ## 3. Sema4.ai Action Server
 
 **C4 level:** Container
-**Primary concern:** How an LLM discovers and invokes callable business logic
-**Flow direction:** Left-to-right (LLM on left, external systems on right)
+**Primary concern:** How typed Python functions become LLM-callable tools via an OpenAPI/MCP-compatible server
+**Flow direction:** Left-to-right (authoring left, external systems right)
 
-### Nodes
+### Nodes (14)
 
-| Name | Role | Tech |
-|------|------|------|
-| LLM / GPT | External system | OpenAI GPT-4; generates tool-use requests |
-| Action Server | Container (API) | FastAPI; hosts action registry + discovery endpoint |
-| Action Registry | Container (data store) | In-memory or file-based; maps action names to Python functions |
-| AI Action | Container (function) | Python function decorated with `@action`; type-safe, Pydantic-validated |
-| External System | External system | Database, REST API, file system, Slack, etc. |
+| Alias | Name | Type | Role / Tech |
+|-------|------|------|-------------|
+| `dev` | Developer | Person | Authors `@action` \| `@tool` Python functions via VS Code SDK |
+| `powerUser` | Power User | Person | Configures Studio: LLM provider, connections, OAuth, access grants |
+| `gallery` | Actions Gallery | System_Ext | `github.com/Sema4AI/gallery` — reference Action Packages |
+| `llm` | LLM / GPT | System_Ext | OpenAI / Azure / Bedrock — tool-use reasoning |
+| `externalSystems` | External Systems | System_Ext | SharePoint, SAP, DBs, browsers, SaaS APIs |
+| `actionPkg` | Action Package | Container | `package.yaml` + `@action` Python; RCC-managed env |
+| `actionServer` | Action Server | Container | FastAPI + RCC; exposes `/openapi.json`, `/mcp`, `/actions/{name}`. Precedes MCP standard. |
+| `registry` | Action Registry | ContainerDb | In-memory; name → Pydantic schema → OpenAPI spec; built at startup |
+| `studio` | Sema4.ai Studio | Container | Desktop chat app; ingests OpenAPI/MCP spec; drives LLM tool-use loop |
+| `actionA` | query_database | Container (AI Action) | Python `@action`; Postgres / Snowflake query |
+| `actionB` | post_to_slack | Container (AI Action) | Python `@action`; SaaS API call |
+| `actionC` | read_sheet | Container (AI Action) | Python `@action`; SharePoint / Sheets read |
 
-### Key edges
+Boundary `aiActions`: "AI Actions (Pydantic-typed Python, loaded from Action Package)" — contains `actionA`, `actionB`, `actionC`.
 
-- LLM → Action Server: `action discovery (GET /actions)` (sync, REST)
-- LLM → Action Server: `action invocation (POST /actions/{name})` (sync, JSON payload)
-- Action Server → Action Registry: `resolve action by name` (sync, in-process)
-- Action Registry → AI Action: `invoke with validated params` (sync)
-- AI Action → External System: `execute business logic` (sync, protocol varies)
-- External System → AI Action: `response` (sync)
-- AI Action → Action Server: `typed result` (sync)
-- Action Server → LLM: `structured JSON response` (sync)
+### Key edges (~15, all sync)
 
-### Design constraints worth showing visually
+- `dev → actionPkg`: authors (`@action` | `@tool`, VS Code SDK)
+- `dev → gallery`: contributes + pulls reference packages
+- `powerUser → studio`: configures LLM + connections + access grants
+- `studio → gallery`: browses + installs Action Packages
+- `actionServer → actionPkg`: scans + loads `@action` functions at startup
+- `actionServer → registry`: populates + looks up by name
+- `studio → actionServer`: discovers actions (GET `/openapi.json` + `/mcp`)
+- `studio → llm`: prompt + tool schema / tool-call response
+- `studio → actionServer`: invokes action (POST `/actions/{name}`, validated JSON)
+- `actionServer → actionA`: dispatches with validated params
+- `actionServer → actionB`: dispatches with validated params
+- `actionServer → actionC`: dispatches with validated params
+- `actionA → externalSystems`: queries DB
+- `actionB → externalSystems`: POSTs to SaaS API
+- `actionC → externalSystems`: reads doc / sheet
 
-- Pre-MCP: annotate Action Server with "precedes MCP standard" to give historical context.
-- The discovery step (GET /actions) returns an OpenAPI-compatible schema; LLM uses this to form subsequent calls.
-- Each AI Action is a discrete, versioned, deployable unit. Show multiple AI Action boxes to emphasize the pluggability.
-- The gallery (Sema4AI/gallery) is a collection of reference AI Actions. Can show as a separate "Actions Gallery" container pointing into Action Registry.
+### Design constraints
+
+- Passive-store rule: `registry` has only incoming edges — `actionServer` is the initiator for both populate and lookup.
+- Pull-direction: `dev → gallery` and `studio → gallery` point consumer → producer.
+- "Precedes MCP standard" note lives in `actionServer`'s description string, not a separate node.
+- Two `studio → actionServer` edges are distinct (discover vs invoke); separate arrows in Excalidraw with focus offsets.
+- Edge label convention: `/` = req/resp split (left sent, right returned); `|` = logical OR alternative.
 
 ---
 
@@ -378,34 +395,52 @@ Chat lane (bottom lane):
 ## 10. Robocorp RPA
 
 **C4 level:** Container
-**Primary concern:** How the library layer sits between robot definitions and target systems
+**Primary concern:** How RCC, robocorp-tasks, and two library families wire together from developer authoring to enterprise orchestration
 **Flow direction:** Top-to-bottom
 
 ### Nodes
 
-| Name | Role | Tech |
-|------|------|------|
-| Robot / Task Definition | Container | Robot Framework .robot files or Python tasks |
-| Robocorp Runtime | Container | Task execution engine; manages environment + secrets |
-| Web Automation Library | Container (library) | Selenium + Playwright; browser automation |
-| Desktop Library | Container (library) | Windows/Linux desktop automation |
-| OCR Library | Container (library) | Document reading, screen text extraction |
-| Docs / PDF Library | Container (library) | PDF parsing and generation |
-| Target Systems | External system | Web apps, desktop apps, file systems, ERPs |
-| Execution Log + Artifacts | Database | Run reports, screenshots, extracted data |
-| robocorp.com/portal | External system | Public library discovery + documentation |
+| Alias | Name | Role | Tech |
+|-------|------|------|------|
+| `dev` | Developer | Person | Automation engineer authoring robots |
+| `portal` | robocorp.com/portal + example-* repos | External system | Gallery of pullable example robots hosted on GitHub |
+| `rcc` | RCC CLI | Container | Go; OSS — self-contained Python envs; rcc pull / run / cloud push |
+| `taskPkg` | Task Package | Container | robot.yaml + conda.yaml + tasks.py; one-robot deployable unit |
+| `tasks` | robocorp-tasks | Container | Python; @task decorator, entry point + logging bootstrap |
+| `libBrowser` | Browser lib | Container (inside boundary) | robocorp-browser / rpaframework (Selenium + Playwright) |
+| `libDesktop` | Desktop lib | Container (inside boundary) | robocorp-windows / rpaframework-windows |
+| `libDocs` | Docs + OCR lib | Container (inside boundary) | rpaframework-pdf + rpaframework-recognition |
+| `libCloud` | Cloud integrations | Container (inside boundary) | rpaframework-aws / -google / -openai / -hubspot |
+| `libData` | Data plumbing | Container (inside boundary) | robocorp-workitems + -vault + -storage |
+| `libLog` | robocorp-log | Container (inside boundary) | Python; structured execution logging |
+| `artifacts` | log.html + artifacts | Database | Run report, screenshots, extracted data |
+| `targets` | Target Systems | External system | Web apps, desktop apps, cloud SaaS, filesystems, ERPs |
+| `controlRoom` | Control Room | External system | Enterprise orchestration: scheduling, secrets, scaling |
+
+**Boundary:** `libs` — "Automation Libraries (OSS on GitHub, published to PyPI — robocorp-* + rpaframework-*)" containing libBrowser, libDesktop, libDocs, libCloud, libData, libLog.
 
 ### Key edges
 
-- Robot / Task Definition → Robocorp Runtime: `execute task` (sync)
-- Robocorp Runtime → Web Automation Library: `dispatch web step` (sync)
-- Robocorp Runtime → Desktop Library: `dispatch desktop step` (sync)
-- Robocorp Runtime → OCR Library: `dispatch OCR step` (sync)
-- Robocorp Runtime → Docs / PDF Library: `dispatch docs step` (sync)
-- Web Automation Library → Target Systems: `browser actions` (sync)
-- Desktop Library → Target Systems: `desktop actions` (sync)
-- OCR Library → Target Systems: `screen capture + extract` (sync)
-- Robocorp Runtime → Execution Log + Artifacts: `write log + artifacts` (async)
+- dev → portal: `browses example repos` (sync)
+- dev → rcc: `rcc pull / rcc run / rcc cloud push` (sync)
+- dev → taskPkg: `authors` (sync)
+- rcc → portal: `rcc pull example-* repos` (sync; consumer→producer)
+- rcc → taskPkg: `builds env + executes` (sync)
+- rcc → controlRoom: `submits + pushes` (sync)
+- controlRoom → rcc: `schedules + triggers` (async — fire-and-forget)
+- taskPkg → tasks: `imports @task` (sync)
+- tasks → libBrowser: `dispatch` (sync)
+- tasks → libDesktop: `dispatch` (sync)
+- tasks → libDocs: `dispatch` (sync)
+- tasks → libCloud: `dispatch` (sync)
+- tasks → libData: `dispatch` (sync)
+- tasks → libLog: `writes log events` (sync)
+- libBrowser → targets: `browser actions` (sync)
+- libDesktop → targets: `desktop actions` (sync)
+- libDocs → targets: `document + screen` (sync)
+- libCloud → targets: `API calls` (sync)
+- libData → targets: `fetch/write work items + secrets` (sync)
+- libLog → artifacts: `log.html + screenshots` (async — fire-and-forget)
 
 ---
 
