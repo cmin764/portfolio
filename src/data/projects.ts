@@ -222,7 +222,7 @@ export const PROJECTS: ProjectData[] = [
     architectureNotes:
       'Developer authors @action | @tool Python (VS Code SDK) → Action Package (package.yaml + RCC env); Power User configures Sema4.ai Studio (LLM + connections + access); Studio discovers Action Server OpenAPI/MCP spec → LLM tool-use → Studio invokes Action Server → dispatches typed AI Action → External Systems (DB/API/browser/SaaS); Actions Gallery feeds both Developer and Studio',
     diagramFile: 'sema4ai-action-server.svg',
-    diagramExcalidrawUrl: 'https://excalidraw.com/#json=u6FMqyxfXukO8K0yEP7ha,_7a9SP1F8rq_9XiKlB2dZQ',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=VI6ctFzzTysEXExIBwlXG,mssCYSqHaaao4pX6Pn6uqw',
   },
   {
     id: 'deep-ice',
