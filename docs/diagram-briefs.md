@@ -414,6 +414,7 @@ Chat lane (bottom lane):
 | `libData` | Data plumbing | Container (inside boundary) | robocorp-workitems + -vault + -storage |
 | `libLog` | robocorp-log | Container (inside boundary) | Python; structured execution logging |
 | `artifacts` | log.html + artifacts | Database | Run report, screenshots, extracted data |
+| `targets` | Target Systems | External system | Web apps, desktop apps, cloud SaaS, filesystems, ERPs |
 | `controlRoom` | Control Room | External system | Enterprise orchestration: scheduling, secrets, scaling |
 
 **Boundary:** `libs` — "Automation Libraries (OSS on GitHub, published to PyPI — robocorp-* + rpaframework-*)" containing libBrowser, libDesktop, libDocs, libCloud, libData, libLog.
