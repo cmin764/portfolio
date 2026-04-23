@@ -6,7 +6,7 @@ Developer authors typed `@action` Python functions inside an Action Package; Act
 C4Container
   title Action Server + AI Actions (2023–2024)
 
-  Person(dev, "Developer", "Authors @action / @tool Python functions via VS Code SDK")
+  Person(dev, "Developer", "Authors @action | @tool Python functions via VS Code SDK")
   Person(powerUser, "Power User", "Configures Studio: LLM provider, connections, OAuth, access grants")
   System_Ext(gallery, "Actions Gallery", "github.com/Sema4AI/gallery — reference Action Packages")
   System_Ext(llm, "LLM / GPT", "OpenAI / Azure / Bedrock — tool-use reasoning")

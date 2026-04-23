@@ -114,36 +114,53 @@ Each brief is complementary to `portfolio-blueprint.md` (which has the narrative
 ## 3. Sema4.ai Action Server
 
 **C4 level:** Container
-**Primary concern:** How an LLM discovers and invokes callable business logic
-**Flow direction:** Left-to-right (LLM on left, external systems on right)
+**Primary concern:** How typed Python functions become LLM-callable tools via an OpenAPI/MCP-compatible server
+**Flow direction:** Left-to-right (authoring left, external systems right)
 
-### Nodes
+### Nodes (14)
 
-| Name | Role | Tech |
-|------|------|------|
-| LLM / GPT | External system | OpenAI GPT-4; generates tool-use requests |
-| Action Server | Container (API) | FastAPI; hosts action registry + discovery endpoint |
-| Action Registry | Container (data store) | In-memory or file-based; maps action names to Python functions |
-| AI Action | Container (function) | Python function decorated with `@action`; type-safe, Pydantic-validated |
-| External System | External system | Database, REST API, file system, Slack, etc. |
+| Alias | Name | Type | Role / Tech |
+|-------|------|------|-------------|
+| `dev` | Developer | Person | Authors `@action` \| `@tool` Python functions via VS Code SDK |
+| `powerUser` | Power User | Person | Configures Studio: LLM provider, connections, OAuth, access grants |
+| `gallery` | Actions Gallery | System_Ext | `github.com/Sema4AI/gallery` — reference Action Packages |
+| `llm` | LLM / GPT | System_Ext | OpenAI / Azure / Bedrock — tool-use reasoning |
+| `externalSystems` | External Systems | System_Ext | SharePoint, SAP, DBs, browsers, SaaS APIs |
+| `actionPkg` | Action Package | Container | `package.yaml` + `@action` Python; RCC-managed env |
+| `actionServer` | Action Server | Container | FastAPI + RCC; exposes `/openapi.json`, `/mcp`, `/actions/{name}`. Precedes MCP standard. |
+| `registry` | Action Registry | ContainerDb | In-memory; name → Pydantic schema → OpenAPI spec; built at startup |
+| `studio` | Sema4.ai Studio | Container | Desktop chat app; ingests OpenAPI/MCP spec; drives LLM tool-use loop |
+| `actionA` | query_database | Container (AI Action) | Python `@action`; Postgres / Snowflake query |
+| `actionB` | post_to_slack | Container (AI Action) | Python `@action`; SaaS API call |
+| `actionC` | read_sheet | Container (AI Action) | Python `@action`; SharePoint / Sheets read |
 
-### Key edges
+Boundary `aiActions`: "AI Actions (Pydantic-typed Python, loaded from Action Package)" — contains `actionA`, `actionB`, `actionC`.
 
-- LLM → Action Server: `action discovery (GET /actions)` (sync, REST)
-- LLM → Action Server: `action invocation (POST /actions/{name})` (sync, JSON payload)
-- Action Server → Action Registry: `resolve action by name` (sync, in-process)
-- Action Registry → AI Action: `invoke with validated params` (sync)
-- AI Action → External System: `execute business logic` (sync, protocol varies)
-- External System → AI Action: `response` (sync)
-- AI Action → Action Server: `typed result` (sync)
-- Action Server → LLM: `structured JSON response` (sync)
+### Key edges (~15, all sync)
 
-### Design constraints worth showing visually
+- `dev → actionPkg`: authors (`@action` | `@tool`, VS Code SDK)
+- `dev → gallery`: contributes + pulls reference packages
+- `powerUser → studio`: configures LLM + connections + access grants
+- `studio → gallery`: browses + installs Action Packages
+- `actionServer → actionPkg`: scans + loads `@action` functions at startup
+- `actionServer → registry`: populates + looks up by name
+- `studio → actionServer`: discovers actions (GET `/openapi.json` + `/mcp`)
+- `studio → llm`: prompt + tool schema / tool-call response
+- `studio → actionServer`: invokes action (POST `/actions/{name}`, validated JSON)
+- `actionServer → actionA`: dispatches with validated params
+- `actionServer → actionB`: dispatches with validated params
+- `actionServer → actionC`: dispatches with validated params
+- `actionA → externalSystems`: queries DB
+- `actionB → externalSystems`: POSTs to SaaS API
+- `actionC → externalSystems`: reads doc / sheet
 
-- Pre-MCP: annotate Action Server with "precedes MCP standard" to give historical context.
-- The discovery step (GET /actions) returns an OpenAPI-compatible schema; LLM uses this to form subsequent calls.
-- Each AI Action is a discrete, versioned, deployable unit. Show multiple AI Action boxes to emphasize the pluggability.
-- The gallery (Sema4AI/gallery) is a collection of reference AI Actions. Can show as a separate "Actions Gallery" container pointing into Action Registry.
+### Design constraints
+
+- Passive-store rule: `registry` has only incoming edges — `actionServer` is the initiator for both populate and lookup.
+- Pull-direction: `dev → gallery` and `studio → gallery` point consumer → producer.
+- "Precedes MCP standard" note lives in `actionServer`'s description string, not a separate node.
+- Two `studio → actionServer` edges are distinct (discover vs invoke); separate arrows in Excalidraw with focus offsets.
+- Edge label convention: `/` = req/resp split (left sent, right returned); `|` = logical OR alternative.
 
 ---
 

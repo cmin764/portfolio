@@ -220,7 +220,9 @@ export const PROJECTS: ProjectData[] = [
       { label: 'Gallery', url: 'https://github.com/Sema4AI/gallery' },
     ],
     architectureNotes:
-      'GPT / LLM → Action Server (FastAPI + action registry) → AI Action (Python function with schema) → external system (DB, API, file, etc.) → response back to LLM',
+      'Developer authors @action | @tool Python (VS Code SDK) → Action Package (package.yaml + RCC env); Power User configures Sema4.ai Studio (LLM + connections + access); Studio discovers Action Server OpenAPI/MCP spec → LLM tool-use → Studio invokes Action Server → dispatches typed AI Action → External Systems (DB/API/browser/SaaS); Actions Gallery feeds both Developer and Studio',
+    diagramFile: 'sema4ai-action-server.svg',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=u6FMqyxfXukO8K0yEP7ha,_7a9SP1F8rq_9XiKlB2dZQ',
   },
   {
     id: 'deep-ice',
