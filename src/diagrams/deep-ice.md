@@ -5,7 +5,7 @@ C4Component
   title DeepIce: FastAPI Reference App (2023–present)
 
   Person(client, "REST Client", "Any HTTP consumer: curl, httpie, or frontend app")
-  Container_Ext(nextjs, "Next.js Frontend", "TypeScript / Next.js", "Planned web UI (planned)")
+  Container(nextjs, "Next.js Frontend", "TypeScript / Next.js", "Planned web UI (planned)")
 
   System_Boundary(deepice, "DeepIce") {
     Container_Boundary(fastapi, "FastAPI App") {
@@ -42,12 +42,12 @@ C4Component
   UpdateElementStyle(service, $fontColor="#099268", $bgColor="#96f2d7", $borderColor="#099268")
   UpdateElementStyle(session, $fontColor="#099268", $bgColor="#96f2d7", $borderColor="#099268")
   UpdateElementStyle(client, $fontColor="#748ffc", $bgColor="#dbe4ff", $borderColor="#748ffc")
-  UpdateElementStyle(worker, $fontColor="#868e96", $bgColor="#e9ecef", $borderColor="#868e96")
-  UpdateElementStyle(postgres, $fontColor="#868e96", $bgColor="#e9ecef", $borderColor="#868e96")
-  UpdateElementStyle(redis, $fontColor="#868e96", $bgColor="#e9ecef", $borderColor="#868e96")
-  UpdateElementStyle(alembic, $fontColor="#868e96", $bgColor="#e9ecef", $borderColor="#868e96")
+  UpdateElementStyle(worker, $fontColor="#099268", $bgColor="#96f2d7", $borderColor="#099268")
+  UpdateElementStyle(postgres, $fontColor="#e8590c", $bgColor="#ffd8a8", $borderColor="#e8590c")
+  UpdateElementStyle(redis, $fontColor="#e8590c", $bgColor="#ffd8a8", $borderColor="#e8590c")
+  UpdateElementStyle(alembic, $fontColor="#099268", $bgColor="#96f2d7", $borderColor="#099268")
   UpdateElementStyle(sentry, $fontColor="#868e96", $bgColor="#e9ecef", $borderColor="#868e96")
-  UpdateElementStyle(nextjs, $fontColor="#868e96", $bgColor="#e9ecef", $borderColor="#868e96")
+  UpdateElementStyle(nextjs, $fontColor="#1971c2", $bgColor="#a5d8ff", $borderColor="#1971c2")
   UpdateElementStyle(elk, $fontColor="#868e96", $bgColor="#e9ecef", $borderColor="#868e96")
   UpdateElementStyle(prometheus, $fontColor="#868e96", $bgColor="#e9ecef", $borderColor="#868e96")
 
