@@ -168,21 +168,22 @@ The following is a condensed, implementation-ready set of rules for an automatio
   - Relationships: list of edges with `{from, to, type, label, sync?}` where `type` ∈ `{call, data, dependency, monitor}`.
 ### 9.2 Node rendering rules
 - Map `role` to shape and style:
-  - `person`: stick figure or rounded rectangle, light fill.
+  - `person`: **Excalidraw: circle/ellipse** (`"type": "ellipse"`); Mermaid `Person()` renders as a fixed box with icon, no shape override possible.
   - `system`: rounded rectangle with thicker border.
   - `container`: rectangle or rounded rectangle.
-  - `database`: cylinder.
-  - `queue|topic|stream`: pill or cylinder labeled as such.
-  - `external-system|external-service`: same shape as system/container but dashed border and muted color.
-- Label format: `Name – Type` on first line; optional short description underneath.
+  - `database`: cylinder or rounded rectangle (Excalidraw uses rounded rect differentiated by color).
+  - `queue|topic|stream`: pill or cylinder labeled as such; same peach/orange palette as data stores.
+  - `external-system|external-service`: same shape as container, near-white bg `#e9ecef`, gray border `#868e96`.
+- Label format (3-level): Name on first line; `[Technology / stack]` on second line; short responsibility on third line. In Mermaid C4: `Container(alias, "Name", "Technology", "Description")`.
 - Color mapping (authoritative hex values in `.claude/skills/diagram/references/color-palette.md`):
   - UI/frontends: light blue bg `#a5d8ff`, stroke `#1971c2`.
   - Services/APIs: light mint bg `#96f2d7`, stroke `#099268`.
   - Data stores, caches, queues: light peach bg `#ffd8a8`, stroke `#e8590c`.
   - External systems: near-white bg `#e9ecef`, stroke `#868e96`.
   - Boundary/grouping boxes: neutral bronze tint `#eaddd7`, stroke `#846358` — all boundaries use this regardless of what they contain. Role distinction via title color only.
-  - Legend/annotation boxes: post-it yellow `#ffec99`, stroke `#1e1e1e`.
-- Arrow colors: near-black `#1e1e1e` by default. Color only when the semantic cannot be expressed with line style alone, and only when documented in the diagram's legend. Cross-boundary arrows are the canonical exception: red `#e03131` outbound, blue `#1971c2` inbound.
+  - Legend/annotation boxes: post-it yellow `#ffec99`, no border, `hachure` fillStyle, `#1e1e1e` text.
+  - Boundary title text: `#846358` always, matching the stroke — never role-colored, never `#1e1e1e`.
+- Arrow colors: `#1e1e1e` for all edges, no exceptions. Stroke style and arrowhead type (filled triangle for sync, open stick for async) encode the full semantic. Color adds nothing.
 ### 9.3 Edge rendering rules
 - For `type = call` or `data`:
   - Use solid lines.
