@@ -111,6 +111,8 @@ Legend box style: light yellow post-it (#ffec99), **no border** (`strokeColor: "
 
 ## Dark mode compatibility
 
+**Scope:** `dark:invert` applies only to exported SVGs rendered via `<img>` in the portfolio. Mermaid C4 diagrams render on their own white canvas (in Cursor preview or a browser), so the pastel fills with dark text are already legible there regardless of editor dark mode — no special handling needed for the Mermaid preview.
+
 The portfolio uses `dark:invert` on the `<img>` tag for diagram SVGs. This means:
 - White/light backgrounds invert to dark — the light fills above (peach, mint, light blue) survive reasonably
 - **Avoid pure black** (#000000) fills: they become pure white when inverted
