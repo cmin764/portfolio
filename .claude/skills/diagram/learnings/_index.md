@@ -15,3 +15,4 @@ Auto-maintained index. Each entry links to a learning file with context and rati
 - [node-semantics-002 — Only annotate LLM external with "embeddings" when a vector store appears in the diagram](node-semantics-002.md) — source: Candidate Assessment, 2026-04-21
 - [labeling-001 — `/` = req/resp split on edges; `|` = logical OR; never mix](labeling-001.md) — source: Sema4.ai Action Server, 2026-04-22
 - [integration-002 — Always bind arrows with startBinding/endBinding + gap≥8 to attach at node borders, not centers](integration-002.md) — source: DeepIce, 2026-04-24
+- [integration-003 — Strip [async]/[cron]/[async, secondary] meta-tags from Excalidraw labels; stroke+head encodes the meaning](integration-003.md) — source: consolidation, 2026-04-24

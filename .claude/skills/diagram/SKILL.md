@@ -143,7 +143,31 @@ Apply colors from `.claude/skills/diagram/references/color-palette.md`. Font col
 - Database/queue: `$bgColor="#ffd8a8" $borderColor="#e8590c" $fontColor="#e8590c"`
 - External systems: `$bgColor="#e9ecef" $borderColor="#868e96" $fontColor="#868e96"` — always override; default is dark navy
 
-Apply via `UpdateElementStyle(alias, ...)` for each non-default node. Person shape in C4Container is fixed (box with icon) — no circle override is possible via the API.
+Apply via `UpdateElementStyle(alias, ...)` for each non-default node. Person shape in C4Container is a fixed box with icon — no circle override is possible via the Mermaid API.
+
+### Node text structure (3-level)
+
+Each node carries three tiers of information:
+```
+Name
+[Technology / stack]
+Short responsibility — one clause
+```
+
+In Mermaid C4, this maps directly to the four-parameter primitive:
+`Container(alias, "Name", "Technology", "Description")`
+
+In Excalidraw, use a multiline bound text element with the name on the first line (larger, ~16px), `[Technology]` on the second line (smaller, ~12px, italic or bracketed), and the description on the third line (smaller, ~12px). All text uses the border color of the node.
+
+### Title format
+
+- Mermaid `title` field: `<Company>: <Project> (<period>)` — e.g. `VONQ: Meeting Assistant (2025–2026)`. For personal/OSS projects with no employer: `<Project> (<period>)` — e.g. `DeepIce: FastAPI Reference App (2023–present)`.
+- H1 heading in the `.md` file: `# <Company>: <Project> (<period>) — <Diagram type>` — e.g. `# VONQ: Meeting Assistant (2025–2026) — Container Diagram`.
+- Excalidraw: add a subtitle text element below the diagram title — e.g. "Container Diagram".
+
+### Edge mapping — directional hints
+
+- Never use `Rel_D`, `Rel_U`, `Rel_L`, `Rel_R` — directional Rel variants collapse layout when combined with `Boundary`. Use plain `Rel()` only.
 
 ### Output
 
@@ -151,7 +175,7 @@ Write the diagram to **`src/diagrams/<id>.md`** as a Markdown file with a mermai
 
 Format:
 ```markdown
-# <Project Title> — Container Diagram (<period>)
+# <Company>: <Project> (<period>) — <Diagram type>
 
 ```mermaid
 [MERMAID CODE]
@@ -334,19 +358,33 @@ Follow `.claude/skills/diagram/references/integration-checklist.md` step by step
 
    **Node styling (boxes):**
    - `"roughness": 1`, `"fontFamily": 1` (Virgil) on every element — non-negotiable, preserves hand-drawn aesthetic
+   - All nodes: rounded rectangle (`"type": "rectangle"`, `"roundness": {"type": 3}`)
+   - **Person/Actor: circle/ellipse** (`"type": "ellipse"`) with the indigo palette (`#dbe4ff` fill, `#748ffc` stroke/text). Mermaid's `Person()` renders as a fixed box — Excalidraw is the only place this distinction can be made.
    - Use **pastel fills** from `color-palette.md` (not saturated): `#a5d8ff` UI, `#96f2d7` service, `#ffd8a8` data store, `#e9ecef` external
    - Text color = border color (same pairing as Mermaid: teal service nodes use `#099268` text, indigo person nodes use `#748ffc` text, etc.)
    - Use bound text elements (`containerId`) for all node labels — inline `label` shorthand is stripped by `export_to_excalidraw`
    - Set `"boundElements"` arrays on shapes pointing to their text and arrow IDs
+   - **3-level text per node:** Name (larger, ~16px) / [Technology] (smaller, ~12px) / description (smaller, ~12px). All text at border color.
+   - **Boundary boxes:** fill `#eaddd7`, stroke `#846358`, title text `#846358` (never role-colored, never `#1e1e1e`)
+
+   **Meta-tags on edge labels (Excalidraw only — strip them):**
+   Remove `[async]`, `[cron]`, and `[async, secondary]` from all Excalidraw edge labels. Stroke style + arrowhead already encode the full meaning. Keep only semantic content (e.g., "reports errors" not "reports errors [async, secondary]"). Exception: keep `(planned)` and `(assumed)` — these are semantic, not style hints.
+
+   **Legend box (include when diagram has varied edge types):**
+   - Shape: rounded rectangle, **no border** (`"strokeColor": "transparent"`)
+   - Fill: `#ffec99` (light amber)
+   - Fill style: **`"hachure"`** (diagonal hatching)
+   - Text: `#1e1e1e`
+   - Contents: color → role key, line style → interaction type key
 
    **Arrow styling (edges):**
 
    | Interaction type | `strokeStyle` | `endArrowhead` | When |
    |-----------------|--------------|----------------|------|
-   | Sync call (default) | `"solid"` | `"triangle"` | Blocking request/response; no `[async]` or `[cron]` label |
-   | Async / fire-and-forget | `"solid"` | `"arrow"` | Edge label contains `[async]` |
-   | Cron / polling / dependency | `"dashed"` | `"triangle"` | Edge label contains `[cron]` |
-   | Secondary / background async | `"dashed"` | `"arrow"` | Edge label contains `[async, secondary]` |
+   | Sync call (default) | `"solid"` | `"triangle"` | Blocking request/response; sender waits for return |
+   | Async / fire-and-forget | `"solid"` | `"arrow"` | Primary path async: sender's main job IS this dispatch (e.g., enqueue task) |
+   | Cron / polling / dependency | `"dashed"` | `"triangle"` | Scheduled/periodic fetch; build-time dependency; sender blocks when it runs |
+   | Secondary / background async | `"dashed"` | `"arrow"` | Use ONLY when both conditions hold: (1) not on main request path AND (2) fire-and-forget. Canonical: error reporting to Sentry, log shipping, telemetry push. If the primary user action still succeeds when this call fails, it qualifies. |
 
    **Exactly four combinations.** Two arrowhead values — `"triangle"` (filled, sync) and `"arrow"` (open stick, async) — never `"triangle_outline"`. **All arrows use `#1e1e1e`.** Stroke/head encodes the full meaning; color adds nothing and must not vary.
 

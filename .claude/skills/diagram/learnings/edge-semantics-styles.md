@@ -10,7 +10,7 @@ Exactly four arrow combinations encode distinct interaction models. Line style (
 | Solid | Filled triangle | `"solid"` + `"triangle"` | _(none)_ | Sync: sender blocks waiting for return (REST, DB query, gRPC) |
 | Solid | Open stick | `"solid"` + `"arrow"` | `[async]` | Async primary: fire-and-forget to queue, event bus, or pub/sub |
 | Dashed | Filled triangle | `"dashed"` + `"triangle"` | `[cron]` | Cron job, polling, scheduled fetch, build-time dependency |
-| Dashed | Open stick | `"dashed"` + `"arrow"` | `[async, secondary]` | Secondary/background async: telemetry, log shipping, monitoring |
+| Dashed | Open stick | `"dashed"` + `"arrow"` | `[async, secondary]` | Secondary/background async: use ONLY when BOTH conditions hold: (1) not on main request path, AND (2) fire-and-forget. Canonical: error reporting (Sentry), log shipping (ELK), telemetry/metrics push. If the primary user action still succeeds when this call fails, it qualifies. |
 
 **Arrowhead key — two values only:**
 - `"triangle"` — closed filled triangle — sync
