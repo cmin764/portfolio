@@ -238,7 +238,7 @@ export const PROJECTS: ProjectData[] = [
       { label: 'Repo', url: 'https://github.com/cmin764/deep-ice' },
     ],
     architectureNotes:
-      'HTTP request → FastAPI router → service layer → SQLModel async session → PostgreSQL → Pydantic response schema',
+      'HTTP request → FastAPI router → service layer → SQLModel async session → PostgreSQL. CARD payments enqueued to Redis → ARQ worker confirms or cancels order. Alembic runs migrations at startup. Sentry for error tracking.',
   },
   {
     id: 'pulsr',

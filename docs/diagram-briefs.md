@@ -362,33 +362,49 @@ Chat lane (bottom lane):
 
 ## 9. DeepIce
 
-**C4 level:** Component (inside the FastAPI container)
-**Primary concern:** Layered async Python API; shows idiomatic project structure
-**Flow direction:** Top-to-bottom (HTTP in, Postgres out)
+**C4 level:** Component (FastAPI internals as hero; outer containers shown for deployment context)
+**Primary concern:** Layered async Python API; shows idiomatic project structure inside a real deployment topology
+**Flow direction:** Top-to-bottom
+
+**Boundary structure:** `System_Boundary(deepice)` → `Container_Boundary(fastapi)` → `Component()` nodes. The outer System boundary holds all owned containers; the inner Container boundary zooms into the FastAPI app. External actors and systems sit outside both.
+
+**Color note:** All nodes outside the FastAPI boundary (postgres, redis, worker, alembic, sentry, nextjs, elk, prometheus) use the muted gray palette (`#e9ecef/#868e96`) to visually recede. Only the three Component nodes inside the FastAPI boundary use their role palette (mint). This is a deliberate visual hierarchy choice, not a role misclassification.
 
 ### Nodes
 
-| Name | Role | Tech |
-|------|------|------|
-| HTTP Client | Person / External | Any REST consumer |
-| FastAPI Router | Component | Route declarations, request validation |
-| Service Layer | Component | Business logic; transaction boundaries |
-| SQLModel Session | Component | Async ORM; Pydantic + SQLAlchemy combined |
-| PostgreSQL | Database | Primary data store |
-| Redis | Database (cache) | Response caching layer |
-| Alembic | Container (tool) | Schema migrations; run via invoke tasks |
+| Alias | Name | Role | Tech | Palette |
+|-------|------|------|------|---------|
+| `client` | REST Client | Person | Any HTTP consumer | Indigo (Person) |
+| `router` | FastAPI Router | Component | Python / FastAPI | Mint (Service) |
+| `service` | Service Layer | Component | Python | Mint (Service) |
+| `session` | SQLModel Session | Component | SQLModel / asyncpg | Mint (Service) |
+| `worker` | ARQ Worker | Container | Python / ARQ | Gray (muted) |
+| `postgres` | PostgreSQL | ContainerDb | PostgreSQL / asyncpg | Gray (muted) |
+| `redis` | Redis | ContainerDb | Redis | Gray (muted) |
+| `alembic` | Alembic | Container | Python / Alembic | Gray (muted) |
+| `sentry` | Sentry | System_Ext | — | Gray (muted) |
+| `nextjs` | Next.js Frontend | Container_Ext | TypeScript / Next.js | Gray (muted, planned) |
+| `elk` | ELK Stack | System_Ext | Logstash + Elasticsearch + Kibana | Gray (muted, planned) |
+| `prometheus` | Prometheus / Grafana | System_Ext | — | Gray (muted, planned) |
 
 ### Key edges
 
-- HTTP Client → FastAPI Router: `HTTP request` (sync)
-- FastAPI Router → Redis: `cache lookup` (sync, before hitting service)
-- Redis → FastAPI Router: `cache hit → early return` (sync)
-- FastAPI Router → Service Layer: `invoke service method` (sync)
-- Service Layer → SQLModel Session: `async query / mutation` (async)
-- SQLModel Session → PostgreSQL: `SQL via asyncpg` (async)
-- PostgreSQL → SQLModel Session: `result set` (async)
-- Service Layer → FastAPI Router: `domain object` (sync)
-- FastAPI Router → HTTP Client: `Pydantic response schema (JSON)` (sync)
+- `client` → `router`: `HTTP request / response` — REST/JSON (sync)
+- `router` → `redis`: `cache lookup / stats write` (sync)
+- `router` → `service`: `invokes service method` (sync)
+- `service` → `session`: `async query / mutation` (async)
+- `session` → `postgres`: `SQL via asyncpg` (async)
+- `router` → `redis`: `enqueues payment task` (async — CARD payments only; second edge, parallel to cache edge)
+- `worker` → `redis`: `polls for tasks` (cron — ARQ pull model)
+- `worker` → `postgres`: `confirms or cancels order` — SQL via asyncpg (async)
+- `alembic` → `postgres`: `applies migrations` (cron — once at startup)
+- `router` → `sentry`: `reports errors` (async, secondary)
+- `worker` → `sentry`: `reports errors` (async, secondary)
+- `nextjs` → `router`: `API calls (planned)` — REST/JSON (sync, planned)
+- `session` → `elk`: `ships logs (planned)` (async, secondary, planned)
+- `prometheus` → `router`: `scrapes metrics (planned)` (cron, planned)
+
+**Passive-store check:** No edge originates from `postgres`, `redis`, or `elk`. Pull direction on `worker → redis` is correct (ARQ worker initiates poll).
 
 ---
 
