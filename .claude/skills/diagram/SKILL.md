@@ -136,12 +136,12 @@ The Excalidraw path (Phase 6B) is where system-design.md rules get fully applied
 
 ### Color application
 
-Apply colors from `.claude/skills/diagram/references/color-palette.md` (pastel fills, dark text `#1e1e1e`):
-- Person: `$bgColor="#dbe4ff" $borderColor="#748ffc" $fontColor="#1e1e1e"` — always override; default is dark navy
-- UI/frontend: `$bgColor="#a5d8ff" $borderColor="#1971c2" $fontColor="#1e1e1e"`
-- Service/API: `$bgColor="#96f2d7" $borderColor="#099268" $fontColor="#1e1e1e"`
-- Database/queue: `$bgColor="#ffd8a8" $borderColor="#e8590c" $fontColor="#1e1e1e"`
-- External systems: leave as Mermaid default (gray)
+Apply colors from `.claude/skills/diagram/references/color-palette.md`. Font color always equals border color — they form the "dark" half of the pastel pair:
+- Person: `$bgColor="#dbe4ff" $borderColor="#748ffc" $fontColor="#748ffc"` — always override; default is dark navy
+- UI/frontend: `$bgColor="#a5d8ff" $borderColor="#1971c2" $fontColor="#1971c2"`
+- Service/API: `$bgColor="#96f2d7" $borderColor="#099268" $fontColor="#099268"`
+- Database/queue: `$bgColor="#ffd8a8" $borderColor="#e8590c" $fontColor="#e8590c"`
+- External systems: `$bgColor="#e9ecef" $borderColor="#868e96" $fontColor="#868e96"` — always override; default is dark navy
 
 Apply via `UpdateElementStyle(alias, ...)` for each non-default node. Person shape in C4Container is fixed (box with icon) — no circle override is possible via the API.
 
@@ -335,7 +335,7 @@ Follow `.claude/skills/diagram/references/integration-checklist.md` step by step
    **Node styling (boxes):**
    - `"roughness": 1`, `"fontFamily": 1` (Virgil) on every element — non-negotiable, preserves hand-drawn aesthetic
    - Use **pastel fills** from `color-palette.md` (not saturated): `#a5d8ff` UI, `#96f2d7` service, `#ffd8a8` data store, `#e9ecef` external
-   - Text color `#1e1e1e` (dark) — pastels on Excalidraw's white canvas need dark text
+   - Text color = border color (same pairing as Mermaid: teal service nodes use `#099268` text, indigo person nodes use `#748ffc` text, etc.)
    - Use bound text elements (`containerId`) for all node labels — inline `label` shorthand is stripped by `export_to_excalidraw`
    - Set `"boundElements"` arrays on shapes pointing to their text and arrow IDs
 
@@ -345,12 +345,24 @@ Follow `.claude/skills/diagram/references/integration-checklist.md` step by step
    |-----------------|--------------|----------------|------|
    | Sync call (default) | `"solid"` | `"triangle"` | Blocking request/response; no `[async]` or `[cron]` label |
    | Async / fire-and-forget | `"solid"` | `"arrow"` | Edge label contains `[async]` |
-   | Cron / dependency | `"dashed"` | `"triangle"` | Edge label contains `[cron]` or "on cron" |
+   | Cron / polling / dependency | `"dashed"` | `"triangle"` | Edge label contains `[cron]` |
+   | Secondary / background async | `"dashed"` | `"arrow"` | Edge label contains `[async, secondary]` |
 
-   **Why these values (UML 2.5 §17.4.4.1):** `"triangle"` = closed filled arrowhead = sender blocks for return. `"arrow"` = open stick arrowhead = sender continues immediately, no return expected. Never use `"triangle_outline"` — it is the outlined large triangle, not the UML async stick arrowhead.
+   **Exactly four combinations.** Two arrowhead values — `"triangle"` (filled, sync) and `"arrow"` (open stick, async) — never `"triangle_outline"`. **All arrows use `#1e1e1e`.** Stroke/head encodes the full meaning; color adds nothing and must not vary.
 
-   - Arrow stroke color: `#1e1e1e` (near-black) for all edges unless a cross-boundary semantic applies (see `color-palette.md`)
+   - Arrow stroke color: `#1e1e1e` for all edges, no exceptions
    - Arrow label: bound text element with `containerId` pointing to the arrow id
+
+   **Arrow endpoint binding (mandatory):** Every arrow must use `startBinding` and `endBinding` with a non-zero `gap` so the arrowhead attaches to the node's border, not its center. Without this, Excalidraw routes all arrows through the center of each box, overlapping text and making the diagram illegible.
+
+   ```json
+   "startBinding": { "elementId": "<source-node-id>", "focus": 0, "gap": 8 },
+   "endBinding":   { "elementId": "<target-node-id>", "focus": 0, "gap": 8 }
+   ```
+
+   - `gap`: minimum 8px; increase to 12–16px for nodes with dense incoming edges
+   - `focus`: use `0` for a single edge between two nodes; use `-0.3` / `+0.3` (or similar offsets) when two parallel edges connect the same pair of nodes, so the lines separate visually
+   - Never omit `startBinding`/`endBinding` — floating arrows (no binding) drift on every render and lose their attachment to nodes entirely
 
 3. Call `mcp__claude_ai_Excalidraw__export_to_excalidraw` with the full Excalidraw JSON and return the shareable URL to the user.
 
