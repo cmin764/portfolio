@@ -1,4 +1,4 @@
-# Traced AI — Container Diagram (2024–present)
+# Traced AI: Compliance Platform (2024–present) — Container Diagram
 
 <!-- Abstraction level: Container (C4)
      Two boundaries rendered side-by-side: client perimeter (left) vs TracedAI cloud (right).
@@ -9,7 +9,7 @@
 
 ```mermaid
 C4Container
-  title Container Diagram for Traced AI
+  title Traced AI: Compliance Platform (2024–present)
 
   Boundary(client, "Client Perimeter", "on-premise / client machine") {
     System_Ext(aiapp, "AI Application", "Any LLM-using app")
@@ -40,4 +40,5 @@ C4Container
   UpdateElementStyle(ingest, $fontColor="#099268", $bgColor="#96f2d7", $borderColor="#099268")
   UpdateElementStyle(ledger, $fontColor="#e8590c", $bgColor="#ffd8a8", $borderColor="#e8590c")
   UpdateElementStyle(rules, $fontColor="#e8590c", $bgColor="#ffd8a8", $borderColor="#e8590c")
+  UpdateElementStyle(aiapp, $bgColor="#e9ecef", $borderColor="#868e96", $fontColor="#868e96")
 ```

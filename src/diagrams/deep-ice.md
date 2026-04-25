@@ -1,23 +1,25 @@
-# DeepIce — Component Diagram (2023-present)
+# DeepIce: FastAPI Reference App (2023–present) — Component Diagram
 
 ```mermaid
 C4Component
-  title DeepIce - Component Diagram (2023-present)
+  title DeepIce: FastAPI Reference App (2023–present)
 
   Person(client, "REST Client", "Any HTTP consumer: curl, httpie, or frontend app")
+  Container_Ext(nextjs, "Next.js Frontend", "TypeScript / Next.js", "Planned web UI (planned)")
 
-  Container_Boundary(fastapi, "FastAPI App") {
-    Component(router, "FastAPI Router", "Python / FastAPI", "Route declarations, request validation, response serialization")
-    Component(service, "Service Layer", "Python", "Business logic, stock management, transaction boundaries")
-    Component(session, "SQLModel Session", "SQLModel / asyncpg", "Async ORM: Pydantic validation + SQLAlchemy query execution")
+  System_Boundary(deepice, "DeepIce") {
+    Container_Boundary(fastapi, "FastAPI App") {
+      Component(router, "FastAPI Router", "Python / FastAPI", "Route declarations, request validation, response serialization")
+      Component(service, "Service Layer", "Python", "Business logic, stock management, transaction boundaries")
+      Component(session, "SQLModel Session", "SQLModel / asyncpg", "Async ORM: Pydantic validation + SQLAlchemy query execution")
+    }
+    Container(worker, "ARQ Worker", "Python / ARQ", "Deferred card payment processor with retry logic")
+    ContainerDb(postgres, "PostgreSQL", "PostgreSQL / asyncpg", "Primary data store: users, ice cream, orders, payments")
+    ContainerDb(redis, "Redis", "Redis", "Response cache, stats store, and ARQ task queue backend")
+    Container(alembic, "Alembic", "Python / Alembic", "Schema migration runner; executes once at startup")
   }
 
-  Container(worker, "ARQ Worker", "Python / ARQ", "Deferred card payment processor with retry logic")
-  ContainerDb(postgres, "PostgreSQL", "PostgreSQL / asyncpg", "Primary data store: users, ice cream, orders, payments")
-  ContainerDb(redis, "Redis", "Redis", "Response cache, stats store, and ARQ task queue backend")
-  Container(alembic, "Alembic", "Python / Alembic", "Schema migration runner; executes once at startup")
   System_Ext(sentry, "Sentry", "Error tracking and performance monitoring")
-  Container_Ext(nextjs, "Next.js Frontend", "TypeScript / Next.js", "Planned web UI (planned)")
   System_Ext(elk, "ELK Stack", "Logstash + Elasticsearch + Kibana — log aggregation and analytics (planned)")
   System_Ext(prometheus, "Prometheus / Grafana", "System and app metrics (planned)")
 

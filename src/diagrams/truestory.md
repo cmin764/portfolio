@@ -1,8 +1,8 @@
-# TrueStory — Container Diagram (2019–2020)
+# TrueStory (2019–2020) — Container Diagram
 
 ```mermaid
 C4Container
-  title TrueStory — Container Diagram (2019–2020)
+  title TrueStory (2019–2020)
 
   Person(user, "User / Reader", "On a news page in Chrome")
 
