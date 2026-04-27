@@ -336,27 +336,32 @@ Chat lane (bottom lane):
 
 ### Nodes
 
-| Name | Role | Tech |
-|------|------|------|
-| User / Developer | Person | Defines pipeline as DAG |
-| Pulsr API | Container (API) | FastAPI; accepts pipeline definitions and run triggers |
-| Step Scheduler | Container (service) | Resolves DAG dependencies; dispatches steps in order |
-| Agent Executor | Container (service) | Runs individual agent steps (parallel or sequential) |
-| State Store | Database | Tracks pipeline + step status; enables retries |
-| Artifact Registry | Database | Stores step outputs for downstream consumption |
-| Execution Log | Database | Immutable run history; observability |
+| Alias | Name | Role | Tech |
+|-------|------|------|------|
+| `user` | Developer | Person | Defines pipelines as DAGs and triggers runs |
+| `api` | Pulsr API | Container (API) | FastAPI; accepts pipeline definitions and run triggers |
+| `executor` | Executor Service | Container (service) | Python; orchestrates workers and backends; manages step state |
+| `worker` | Worker Agent | Container (service) | Python / threading; routes steps to backends; polls execution status via daemon threads |
+| `backend` | Execution Backend | Container (service) | Python; pluggable: Local (subprocess) or Docker container |
+| `db` | SQLite | Database | Single store: pipelines, runs, steps, artifacts |
 
 ### Key edges
 
 - User → Pulsr API: `pipeline definition (DAG)` (sync, REST)
 - User → Pulsr API: `trigger run` (sync, REST)
-- Pulsr API → Step Scheduler: `enqueue DAG` (sync)
-- Step Scheduler → State Store: `read/write step state` (sync)
-- Step Scheduler → Agent Executor: `dispatch step` (async)
-- Agent Executor → Artifact Registry: `store step output` (sync)
-- Agent Executor → State Store: `update step status` (sync)
-- Agent Executor → Execution Log: `append log entry` (async)
-- Agent Executor → Step Scheduler: `signal completion` (async, triggers next step)
+- Pulsr API → SQLite: `creates pipeline / run / step records` (sync)
+- Pulsr API → Executor Service: `dispatches step execution` (sync)
+- Executor Service → SQLite: `reads / writes step run state` (sync)
+- Executor Service → Worker Agent: `submits step` (sync)
+- Worker Agent → Execution Backend: `runs step command` (async — fire-and-forget to backend)
+- Worker Agent → Execution Backend: `polls execution status` (cron — daemon thread every 5 s)
+
+### Design constraints
+
+- All persistence is in a single SQLite database; the three logical concerns (run state, artifacts, logs) are separate tables within it, not separate containers.
+- Worker Agent runs in-process with the API as daemon threads (heartbeat every 60 s, status check every 5 s). In a future distributed deployment, Worker Agents would be separate processes on remote machines (similar to GitHub Actions self-hosted runners).
+- The `api → executor` dispatch is wired but the trigger_run background task integration is in-progress on `feature/interview`.
+- Execution Backend is pluggable: Local (subprocess) and Docker are the two shipped implementations.
 
 ---
 

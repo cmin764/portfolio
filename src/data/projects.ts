@@ -256,7 +256,7 @@ export const PROJECTS: ProjectData[] = [
       { label: 'Repo', url: 'https://github.com/cmin764/pulsr' },
     ],
     architectureNotes:
-      'Pipeline definition (DAG) → Pulsr API (FastAPI) → step scheduler → agent execution (parallel/sequential) → state store → artifact registry → execution log',
+      'Developer triggers pipeline run via REST API → Executor Service selects a Worker Agent → Worker Agent routes each step to a pluggable Execution Backend (Local subprocess or Docker container) and polls for completion → all state (pipelines, runs, steps, artifacts) persisted in a single SQLite DB',
   },
 
   // Frontend & Brand
