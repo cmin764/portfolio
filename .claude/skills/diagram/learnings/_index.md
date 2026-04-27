@@ -18,3 +18,4 @@ Auto-maintained index. Each entry links to a learning file with context and rati
 - [integration-003 — Strip [async]/[cron]/[async, secondary] meta-tags from Excalidraw labels; stroke+head encodes the meaning](integration-003.md) — source: consolidation, 2026-04-24
 - [node-semantics-003 — Commodity managed hosting = ContainerDb; proprietary SaaS data product = System_Ext + orange](node-semantics-003.md) — source: VONQ Knowledge Base, 2026-04-27
 - [mermaid-syntax-002 — Mermaid C4 drops all but the last Rel() between the same node pair; Excalidraw is authoritative for parallel edges](mermaid-syntax-002.md) — source: Pulsr, 2026-04-27
+- [styling-003 — Boundary boxes must use strokeStyle dashed; solid is Excalidraw's default and makes boundaries indistinguishable from containers](styling-003.md) — source: Pulsr, 2026-04-27

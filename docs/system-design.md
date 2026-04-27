@@ -180,7 +180,7 @@ The following is a condensed, implementation-ready set of rules for an automatio
   - Services/APIs: light mint bg `#96f2d7`, stroke `#099268`.
   - Data stores, caches, queues: light peach bg `#ffd8a8`, stroke `#e8590c`.
   - External systems: near-white bg `#e9ecef`, stroke `#868e96`.
-  - Boundary/grouping boxes: neutral bronze tint `#eaddd7`, stroke `#846358` — all boundaries use this regardless of what they contain. Role distinction via title color only.
+  - Boundary/grouping boxes: neutral bronze tint `#eaddd7`, stroke `#846358`, `strokeStyle: "dashed"` — all boundaries use this regardless of what they contain. Role distinction via title color only. Dashed stroke is mandatory: it distinguishes the grouping frame from solid container boxes.
   - Legend/annotation boxes: post-it yellow `#ffec99`, no border, `hachure` fillStyle, `#1e1e1e` text.
   - Boundary title text: `#846358` always, matching the stroke — never role-colored, never `#1e1e1e`.
 - Arrow colors: `#1e1e1e` for all edges, no exceptions. Stroke style and arrowhead type (filled triangle for sync, open stick for async) encode the full semantic. Color adds nothing.
