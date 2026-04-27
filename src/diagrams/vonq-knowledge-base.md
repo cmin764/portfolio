@@ -21,7 +21,8 @@ Design notes that Mermaid C4 cannot fully render (preserved for the Excalidraw p
   - Cron (crawler → clientSite, label [cron]): strokeStyle "dashed", endArrowhead "triangle" (closed filled)
 - Node fills for Excalidraw (pastel palette, text = border color):
   - Services (crawler, syncer, agent): bg #96f2d7, stroke #099268
-  - Data stores (kb, pinecone): bg #ffd8a8, stroke #e8590c
+  - Data stores (kb): bg #ffd8a8, stroke #e8590c
+  - External data store (pinecone): System_Ext primitive, but styled orange (bg #ffd8a8, stroke #e8590c) — external infra, owned data
   - UI (widget): bg #a5d8ff, stroke #1971c2
   - External (clientSite, openai): bg #e9ecef, stroke #868e96
 - All Excalidraw elements: roughness 1, fontFamily 1 (Virgil).
@@ -41,7 +42,7 @@ C4Container
   Container(crawler, "Career Site Crawler", "Firecrawl, Python", "Cron-triggered; scrapes job listings from client career sites")
   ContainerDb(kb, "Knowledge Base", "PostgreSQL", "Stores crawled Documents; source of truth before vectorisation")
   Container(syncer, "Embedding Sync Worker", "Python", "Event-driven; reads Documents, embeds, upserts vectors")
-  ContainerDb(pinecone, "Vector Index", "Pinecone", "Stores and serves job embeddings for semantic retrieval")
+  System_Ext(pinecone, "Vector Index", "Pinecone — external managed vector store; we own the data, not the infra")
   Container(agent, "Careers Agent", "Python, Django", "RAG orchestration: retrieves roles, composes reply")
   Boundary(clientEmbed, "Embedded on client career site", "deployment") {
     Container(widget, "Candidate Chat Widget", "React", "Embeddable UI on client career site")

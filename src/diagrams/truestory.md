@@ -21,6 +21,7 @@ C4Container
   UpdateElementStyle(user, $fontColor="#748ffc", $bgColor="#dbe4ff", $borderColor="#748ffc")
   UpdateElementStyle(ext, $fontColor="#1971c2", $bgColor="#a5d8ff", $borderColor="#1971c2")
   UpdateElementStyle(api, $fontColor="#099268", $bgColor="#96f2d7", $borderColor="#099268")
+  UpdateElementStyle(news, $bgColor="#e9ecef", $borderColor="#868e96", $fontColor="#868e96")
 
   UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="1")
 ```

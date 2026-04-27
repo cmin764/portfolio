@@ -48,4 +48,7 @@ C4Container
   UpdateElementStyle(actionA, $bgColor="#96f2d7", $borderColor="#099268", $fontColor="#099268")
   UpdateElementStyle(actionB, $bgColor="#96f2d7", $borderColor="#099268", $fontColor="#099268")
   UpdateElementStyle(actionC, $bgColor="#96f2d7", $borderColor="#099268", $fontColor="#099268")
+  UpdateElementStyle(gallery, $bgColor="#e9ecef", $borderColor="#868e96", $fontColor="#868e96")
+  UpdateElementStyle(llm, $bgColor="#e9ecef", $borderColor="#868e96", $fontColor="#868e96")
+  UpdateElementStyle(externalSystems, $bgColor="#e9ecef", $borderColor="#868e96", $fontColor="#868e96")
 ```
