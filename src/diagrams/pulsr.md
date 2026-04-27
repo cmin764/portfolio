@@ -1,8 +1,8 @@
-# Pulsr — Container Diagram
+# Pulsr (2025–present) — Container Diagram
 
 ```mermaid
 C4Container
-  title Pulsr
+  title Pulsr (2025–present)
 
   Person(user, "Developer", "Defines pipelines as DAGs and triggers runs")
 
@@ -10,8 +10,8 @@ C4Container
     Container(api, "Pulsr API", "FastAPI", "Accepts pipeline definitions and run triggers")
     Container(executor, "Executor Service", "Python", "Orchestrates workers and backends; manages step state")
     Container(worker, "Worker Agent", "Python / threading", "Routes steps to backends; polls execution status")
+    ContainerDb(db, "Pipeline Store", "SQLite", "Single store: pipelines, runs, steps, artifacts")
     Container(backend, "Execution Backend", "Python (Local / Docker)", "Pluggable: runs shell commands or Docker containers")
-    ContainerDb(db, "SQLite", "SQLite", "Single store: pipelines, runs, steps, artifacts")
   }
 
   Rel(user, api, "defines pipeline (DAG)")

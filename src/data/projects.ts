@@ -245,6 +245,7 @@ export const PROJECTS: ProjectData[] = [
   {
     id: 'pulsr',
     title: 'Pulsr',
+    period: '2025–present',
     tagline: 'Pipeline orchestration API for AI agents: ZenML-like infra for harnessing and scaling agents',
     description:
       'Built to solve the problem of coordinating multiple AI agents across a DAG of steps with state management, retry logic, and observability. Inspired by ZenML and Prefect but focused on AI agent workflows rather than ML training pipelines. Agents are registered as pipeline steps, dependencies are declared explicitly, and execution is orchestrated via a FastAPI control plane.',
@@ -257,6 +258,8 @@ export const PROJECTS: ProjectData[] = [
     ],
     architectureNotes:
       'Developer triggers pipeline run via REST API → Executor Service selects a Worker Agent → Worker Agent routes each step to a pluggable Execution Backend (Local subprocess or Docker container) and polls for completion → all state (pipelines, runs, steps, artifacts) persisted in a single SQLite DB',
+    diagramFile: 'pulsr.svg',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=O_vbhCaZCr1OhPPXyhPZK,qAkFtE0L7OZLWpqzdTqNQg',
   },
 
   // Frontend & Brand
