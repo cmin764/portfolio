@@ -234,15 +234,18 @@ export const PROJECTS: ProjectData[] = [
     complexity: 'medium',
     status: 'shipped',
     tags: ['Python', 'FastAPI', 'SQLModel', 'PostgreSQL', 'Redis', 'Pydantic', 'Docker', 'asyncio', 'pytest'],
+    diagramFile: 'deep-ice.svg',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=9nPeVYHlHKaIASVgrsBRL,fHrU53yBPlk02qu6RK5tPg',
     links: [
       { label: 'Repo', url: 'https://github.com/cmin764/deep-ice' },
     ],
     architectureNotes:
-      'HTTP request → FastAPI router → service layer → SQLModel async session → PostgreSQL → Pydantic response schema',
+      'HTTP request → FastAPI router → service layer → SQLModel async session → PostgreSQL. CARD payments enqueued to Redis → ARQ worker confirms or cancels order. Alembic runs migrations at startup. Sentry for error tracking.',
   },
   {
     id: 'pulsr',
     title: 'Pulsr',
+    period: '2025–present',
     tagline: 'Pipeline orchestration API for AI agents: ZenML-like infra for harnessing and scaling agents',
     description:
       'Built to solve the problem of coordinating multiple AI agents across a DAG of steps with state management, retry logic, and observability. Inspired by ZenML and Prefect but focused on AI agent workflows rather than ML training pipelines. Agents are registered as pipeline steps, dependencies are declared explicitly, and execution is orchestrated via a FastAPI control plane.',
@@ -254,7 +257,9 @@ export const PROJECTS: ProjectData[] = [
       { label: 'Repo', url: 'https://github.com/cmin764/pulsr' },
     ],
     architectureNotes:
-      'Pipeline definition (DAG) → Pulsr API (FastAPI) → step scheduler → agent execution (parallel/sequential) → state store → artifact registry → execution log',
+      'Developer triggers pipeline run via REST API → Executor Service selects a Worker Agent → Worker Agent routes each step to a pluggable Execution Backend (Local subprocess or Docker container) and polls for completion → all state (pipelines, runs, steps, artifacts) persisted in a single SQLite DB',
+    diagramFile: 'pulsr.svg',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=h7_u9DQNbw0r6uxv7ZyLH,LjyBiXM-29nE-X_XV-qaOQ',
   },
 
   // Frontend & Brand

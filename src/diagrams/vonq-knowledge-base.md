@@ -1,4 +1,4 @@
-# Knowledge Base & Careers Agent — Container Diagram (2025-2026)
+# VONQ: Knowledge Base & Careers Agent (2025–2026) — Container Diagram
 
 Two-lane RAG pipeline: a cron-triggered Career Site Crawler scrapes client career pages,
 stores Documents in a Postgres Knowledge Base, and publishes events that drive an async
@@ -12,17 +12,17 @@ Design notes that Mermaid C4 cannot fully render (preserved for the Excalidraw p
 - The Candidate Chat Widget is embedded inside the Client Career Site, not on a VONQ
   domain. `widget` is wrapped in a boundary labeled "Embedded on client career site" in
   both Mermaid and Excalidraw. Excalidraw uses bronze boundary tint (#eaddd7 / #846358).
-  Note: this diagram uses directional Rel hints alongside the boundary (layout-001 anti-pattern);
-  layout may collapse — if so, convert Rel_* to plain Rel.
+  All edges use plain Rel() — no directional hints (layout-001).
 - Two distinct flows share the Vector Index: the async crawl-and-index lane (top) and
   the sync chat lane (bottom). Keep them visually separated.
 - Arrow styles for Excalidraw (UML 2.5 §17.4.4.1, system-design.md §9.3):
   - Sync (9 edges, default): strokeStyle "solid", endArrowhead "triangle" (closed filled)
   - Async (crawler → syncer, label [async]): strokeStyle "solid", endArrowhead "arrow" (open stick)
   - Cron (crawler → clientSite, label [cron]): strokeStyle "dashed", endArrowhead "triangle" (closed filled)
-- Node fills for Excalidraw (pastel palette, text #1e1e1e):
+- Node fills for Excalidraw (pastel palette, text = border color):
   - Services (crawler, syncer, agent): bg #96f2d7, stroke #099268
-  - Data stores (kb, pinecone): bg #ffd8a8, stroke #e8590c
+  - Data stores (kb): bg #ffd8a8, stroke #e8590c
+  - External data store (pinecone): System_Ext primitive, but styled orange (bg #ffd8a8, stroke #e8590c) — external infra, owned data
   - UI (widget): bg #a5d8ff, stroke #1971c2
   - External (clientSite, openai): bg #e9ecef, stroke #868e96
 - All Excalidraw elements: roughness 1, fontFamily 1 (Virgil).
@@ -30,7 +30,7 @@ Design notes that Mermaid C4 cannot fully render (preserved for the Excalidraw p
 
 ```mermaid
 C4Container
-  title Container Diagram for VONQ Knowledge Base & Careers Agent (2025-2026)
+  title VONQ: Knowledge Base & Careers Agent (2025–2026)
 
   UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
 
@@ -42,24 +42,24 @@ C4Container
   Container(crawler, "Career Site Crawler", "Firecrawl, Python", "Cron-triggered; scrapes job listings from client career sites")
   ContainerDb(kb, "Knowledge Base", "PostgreSQL", "Stores crawled Documents; source of truth before vectorisation")
   Container(syncer, "Embedding Sync Worker", "Python", "Event-driven; reads Documents, embeds, upserts vectors")
-  ContainerDb(pinecone, "Vector Index", "Pinecone", "Stores and serves job embeddings for semantic retrieval")
+  System_Ext(pinecone, "Vector Index", "Pinecone — external managed vector store; we own the data, not the infra")
   Container(agent, "Careers Agent", "Python, Django", "RAG orchestration: retrieves roles, composes reply")
   Boundary(clientEmbed, "Embedded on client career site", "deployment") {
     Container(widget, "Candidate Chat Widget", "React", "Embeddable UI on client career site")
   }
 
-  Rel_U(crawler, clientSite, "crawls [cron]")
-  Rel_R(crawler, kb, "stores Document")
-  Rel_R(crawler, syncer, "doc ready [async]")
-  Rel_L(syncer, kb, "reads Document")
-  Rel_R(syncer, openai, "embed text")
-  Rel_D(syncer, pinecone, "upserts vectors")
+  Rel(crawler, clientSite, "crawls [cron]")
+  Rel(crawler, kb, "stores Document")
+  Rel(crawler, syncer, "doc ready [async]")
+  Rel(syncer, kb, "reads Document")
+  Rel(syncer, openai, "embed text")
+  Rel(syncer, pinecone, "upserts vectors")
 
-  Rel_L(candidate, widget, "CV + message")
-  Rel_U(widget, agent, "CV + query / matched roles + URLs")
-  Rel_U(agent, openai, "embed + completion")
-  Rel_L(agent, pinecone, "k-NN search")
-  Rel_U(candidate, clientSite, "applies to job")
+  Rel(candidate, widget, "CV + message")
+  Rel(widget, agent, "CV + query / matched roles + URLs")
+  Rel(agent, openai, "embed + completion")
+  Rel(agent, pinecone, "k-NN search")
+  Rel(candidate, clientSite, "applies to job")
 
   UpdateElementStyle(candidate, $fontColor="#748ffc", $bgColor="#dbe4ff", $borderColor="#748ffc")
   UpdateElementStyle(widget, $fontColor="#1971c2", $bgColor="#a5d8ff", $borderColor="#1971c2")
@@ -68,4 +68,6 @@ C4Container
   UpdateElementStyle(agent, $fontColor="#099268", $bgColor="#96f2d7", $borderColor="#099268")
   UpdateElementStyle(kb, $fontColor="#e8590c", $bgColor="#ffd8a8", $borderColor="#e8590c")
   UpdateElementStyle(pinecone, $fontColor="#e8590c", $bgColor="#ffd8a8", $borderColor="#e8590c")
+  UpdateElementStyle(clientSite, $bgColor="#e9ecef", $borderColor="#868e96", $fontColor="#868e96")
+  UpdateElementStyle(openai, $bgColor="#e9ecef", $borderColor="#868e96", $fontColor="#868e96")
 ```

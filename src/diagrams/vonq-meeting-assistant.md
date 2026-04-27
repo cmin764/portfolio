@@ -1,4 +1,4 @@
-# Meeting Assistant — Container Diagram (2025-2026)
+# VONQ: Meeting Assistant (2025–2026) — Container Diagram
 
 Real-time pipeline where Recall.ai joins Google Meet as a third participant, streams
 transcripts into Django, OpenAI reasons turn-by-turn, and two outputs branch:
@@ -14,7 +14,7 @@ Design notes that Mermaid C4 cannot fully render (preserved for the Excalidraw p
 - Arrow styles for Excalidraw (UML 2.5 §17.4.4.1, system-design.md §9.3):
   - Sync (default): strokeStyle "solid", endArrowhead "triangle" (closed filled)
   - Async (edges labeled [async]): strokeStyle "solid", endArrowhead "arrow" (open stick)
-- Node fills for Excalidraw (pastel palette, text #1e1e1e):
+- Node fills for Excalidraw (pastel palette, text = border color):
   - Services (ui, webhook, engine): ui bg #a5d8ff stroke #1971c2; webhook/engine bg #96f2d7 stroke #099268
   - External (meet, bot, listened, openai, tts): bg #e9ecef, stroke #868e96
 - All Excalidraw elements: roughness 1, fontFamily 1 (Virgil).
@@ -22,7 +22,7 @@ Design notes that Mermaid C4 cannot fully render (preserved for the Excalidraw p
 
 ```mermaid
 C4Container
-  title Container Diagram for VONQ Meeting Assistant (2025-2026)
+  title VONQ: Meeting Assistant (2025–2026)
 
   UpdateLayoutConfig($c4ShapeInRow="4", $c4BoundaryInRow="1")
 
@@ -58,4 +58,9 @@ C4Container
   UpdateElementStyle(ui, $fontColor="#1971c2", $bgColor="#a5d8ff", $borderColor="#1971c2")
   UpdateElementStyle(webhook, $fontColor="#099268", $bgColor="#96f2d7", $borderColor="#099268")
   UpdateElementStyle(engine, $fontColor="#099268", $bgColor="#96f2d7", $borderColor="#099268")
+  UpdateElementStyle(meet, $bgColor="#e9ecef", $borderColor="#868e96", $fontColor="#868e96")
+  UpdateElementStyle(bot, $bgColor="#e9ecef", $borderColor="#868e96", $fontColor="#868e96")
+  UpdateElementStyle(listened, $bgColor="#e9ecef", $borderColor="#868e96", $fontColor="#868e96")
+  UpdateElementStyle(openai, $bgColor="#e9ecef", $borderColor="#868e96", $fontColor="#868e96")
+  UpdateElementStyle(tts, $bgColor="#e9ecef", $borderColor="#868e96", $fontColor="#868e96")
 ```
