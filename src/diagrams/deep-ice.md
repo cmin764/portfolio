@@ -35,7 +35,7 @@ C4Component
   Rel(router, sentry, "reports errors [async, secondary]")
   Rel(worker, sentry, "reports errors [async, secondary]")
   Rel(nextjs, router, "API calls (planned)", "REST / JSON")
-  Rel(session, elk, "ships logs (planned) [async, secondary]")
+  Rel(router, elk, "ships app logs (planned) [async, secondary]")
   Rel(prometheus, router, "scrapes metrics (planned) [cron]")
 
   UpdateElementStyle(router, $fontColor="#099268", $bgColor="#96f2d7", $borderColor="#099268")

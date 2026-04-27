@@ -406,10 +406,10 @@ Chat lane (bottom lane):
 - `router` → `sentry`: `reports errors` (async, secondary)
 - `worker` → `sentry`: `reports errors` (async, secondary)
 - `nextjs` → `router`: `API calls (planned)` — REST/JSON (sync, planned)
-- `session` → `elk`: `ships logs (planned)` (async, secondary, planned)
+- `router` → `elk`: `ships app logs (planned)` (async, secondary, planned) — log shipping originates at the app/ASGI level, not from the ORM layer
 - `prometheus` → `router`: `scrapes metrics (planned)` (cron, planned)
 
-**Passive-store check:** No edge originates from `postgres`, `redis`, or `elk`. Pull direction on `worker → redis` is correct (ARQ worker initiates poll).
+**Passive-store check:** No edge originates from `postgres`, `redis`, or `elk`. Pull direction on `worker → redis` is correct (ARQ worker initiates poll). `elk` remains passive: the app pushes logs to it, not the reverse.
 
 ---
 
