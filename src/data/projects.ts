@@ -259,7 +259,7 @@ export const PROJECTS: ProjectData[] = [
     architectureNotes:
       'Developer triggers pipeline run via REST API → Executor Service selects a Worker Agent → Worker Agent routes each step to a pluggable Execution Backend (Local subprocess or Docker container) and polls for completion → all state (pipelines, runs, steps, artifacts) persisted in a single SQLite DB',
     diagramFile: 'pulsr.svg',
-    diagramExcalidrawUrl: 'https://excalidraw.com/#json=O_vbhCaZCr1OhPPXyhPZK,qAkFtE0L7OZLWpqzdTqNQg',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=h7_u9DQNbw0r6uxv7ZyLH,LjyBiXM-29nE-X_XV-qaOQ',
   },
 
   // Frontend & Brand
