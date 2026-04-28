@@ -19,19 +19,27 @@ Each role has three paired values: a pastel fill, a darker border, and a matchin
 | Person | #dbe4ff | #748ffc | #748ffc | Light indigo bg, indigo border + text — distinct from UI sky blue. **Excalidraw: render as circle/ellipse** (`"type": "ellipse"`). Mermaid `Person()` is a fixed box with icon — no shape override possible. |
 | Generated artifact / file | #fef9c3 | #ca8a04 | #ca8a04 | Light amber bg, amber border + text — for files, exports, generated documents (not data stores) |
 
-## Node text structure (3-level)
+## Node text structure
 
-Every node carries three tiers — apply to both Mermaid and Excalidraw:
-
+**Mermaid C4** — four-parameter primitive already separates the tiers:
 ```
-Name
-[Technology / stack]
-Short responsibility — one clause
+Container(alias, "Name", "Technology", "Description (status if applicable)")
 ```
 
-Mermaid C4 maps this to the four-parameter primitive: `Container(alias, "Name", "Technology", "Description")`.
+**Excalidraw** — multiline bound text element, 3–4 lines:
+```
+Name                          ← ~16px, bold
+<Type>                        ← ~12px  e.g. <Container>, <Component>, <System>
+[Technology / stack]          ← ~12px  e.g. [Flask + REST], [PostgreSQL]
+Short responsibility (status) ← ~12px  (planned) or (assumed) appended inline
+```
 
-Excalidraw: multiline bound text element. Name at ~16px, `[Technology]` and description at ~12px. All text color = node border color.
+Bracket semantics (Excalidraw only — Mermaid uses function names for type):
+- `<>` — C4 abstraction level / role
+- `[]` — technology stack
+- `()` — optional status qualifier (`(planned)`, `(assumed)`)
+
+Never use `[]` for both type and technology on the same node. All text color = node border color.
 
 ---
 
