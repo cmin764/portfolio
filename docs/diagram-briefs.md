@@ -378,7 +378,7 @@ Chat lane (bottom lane):
 
 **Boundary structure:** `System_Boundary(deepice)` → `Container_Boundary(fastapi)` → `Component()` nodes. The outer System boundary holds all owned containers; the inner Container boundary zooms into the FastAPI app. External actors and systems sit outside both.
 
-**Color note:** All nodes outside the FastAPI boundary (postgres, redis, worker, alembic, sentry, nextjs, elk, prometheus) use the muted gray palette (`#e9ecef/#868e96`) to visually recede. Only the three Component nodes inside the FastAPI boundary use their role palette (mint). This is a deliberate visual hierarchy choice, not a role misclassification.
+**Color note:** All nodes use their runtime role palette (mint for services/workers, peach for data stores, blue for UI, gray for external systems). Role color takes precedence over boundary depth — no visual recede applied.
 
 ### Nodes
 
@@ -388,14 +388,14 @@ Chat lane (bottom lane):
 | `router` | FastAPI Router | Component | Python / FastAPI | Mint (Service) |
 | `service` | Service Layer | Component | Python | Mint (Service) |
 | `session` | SQLModel Session | Component | SQLModel / asyncpg | Mint (Service) |
-| `worker` | ARQ Worker | Container | Python / ARQ | Gray (muted) |
-| `postgres` | PostgreSQL | ContainerDb | PostgreSQL / asyncpg | Gray (muted) |
-| `redis` | Redis | ContainerDb | Redis | Gray (muted) |
-| `alembic` | Alembic | Container | Python / Alembic | Gray (muted) |
-| `sentry` | Sentry | System_Ext | — | Gray (muted) |
-| `nextjs` | Next.js Frontend | Container_Ext | TypeScript / Next.js | Gray (muted, planned) |
-| `elk` | ELK Stack | System_Ext | Logstash + Elasticsearch + Kibana | Gray (muted, planned) |
-| `prometheus` | Prometheus / Grafana | System_Ext | — | Gray (muted, planned) |
+| `worker` | ARQ Worker | Container | Python / ARQ | Mint (Service) |
+| `postgres` | PostgreSQL | ContainerDb | PostgreSQL / asyncpg | Peach (Data Store) |
+| `redis` | Redis | ContainerDb | Redis | Peach (Data Store) |
+| `alembic` | Alembic | Container | Python / Alembic | Mint (Service) |
+| `sentry` | Sentry | System_Ext | — | Gray (External) |
+| `nextjs` | Next.js Frontend | Container_Ext | TypeScript / Next.js | Blue (UI, planned) |
+| `elk` | ELK Stack | System_Ext | Logstash + Elasticsearch + Kibana | Gray (External, planned) |
+| `prometheus` | Prometheus / Grafana | System_Ext | — | Gray (External, planned) |
 
 ### Key edges
 
