@@ -26,10 +26,10 @@ Each role has three paired values: a pastel fill, a darker border, and a matchin
 Container(alias, "Name", "Technology", "Description (status if applicable)")
 ```
 
-**Excalidraw** — multiline bound text element, 3–4 lines:
+**Excalidraw** — multiline bound text element, 2–4 lines:
 ```
 Name                          ← ~16px, bold
-<Type>                        ← ~12px  e.g. <Container>, <Component>, <System>
+<Type>                        ← ~12px  optional — e.g. <Container>, <Component>; omit when role is obvious from color or context
 [Technology / stack]          ← ~12px  e.g. [Flask + REST], [PostgreSQL]
 Short responsibility (status) ← ~12px  (planned) or (assumed) appended inline
 ```

@@ -11,10 +11,10 @@ In Excalidraw node labels, three bracket types carry distinct semantic meaning. 
 | `[Technology]` | Tech stack annotation | `[Flask + REST]`, `[PostgreSQL]`, `[Python / FastAPI]` |
 | `(status)` | Optional qualifier | `(planned)`, `(assumed)` |
 
-**Node text structure (Excalidraw, 3–4 lines):**
+**Node text structure (Excalidraw, 2–4 lines):**
 ```
 Name
-<Type>
+<Type>            ← optional; omit when the role is obvious from context or color
 [Technology]
 Short responsibility (status if applicable)
 ```
