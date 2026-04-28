@@ -19,3 +19,4 @@ Auto-maintained index. Each entry links to a learning file with context and rati
 - [node-semantics-003 — Commodity managed hosting = ContainerDb; proprietary SaaS data product = System_Ext + orange](node-semantics-003.md) — source: VONQ Knowledge Base, 2026-04-27
 - [mermaid-syntax-002 — Mermaid C4 drops all but the last Rel() between the same node pair; Excalidraw is authoritative for parallel edges](mermaid-syntax-002.md) — source: Pulsr, 2026-04-27
 - [styling-003 — Boundary boxes must use strokeStyle dashed; solid is Excalidraw's default and makes boundaries indistinguishable from containers](styling-003.md) — source: Pulsr, 2026-04-27
+- [mermaid-syntax-003 — Cross-boundary edges force Mermaid TB ranker to place outside node above the boundary; fix by wrapping CI/tool nodes in their own boundary](mermaid-syntax-003.md) — source: A5 GTO Engine, 2026-04-27
