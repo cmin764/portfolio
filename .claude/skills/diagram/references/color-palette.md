@@ -43,13 +43,14 @@ Limit to these 4-5 fill colors. More than that reduces clarity. The artifact amb
 
 ## Boundary / grouping boxes
 
-All boundary boxes use a **single neutral bronze tint**, regardless of what they contain. Role distinction comes from the boundary title color only, not the fill.
+Boundary boxes use neutral bronze tints. Shade depth signals nesting level — lighter for the outermost frame, one shade darker for any inner boundary nested inside it. Role distinction comes from the title color only, never the fill.
 
-| Element | Fill | Stroke | Title text |
-|---------|------|--------|------------|
-| Boundary box (all) | #eaddd7 | #846358 | `#846358` always — the darker bronze, matching the stroke. Never role-colored, never `#1e1e1e`. |
+| Element | Fill | Stroke | Title text | When |
+|---------|------|--------|------------|------|
+| Outer / only boundary | `#f8f1ee` (bronze-1) | `#846358` | `#846358` | Default: the single boundary on a diagram, or the outermost in a nested pair |
+| Inner boundary (nested) | `#eaddd7` (bronze-2) | `#846358` | `#846358` | Only when a smaller boundary sits visually inside a larger one |
 
-Never use role-specific fills (blue, teal) for boundary boxes. A bronze-tinted Client Perimeter with a blue title and a bronze-tinted Cloud boundary with a teal title is sufficient and avoids ambiguity about whether the boundary color means something semantic.
+Never go darker than bronze-2 unless you have three or more nesting levels (rare). Never use role-specific fills (blue, teal) for boundary boxes. The shade hierarchy provides depth; title color is the only other differentiator.
 
 ---
 
