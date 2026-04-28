@@ -513,35 +513,43 @@ Chat lane (bottom lane):
 ## 12. Gorgias App Store
 
 **C4 level:** Container
-**Primary concern:** OAuth2 Authorization Code Grant flow for third-party app installation
-**Flow direction:** Top-to-bottom (developer publishes → merchant installs → token exchange)
+**Primary concern:** OAuth2 Authorization Code Grant flow — front-channel vs back-channel split, Developer Portal lifecycle, Gorgias as the OAuth server
+**Flow direction:** Top-to-bottom
+
+**Architectural note:** Gorgias runs its own OAuth2 server (Flask + authlib). The third-party app is the OAuth client. Auth0 is the merchant SSO identity provider only — it does not participate in third-party token issuance. The Developer Portal is a Web UI; all DB writes go through the App Store Flask backend.
 
 ### Nodes
 
-| Name | Role | Tech |
-|------|------|------|
-| External Developer | Person | Builds and publishes an app to Gorgias App Store |
-| Merchant (Shopify) | Person | Installs a third-party app into their Gorgias account |
-| Gorgias App Store | Container (web UI) | App listing, install button |
-| Auth0 | External system (SaaS) | Identity provider; issues authorization codes |
-| authlib | Container (library) | Flask extension implementing OAuth2 flows |
-| Gorgias API | Container (API) | Flask + PostgreSQL; REST API for helpdesk data |
-| Third-party App | External system | Developer's app; receives access token and calls API |
+| Name | Role | Tech | Palette |
+|------|------|------|---------|
+| External Developer | Person | Registers app; drives install + token exchange | Indigo |
+| Merchant | Person | Browses App Store; authorizes third-party access | Indigo |
+| Auth0 | External system | Merchant SSO identity provider (Gorgias login only) | Gray |
+| Third-party App | External system | OAuth client; stores client credentials + tokens | Gray |
+| Developer Portal | Container (Web UI) | App registration, OAuth2 config, review gate | Blue |
+| App Store + OAuth Server | Container (API) | Flask + authlib + Auth0 SDK; app marketplace + OAuth2 server (/oauth/authorize, /oauth/token, consent UI) | Mint |
+| Gorgias API | Container (API) | Flask + REST; helpdesk REST API at /api/*; validates bearer tokens | Mint |
+| Gorgias DB | ContainerDb | PostgreSQL; helpdesk data + App & OAuth state: configs, tokens, clients, codes | Peach |
 
-### Key edges
+### Key edges (all sync)
 
-- External Developer → Gorgias App Store: `submits app` (sync)
-- Merchant → Gorgias App Store: `clicks Install` (sync)
-- Gorgias App Store → Auth0: `redirect: authorization request` (sync, OAuth2 redirect)
-- Auth0 → Merchant: `login + consent screen` (sync)
-- Auth0 → Gorgias App Store: `authorization code` (sync, redirect callback)
-- Gorgias App Store → Auth0: `exchange code for token` (sync, back-channel)
-- Auth0 → Gorgias App Store: `access token` (sync)
-- Gorgias App Store → Third-party App: `access token delivered` (sync)
-- Third-party App → Gorgias API: `API calls with token` (sync, REST)
-- Gorgias API → PostgreSQL: `data access` (sync)
+- External Developer → Developer Portal: `registers + configures app`
+- Developer Portal → App Store + OAuth Server: `publishes approved app listing`
+- Merchant → App Store + OAuth Server: `browses + clicks Install + authorizes consent`
+- Merchant → Auth0: `SSO login`
+- App Store + OAuth Server → Third-party App: `a) redirects to install URL`
+- Third-party App → App Store + OAuth Server: `b) auth request / auth code` (front-channel, browser redirect)
+- Third-party App → App Store + OAuth Server: `c) code-for-token / access + refresh tokens` (back-channel, server-to-server)
+- App Store + OAuth Server → Gorgias DB: `persists app registrations + review state`
+- App Store + OAuth Server → Gorgias DB: `persists OAuth state`
+- Third-party App → Gorgias API: `REST: bearer token`
+- Gorgias API → Gorgias DB: `validates token + queries helpdesk data`
+
+Note: edges b) and c) are parallel (same source/target pair). Mermaid renders only the last one; Excalidraw is authoritative. Same applies to the two App Store → DB edges.
 
 ### Design constraints worth showing visually
 
-- Show the **front-channel** (browser redirects) vs **back-channel** (server-to-server token exchange) split. This is the security-critical part of Authorization Code Grant.
-- Third-party app ends up installed in the merchant's account context; annotate with "merchant-scoped access token".
+- Step labels a/b/c on the install flow make the OAuth sequence readable without a separate sequence diagram.
+- Front-channel (b) vs back-channel (c) is the security-critical split — two visually distinct parallel arrows between Third-party App and App Store.
+- Developer Portal has no direct DB edge — all writes route through the App Store backend (Web UI → API → DB layering).
+- Auth0 has exactly one incoming arrow (SSO login) and zero outgoing — isolated from the OAuth code/token flow.

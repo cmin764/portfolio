@@ -154,7 +154,7 @@ export const PROJECTS: ProjectData[] = [
     title: 'Gorgias App Store',
     tagline: 'OAuth2 developer platform enabling third-party apps inside e-commerce support automation',
     description:
-      'Gorgias is an e-commerce helpdesk targeting Shopify merchants. Led the Developer Experience team and laid the technical foundation for an App Store: OAuth2 Authorization Code Grant flow (via Flask + authlib + Auth0), enabling external developers to publish and monetize integrations inside Gorgias. Improved the REST API and developer docs. Fast-paced startup environment with direct exposure to DX leadership and partner ecosystem building.',
+      'Gorgias is an e-commerce helpdesk targeting Shopify merchants. Led the Developer Experience team and built the technical foundation for the App Store: a Developer Portal for app registration and review, and an OAuth2 server (Flask + authlib) that issues tokens to third-party integrations. Auth0 handles merchant SSO login separately. External developers publish apps connecting their services to the Gorgias helpdesk platform, scoped per merchant account. Improved the REST API and developer docs.',
     category: 'professional',
     complexity: 'medium',
     status: 'shipped',
@@ -164,8 +164,10 @@ export const PROJECTS: ProjectData[] = [
     links: [
       { label: 'Docs', url: 'https://developers.gorgias.com/docs/private-vs-public-app' },
     ],
+    diagramFile: 'gorgias-appstore.svg',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=ZOqMjp6C3TSFrwp2qG9As,6Z1pzfP2NeZcjqNRjpqAXA',
     architectureNotes:
-      'External developer → OAuth2 Authorization Code Grant (Flask + authlib + Auth0) → Gorgias API access token → third-party app installed in merchant account',
+      'Developer Portal (Web UI) → App Store + OAuth Server (Flask + authlib): a) redirects to install URL, b) front-channel auth request / auth code, c) back-channel code-for-token. Auth0 = merchant SSO only. PostgreSQL: helpdesk data + app & OAuth state (configs, tokens, clients, codes). Third-party app calls Gorgias API with bearer token.',
   },
   {
     id: 'comfy-grpc',
