@@ -239,7 +239,7 @@ export const PROJECTS: ProjectData[] = [
     status: 'shipped',
     tags: ['Python', 'FastAPI', 'SQLModel', 'PostgreSQL', 'Redis', 'Pydantic', 'Docker', 'asyncio', 'pytest'],
     diagramFile: 'deep-ice.svg',
-    diagramExcalidrawUrl: 'https://excalidraw.com/#json=QdD3r77o1Olk8bWC_d9is,IvBnOu4HZEyz8MeTOYkXug',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=Gu0AaIUVZB367F-_KbwnI,nJQXIBVT5xYIHwxxKtx0hw',
     links: [
       { label: 'Repo', url: 'https://github.com/cmin764/deep-ice' },
     ],
