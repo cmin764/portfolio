@@ -144,6 +144,8 @@ export const PROJECTS: ProjectData[] = [
     company: 'A5 Labs',
     period: '2025',
     links: [],
+    diagramFile: 'a5-gto-engine.svg',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=Je7AlNXFvYZ36fBvb8x12,wn0GHF8pjxgugy66RyPbrA',
     architectureNotes:
       'Game state input → FastAPI (Python) → C++ inference server (GTO/RL model) → action recommendation + EV output → client application',
   },

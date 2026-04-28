@@ -167,38 +167,43 @@ Boundary `aiActions`: "AI Actions (Pydantic-typed Python, loaded from Action Pac
 ## 4. A5 GTO Engine
 
 **C4 level:** Container
-**Primary concern:** Python orchestration over C++ compute; low-latency service mesh
-**Flow direction:** Left-to-right (game client → Python layer → C++ inference)
+**Primary concern:** Polyglot service mesh; three sibling decision services behind a Glue router; C++/Python split
+**Flow direction:** Top-down (game client → Glue → GTO / Strategy / RL; CI lane on the right)
+**Diagram source:** `src/diagrams/a5-gto-engine.md`
+**Excalidraw:** https://excalidraw.com/#json=Je7AlNXFvYZ36fBvb8x12,wn0GHF8pjxgugy66RyPbrA
 
 ### Nodes
 
 | Name | Role | Tech |
 |------|------|------|
 | Game Client | External system | Sends game state (hole cards, board, pot, action history) |
-| GTO Service | Container (API) | Python + FastAPI; implements GTO decision logic |
-| Strategy Service | Container (API) | Python + FastAPI; implements RL-based strategy |
-| Glue Service | Container (API) | Python + FastAPI; routes between GTO/Strategy under time constraints |
-| C++ Inference Server | Container (service) | C++ + Drogon framework; runs GTO/RL models |
-| Benchmark Runner | Container (tool) | Python; analysis + regression/performance benchmark |
-| Bitbucket CI | External system | Triggers benchmark runs on push |
+| Glue Service | Container (API) | Python + FastAPI; routing + orchestration under response-time budget |
+| GTO Service | Container (API) | Python + FastAPI; game-theory-optimal decision logic |
+| Strategy Service | Container (API) | Python + FastAPI; non-GTO strategy heuristics |
+| RL Service | Container (service) | C++ + Drogon; in-process inference server with trained RL models loaded at startup |
+| Acebench | Container (tool) | Python; MLOps benchmark: regression detection + quality/latency tracking against baselines |
+| Bitbucket CI | External system | Pipelines triggered on push / cron |
+
+### Boundaries
+
+- `Python tier (FastAPI)` — wraps Glue, GTO, Strategy
+- `CI / MLOps` — wraps Bitbucket CI and Acebench
 
 ### Key edges
 
-- Game Client → Glue Service: `game state` (sync, REST)
-- Glue Service → GTO Service: `route to GTO` (sync, internal)
-- Glue Service → Strategy Service: `route to Strategy` (sync, internal)
-- GTO Service → C++ Inference Server: `inference request` (sync, low-latency, HTTP)
-- Strategy Service → C++ Inference Server: `inference request` (sync, low-latency, HTTP)
-- C++ Inference Server → GTO Service / Strategy Service: `action + EV output` (sync)
-- Glue Service → Game Client: `recommended action + EV` (sync)
-- Bitbucket CI → Benchmark Runner: `trigger on push` (async)
-- Benchmark Runner → GTO Service / Strategy Service: `regression + quality test` (async)
+- Game Client → Glue Service: `game state / action + EV` (sync, combined req/resp)
+- Glue Service → GTO Service: `route under time budget` (sync)
+- Glue Service → Strategy Service: `route under time budget` (sync)
+- Glue Service → RL Service: `route under time budget` (sync, low-latency HTTP)
+- Bitbucket CI → Acebench: `triggers on push | cron` (dashed + filled triangle = cron trigger)
+- Acebench → Glue Service: `runs regression + quality benchmarks` (sync, system-level)
 
-### Design constraints worth showing visually
+### Design constraints
 
-- Label the **response-time constraint** on the Glue Service routing decision. It does not wait indefinitely for C++.
-- C++ Inference Server is the compute-heavy core. Visually separate Python orchestration layer (left) from C++ compute layer (right).
-- Benchmark Runner is a CI-only path. Show with dashed lines or a separate lane.
+- RL Service stands outside the Python boundary to mark the C++ runtime split.
+- Acebench targets Glue only (system-level end-to-end), not individual decision services.
+- Response-time budget is in Glue's description and edge labels, not a separate visual element.
+- Trained models live inside the RL Service description; no separate artifact node.
 
 ---
 
