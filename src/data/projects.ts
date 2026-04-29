@@ -276,7 +276,7 @@ export const PROJECTS: ProjectData[] = [
     description:
       'The public-facing site for Wandercode, deployed on Vercel. Built to practice what I preach: fast, accessible, and maintainable. Stack: Vite + React + TypeScript + Tailwind + shadcn/ui, managed with bun. Uses a `/frontend-review` skill for agentic self-review before merging.',
     category: 'frontend-brand',
-    complexity: 'medium',
+    complexity: 'low',
     status: 'active',
     tags: ['TypeScript', 'React', 'Vite', 'Tailwind', 'shadcn/ui', 'React Router', 'Vercel'],
     links: [
@@ -291,7 +291,7 @@ export const PROJECTS: ProjectData[] = [
     description:
       'A Next.js site for a short-term rental property in Cyprus. 10+ page types: marketing, gallery with per-room sub-pages, booking, check-in guide, and legal. Framer Motion for scroll-triggered animations, lightbox gallery, reviews carousel, transport modal. Deployed on Vercel, managed with bun. Uses a `/frontend-review` skill for agentic self-review before merging.',
     category: 'frontend-brand',
-    complexity: 'medium',
+    complexity: 'low',
     status: 'active',
     tags: ['TypeScript', 'Next.js', 'Tailwind', 'shadcn/ui', 'Framer Motion', 'Vercel Analytics', 'Vercel'],
     links: [
