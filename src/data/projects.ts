@@ -237,7 +237,7 @@ export const PROJECTS: ProjectData[] = [
     description:
       'A reference implementation of a production-grade FastAPI application. Shows the full stack: async request handling, **SQLModel** for combined Pydantic + SQLAlchemy ORM, **Alembic** migrations, *uv* for dependency management, *invoke* for task automation, Redis for caching, *Docker Compose* setup, and **pytest** with async test fixtures. Built to answer "what does well-structured Python API code look like" with a concrete, runnable example rather than a tutorial.',
     category: 'oss-hobby',
-    complexity: 'medium',
+    complexity: 'low',
     status: 'in-progress',
     tags: ['Python', 'FastAPI', 'SQLModel', 'PostgreSQL', 'Redis', 'Pydantic', 'Docker', 'asyncio', 'pytest', 'Alembic'],
     diagramFile: 'deep-ice.svg',
