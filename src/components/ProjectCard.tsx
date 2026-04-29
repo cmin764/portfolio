@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -9,6 +10,28 @@ import { TechTag } from "@/components/TechTag";
 import { cn } from "@/lib/utils";
 import type { ProjectData } from "@/data/types";
 import { DiagramViewer } from "@/components/DiagramViewer";
+
+function renderDescription(text: string): ReactNode[] {
+  const pattern = /\[([^\]]+)\]\(([^)]+)\)|`([^`]+)`|\*\*([^*]+)\*\*|\*([^*]+)\*/g;
+  const nodes: ReactNode[] = [];
+  let last = 0;
+  let match: RegExpExecArray | null;
+  while ((match = pattern.exec(text)) !== null) {
+    if (match.index > last) nodes.push(text.slice(last, match.index));
+    if (match[1] !== undefined) {
+      nodes.push(<a key={match.index} href={match[2]} target="_blank" rel="noopener noreferrer" className="underline hover:opacity-80">{match[1]}</a>);
+    } else if (match[3] !== undefined) {
+      nodes.push(<code key={match.index} className="text-xs font-mono bg-muted px-1 rounded">{match[3]}</code>);
+    } else if (match[4] !== undefined) {
+      nodes.push(<strong key={match.index}>{match[4]}</strong>);
+    } else {
+      nodes.push(<em key={match.index}>{match[5]}</em>);
+    }
+    last = match.index + match[0].length;
+  }
+  if (last < text.length) nodes.push(text.slice(last));
+  return nodes;
+}
 
 interface Props {
   project: ProjectData;
@@ -78,7 +101,7 @@ export function ProjectCard({ project }: Props) {
 
         <CollapsibleContent>
           <CardContent className="pt-0 space-y-4">
-            <p className="text-sm text-muted-foreground leading-relaxed">{project.description}</p>
+            <p className="text-sm text-muted-foreground leading-relaxed">{renderDescription(project.description)}</p>
 
             {project.diagramFile && (
               <DiagramViewer diagramFile={project.diagramFile} projectTitle={project.title} excalidrawUrl={project.diagramExcalidrawUrl} />
