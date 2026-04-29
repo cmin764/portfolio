@@ -473,40 +473,59 @@ Chat lane (bottom lane):
 ## 11. Comfy gRPC Smart Building APIs
 
 **C4 level:** Container
-**Primary concern:** gRPC-gateway pattern enabling REST clients to consume gRPC services
+**Primary concern:** gRPC-gateway pattern enabling REST clients to consume polyglot gRPC services; spec-first contract per service
 **Flow direction:** Left-to-right
+
+### Boundaries
+
+| Alias | Label | Type | Notes |
+|-------|-------|------|-------|
+| `k8s` | Kubernetes Cluster | Outer (bronze-1) | Wraps all deployed containers; K8s is a boundary, not a runtime node |
+| `grpcSvcs` | gRPC Services | Inner (bronze-2) | Groups the three polyglot services + their per-service proto artifacts |
+| `bmw` | BMW Campus Track | Inner (bronze-2) | Separate parallel track for geolocation work |
 
 ### Nodes
 
-| Name | Role | Tech |
-|------|------|------|
-| REST Client (FE / mobile) | External system | Sends HTTP/JSON; never speaks gRPC directly |
-| gRPC-gateway | Container (reverse proxy) | Transcodes HTTP/JSON ↔ gRPC; generated from .proto |
-| gRPC Service (Go) | Container (service) | Go; occupancy sensing, core smart building logic |
-| gRPC Service (Python) | Container (service) | Python; data processing, analytics |
-| gRPC Service (Node.js) | Container (service) | Node.js; notification + event fanout |
-| IoT Devices | External system | Sensors, HVAC, access control |
-| Database | Database | Primary relational store |
-| Geolocation Service | Container (service) | Python + PostGIS + Mapbox; BMW campus nav |
-| Kubernetes | External system | Deployment + service discovery |
+| Alias | Name | Role | Tech | Palette |
+|-------|------|------|------|---------|
+| `restClient` | REST Client | External system | HTTP/JSON only; never speaks gRPC | Gray |
+| `iot` | IoT Devices | External system | Sensors, HVAC, access control hardware | Gray |
+| `gateway` | gRPC-gateway | Container (reverse proxy) | Go; transcodes HTTP/JSON ↔ gRPC | Mint |
+| `db` | Comfy DB | ContainerDb | PostgreSQL; sensor + occupancy records | Peach |
+| `goSvc` | Occupancy Service | Container (service) | Go; sensing + core smart-building logic | Mint |
+| `pySvc` | Data Service | Container (service) | Python; processing + analytics | Mint |
+| `nodeSvc` | Notification Service | Container (service) | Node.js; event fanout | Mint |
+| `protoOcc` | occupancy.proto | Artifact (diamond) | Protocol Buffers contract — occupancy + sensor API stubs | Amber |
+| `protoData` | analytics.proto | Artifact (diamond) | Protocol Buffers contract — analytics API stubs | Amber |
+| `protoNotif` | notification.proto | Artifact (diamond) | Protocol Buffers contract — notification + event API stubs | Amber |
+| `geoSvc` | Geolocation Service | Container (service) | Python + PostGIS + Mapbox; BMW campus navigation | Mint |
+| `geoDb` | 3D Maps DB | ContainerDb | PostgreSQL + PostGIS; spatial index for campus map data | Peach |
 
 ### Key edges
 
-- REST Client → gRPC-gateway: `HTTP/JSON` (sync)
-- gRPC-gateway → gRPC Service (Go): `gRPC call` (sync)
-- gRPC-gateway → gRPC Service (Python): `gRPC call` (sync)
-- gRPC-gateway → gRPC Service (Node.js): `gRPC call` (sync)
-- gRPC Service (Go) → IoT Devices: `read/write device state` (sync)
-- gRPC Service (Go) → Database: `persist` (sync)
-- gRPC-gateway → REST Client: `JSON response (transcoded)` (sync)
-- REST Client → Geolocation Service: `campus nav request` (sync, REST)
-- Geolocation Service → Database: `PostGIS spatial query` (sync)
+**Runtime (sync, solid + filled triangle):**
+- `restClient → gateway`: `HTTP/JSON req / resp`
+- `gateway → goSvc`: `gRPC: occupancy APIs`
+- `gateway → pySvc`: `gRPC: analytics APIs`
+- `gateway → nodeSvc`: `gRPC: notifications APIs`
+- `goSvc → iot`: `read / write device state`
+- `goSvc → db`: `persist sensor + occupancy data`
+- `restClient → geoSvc`: `campus nav request`
+- `geoSvc → geoDb`: `PostGIS spatial query`
+
+**Build-time dependencies (dashed + filled triangle, consumers → spec):**
+- `gateway → protoOcc`: `uses client stub`
+- `gateway → protoData`: `uses client stub`
+- `gateway → protoNotif`: `uses client stub`
+- `goSvc → protoOcc`: `consumes spec`
+- `pySvc → protoData`: `consumes spec`
+- `nodeSvc → protoNotif`: `consumes spec`
 
 ### Design constraints worth showing visually
 
-- All services share the same `.proto` definitions. Annotate the proto file as the contract between gateway and services.
-- Geolocation service is a separate, parallel track (BMW campus work). Can show in a separate bounded context box.
-- The mock-data pattern: during spec-first development, gateway returns mock responses until services are ready. Annotate as a dashed "mock path" that was replaced.
+- One proto artifact per service (diamond shape, amber). Each has two inbound build-time edges: one from its service (implements server stub) and one from the gateway (uses client stub). This makes the per-service client/server contract pairing visible.
+- Geolocation is a separate parallel track (BMW campus work) with its own spatial DB — isolated in the BMW Campus Track boundary.
+- Mock-data dev pattern excluded: diagram documents the shipped runtime only.
 
 ---
 

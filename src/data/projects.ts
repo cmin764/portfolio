@@ -182,6 +182,8 @@ export const PROJECTS: ProjectData[] = [
     company: 'Comfy (→ Siemens)',
     period: '2019-2020',
     links: [],
+    diagramFile: 'comfy-grpc.svg',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=SoxRhreg62Q8yU0yNyDRM,-KzHlsOQDVoFJyCaxwPy-w',
     architectureNotes:
       'REST clients → gRPC-gateway (reverse proxy) → gRPC services (Go/Python/Node) → IoT devices + DB → responses transcoded back to JSON',
   },

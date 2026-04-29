@@ -17,7 +17,7 @@ Each role has three paired values: a pastel fill, a darker border, and a matchin
 | Queue / Stream | #ffd8a8 | #e8590c | #e8590c | Same as data stores |
 | External System / SaaS | #e9ecef | #868e96 | #868e96 | Near-white bg, gray border + text |
 | Person | #dbe4ff | #748ffc | #748ffc | Light indigo bg, indigo border + text — distinct from UI sky blue. **Excalidraw: render as circle/ellipse** (`"type": "ellipse"`). Mermaid `Person()` is a fixed box with icon — no shape override possible. |
-| Generated artifact / file | #fef9c3 | #ca8a04 | #ca8a04 | Light amber bg, amber border + text — for files, exports, generated documents (not data stores) |
+| Generated artifact / file | #fef9c3 | #ca8a04 | #ca8a04 | Light amber bg, amber border + text — for files, exports, generated documents (not data stores). **Excalidraw: render as diamond** (`"type": "diamond"`). Mermaid has no artifact primitive — use `System_Ext` with amber override as the closest available shape. |
 
 ## Node text structure
 
