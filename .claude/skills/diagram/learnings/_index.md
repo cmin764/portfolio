@@ -19,5 +19,7 @@ Auto-maintained index. Each entry links to a learning file with context and rati
 - [integration-003 — Strip [async]/[cron]/[async, secondary] meta-tags from Excalidraw labels; stroke+head encodes the meaning](integration-003.md) — source: consolidation, 2026-04-24
 - [node-semantics-003 — Commodity managed hosting = ContainerDb; proprietary SaaS data product = System_Ext + orange](node-semantics-003.md) — source: VONQ Knowledge Base, 2026-04-27
 - [mermaid-syntax-002 — Mermaid C4 drops all but the last Rel() between the same node pair; Excalidraw is authoritative for parallel edges](mermaid-syntax-002.md) — source: Pulsr, 2026-04-27
-- [styling-003 — Boundary stroke: dashed=grouping boundary, solid=zoomed-in container expansion; bronze fill: #f8f1ee outer, #eaddd7 nested inner](styling-003.md) — source: Pulsr, 2026-04-27; expanded 2026-04-28
+- [styling-003 — Boundary stroke: dashed=grouping boundary, solid=zoomed-in container expansion; bronze fill: #f8f1ee outer, #eaddd7 nested inner](styling-003.md) — source: Pulsr, 2026-04-27; expanded 2026-04-28; legend requirement added 2026-04-29
 - [mermaid-syntax-003 — Cross-boundary edges force Mermaid TB ranker to place outside node above the boundary; fix by wrapping CI/tool nodes in their own boundary](mermaid-syntax-003.md) — source: A5 GTO Engine, 2026-04-27
+- [legend-001 — Legend is mandatory; canonical content includes direction rule, all 4 arrow styles, color-role key, and boundary vocabulary](legend-001.md) — source: convention review, 2026-04-29
+- [node-semantics-004 — Queue/stream=red (#ffc9c9/#e03131); DB/cache=orange (#ffd8a8/#e8590c); artifact=sharp-corner rect in amber (#fef9c3/#ca8a04)](node-semantics-004.md) — source: convention review, 2026-04-29

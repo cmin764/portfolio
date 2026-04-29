@@ -13,11 +13,11 @@ Each role has three paired values: a pastel fill, a darker border, and a matchin
 |------|-----------|--------|------|-------|
 | UI / Frontend / Web App | #a5d8ff | #1971c2 | #1971c2 | Light blue bg, dark blue border + text |
 | Service / API / Worker | #96f2d7 | #099268 | #099268 | Light mint bg, dark teal border + text |
-| Database / Data Store / Cache | #ffd8a8 | #e8590c | #e8590c | Light peach bg, dark orange border + text |
-| Queue / Stream | #ffd8a8 | #e8590c | #e8590c | Same as data stores |
+| Database / Data Store / Cache / Index / Registry | #ffd8a8 | #e8590c | #e8590c | Light peach bg, dark orange border + text. Includes caches, indexes, registries, key-value stores — any passive state holder. |
+| Queue / Stream / Topic / Pub-Sub | #ffc9c9 | #e03131 | #e03131 | Light red bg, dark red border + text. Only true messaging primitives (queues, streams, topics, pub-sub buses). Mermaid: `ContainerQueue`. |
 | External System / SaaS | #e9ecef | #868e96 | #868e96 | Near-white bg, gray border + text |
 | Person | #dbe4ff | #748ffc | #748ffc | Light indigo bg, indigo border + text — distinct from UI sky blue. **Excalidraw: render as circle/ellipse** (`"type": "ellipse"`). Mermaid `Person()` is a fixed box with icon — no shape override possible. |
-| Generated artifact / file | #fef9c3 | #ca8a04 | #ca8a04 | Light amber bg, amber border + text — for files, exports, generated documents (not data stores). **Excalidraw: render as diamond** (`"type": "diamond"`). Mermaid has no artifact primitive — use `System_Ext` with amber override as the closest available shape. |
+| Generated artifact / file | #fef9c3 | #ca8a04 | #ca8a04 | Light amber bg, amber border + text — for files, exports, generated documents (not live runtime actors). **Excalidraw: non-rounded rectangle** (`"type": "rectangle"`, `"roundness": null` — sharp 90° corners). Sharp corners contrast with rounded rectangles used by all active containers. Mermaid has no artifact primitive — use `System_Ext` with amber override. |
 
 ## Node text structure
 
@@ -112,9 +112,34 @@ Strip noise: "via REST API" goes in the technology annotation field, not the lab
 | Element | Fill | Stroke | Text |
 |---------|------|--------|------|
 | Legend box (arrow key, notes) | #ffec99 | none (borderless), `hachure` fillStyle | #1e1e1e |
-| Warning / callout box | #ffc9c9 | #e03131 | #1e1e1e |
+| Warning / callout box | #fcc2d7 | #c2255c | #1e1e1e |
 
-Legend box style: light yellow post-it (#ffec99), **no border** (`strokeColor: "transparent"` or stroke width 0), rounded corners, **hachure fill** (`fillStyle: "hachure"`), black text. The diagonal hatching on a borderless yellow box gives it the hand-drawn post-it aesthetic and distinguishes it immediately from diagram nodes (which use solid fills with borders).
+Legend box style: light yellow (#ffec99), **no border** (`strokeColor: "transparent"` or stroke width 0), **sharp corners** (`"roundness": null` — non-rounded rectangle), **hachure fill** (`fillStyle: "hachure"`), black text. Sharp corners and diagonal hatching distinguish the legend from diagram nodes, which all use rounded rectangles with solid fills and borders.
+
+**Canonical legend content (mandatory on every diagram):**
+```
+Legend:
+  ── (solid + filled ▶)   Sync call (sender blocks)
+  ─▷ (solid + open ▷)    Async / fire-and-forget
+  ╌╌ (dashed + filled ▶) Cron / polling / dependency
+  ╌╌▷ (dashed + open ▷)  Secondary background async
+
+  ↓ Arrows point from initiator to dependency
+
+  Color → role:
+  [blue]   UI / Frontend
+  [teal]   Service / API
+  [orange] DB / Cache / Store
+  [red]    Queue / Stream / Topic
+  [gray]   External system
+  [indigo] Person / User
+  [amber]  Generated artifact (sharp corners)
+
+  ╌╌╌ GROUPING BOUNDARY (dashed)
+  ─── ZOOM-IN / EXPANDED CONTAINER (solid)
+```
+
+The direction rule ("Arrows point from initiator to dependency") must appear in every legend. Readers must be able to understand edge direction without external documentation.
 
 ---
 
@@ -137,9 +162,11 @@ Use the same pastel palette for both Mermaid and Excalidraw. The C4Container lib
 
 ```
 UpdateElementStyle(alias, $fontColor="#099268", $bgColor="#96f2d7", $borderColor="#099268")  // service
-UpdateElementStyle(alias, $fontColor="#e8590c", $bgColor="#ffd8a8", $borderColor="#e8590c")  // data store
+UpdateElementStyle(alias, $fontColor="#e8590c", $bgColor="#ffd8a8", $borderColor="#e8590c")  // database / cache / store
+UpdateElementStyle(alias, $fontColor="#e03131", $bgColor="#ffc9c9", $borderColor="#e03131")  // queue / stream / topic
 UpdateElementStyle(alias, $fontColor="#1971c2", $bgColor="#a5d8ff", $borderColor="#1971c2")  // UI
 UpdateElementStyle(alias, $fontColor="#868e96", $bgColor="#e9ecef", $borderColor="#868e96")  // external
+UpdateElementStyle(alias, $fontColor="#ca8a04", $bgColor="#fef9c3", $borderColor="#ca8a04")  // artifact (Mermaid: use System_Ext)
 ```
 
 Apply only when the default Mermaid C4 colors diverge from this palette. Always override Person nodes explicitly — the default is a dark navy that clashes with dark text.

@@ -140,7 +140,8 @@ Apply colors from `.claude/skills/diagram/references/color-palette.md`. Font col
 - Person: `$bgColor="#dbe4ff" $borderColor="#748ffc" $fontColor="#748ffc"` — always override; default is dark navy
 - UI/frontend: `$bgColor="#a5d8ff" $borderColor="#1971c2" $fontColor="#1971c2"`
 - Service/API: `$bgColor="#96f2d7" $borderColor="#099268" $fontColor="#099268"`
-- Database/queue: `$bgColor="#ffd8a8" $borderColor="#e8590c" $fontColor="#e8590c"`
+- Database/cache/store: `$bgColor="#ffd8a8" $borderColor="#e8590c" $fontColor="#e8590c"`
+- Queue/stream/topic: `$bgColor="#ffc9c9" $borderColor="#e03131" $fontColor="#e03131"` — use `ContainerQueue` primitive
 - External systems: `$bgColor="#e9ecef" $borderColor="#868e96" $fontColor="#868e96"` — always override; default is dark navy
 
 Apply via `UpdateElementStyle(alias, ...)` for each non-default node. Person shape in C4Container is a fixed box with icon — no circle override is possible via the Mermaid API.
@@ -358,24 +359,30 @@ Follow `.claude/skills/diagram/references/integration-checklist.md` step by step
 
    **Node styling (boxes):**
    - `"roughness": 1`, `"fontFamily": 1` (Virgil) on every element — non-negotiable, preserves hand-drawn aesthetic
-   - All nodes: rounded rectangle (`"type": "rectangle"`, `"roundness": {"type": 3}`)
+   - Active runtime containers: rounded rectangle (`"type": "rectangle"`, `"roundness": {"type": 3}`)
    - **Person/Actor: circle/ellipse** (`"type": "ellipse"`) with the indigo palette (`#dbe4ff` fill, `#748ffc` stroke/text). Mermaid's `Person()` renders as a fixed box — Excalidraw is the only place this distinction can be made.
-   - Use **pastel fills** from `color-palette.md` (not saturated): `#a5d8ff` UI, `#96f2d7` service, `#ffd8a8` data store, `#e9ecef` external
+   - **Artifact/generated file: non-rounded rectangle** (`"type": "rectangle"`, `"roundness": null` — sharp 90° corners) with amber palette (`#fef9c3` fill, `#ca8a04` stroke/text). Sharp corners signal "passive output, not a runtime actor." Mermaid: `System_Ext` with amber override.
+   - **Queue/stream/topic: rounded rectangle** with red palette (`#ffc9c9` fill, `#e03131` stroke/text). Same shape as active containers; differentiated by color only. Mermaid: `ContainerQueue`.
+   - Use **pastel fills** from `color-palette.md` (not saturated): `#a5d8ff` UI, `#96f2d7` service, `#ffd8a8` DB/cache, `#ffc9c9` queue/stream, `#e9ecef` external
    - Text color = border color (same pairing as Mermaid: teal service nodes use `#099268` text, indigo person nodes use `#748ffc` text, etc.)
    - Use bound text elements (`containerId`) for all node labels — inline `label` shorthand is stripped by `export_to_excalidraw`
    - Set `"boundElements"` arrays on shapes pointing to their text and arrow IDs
    - **3-level text per node:** Name (larger, ~16px) / [Technology] (smaller, ~12px) / description (smaller, ~12px). All text at border color.
-   - **Boundary boxes:** fill `#eaddd7`, stroke `#846358`, title text `#846358` (never role-colored, never `#1e1e1e`)
+   - **Boundary boxes:** fill `#eaddd7` (inner/nested) or `#f8f1ee` (outer), stroke `#846358`, title text `#846358` (never role-colored, never `#1e1e1e`). Two stroke semantics: `"strokeStyle": "dashed"` for grouping/trust/deployment boundaries; `"strokeStyle": "solid"` for expansion frames (one container zoomed in to show its internal components). Document both in the legend whenever a solid expansion frame appears on the diagram.
 
    **Meta-tags on edge labels (Excalidraw only — strip them):**
    Remove `[async]`, `[cron]`, and `[async, secondary]` from all Excalidraw edge labels. Stroke style + arrowhead already encode the full meaning. Keep only semantic content (e.g., "reports errors" not "reports errors [async, secondary]"). Exception: keep `(planned)` and `(assumed)` — these are semantic, not style hints.
 
-   **Legend box (include when diagram has varied edge types):**
-   - Shape: rounded rectangle, **no border** (`"strokeColor": "transparent"`)
-   - Fill: `#ffec99` (light amber)
+   **Legend box (mandatory on every diagram):**
+   - Shape: **non-rounded rectangle** (`"type": "rectangle"`, `"roundness": null` — sharp 90° corners), **no border** (`"strokeColor": "transparent"`)
+   - Fill: `#ffec99` (light yellow)
    - Fill style: **`"hachure"`** (diagonal hatching)
    - Text: `#1e1e1e`
-   - Contents: color → role key, line style → interaction type key
+   - Required content:
+     - Arrow styles → interaction types (all four combinations)
+     - **"Arrows point from initiator to dependency"** (mandatory direction rule)
+     - Color → role mapping (blue=UI, teal=service, orange=DB/cache, red=queue/stream, gray=external, indigo=person, amber=artifact)
+     - Boundary stroke vocabulary when both types appear: `╌╌╌ GROUPING BOUNDARY` / `─── ZOOM-IN / EXPANDED CONTAINER`
 
    **Arrow styling (edges):**
 
