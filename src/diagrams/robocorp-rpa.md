@@ -24,7 +24,7 @@ C4Container
     Container(libLog, "robocorp-log", "Python", "Structured execution logging")
   }
 
-  ContainerDb(artifacts, "log.html + artifacts", "File", "Run report, screenshots, extracted data")
+  System_Ext(artifacts, "log.html + artifacts", "Run report, screenshots, extracted data")
 
   Rel(dev, portal, "browses example repos")
   Rel(dev, rcc, "rcc pull / rcc run / rcc cloud push")
@@ -57,7 +57,7 @@ C4Container
   UpdateElementStyle(libCloud, $bgColor="#96f2d7", $borderColor="#099268", $fontColor="#099268")
   UpdateElementStyle(libData, $bgColor="#96f2d7", $borderColor="#099268", $fontColor="#099268")
   UpdateElementStyle(libLog, $bgColor="#96f2d7", $borderColor="#099268", $fontColor="#099268")
-  UpdateElementStyle(artifacts, $bgColor="#ffd8a8", $borderColor="#e8590c", $fontColor="#e8590c")
+  UpdateElementStyle(artifacts, $bgColor="#fef9c3", $borderColor="#ca8a04", $fontColor="#ca8a04")
   UpdateElementStyle(portal, $bgColor="#e9ecef", $borderColor="#868e96", $fontColor="#868e96")
   UpdateElementStyle(targets, $bgColor="#e9ecef", $borderColor="#868e96", $fontColor="#868e96")
   UpdateElementStyle(controlRoom, $bgColor="#e9ecef", $borderColor="#868e96", $fontColor="#868e96")
