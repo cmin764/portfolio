@@ -127,7 +127,7 @@ export const PROJECTS: ProjectData[] = [
     period: '2025-2026',
     links: [],
     diagramFile: 'vonq-candidate-assessment.svg',
-    diagramExcalidrawUrl: 'https://excalidraw.com/#json=PBAn3lK2lFTiBWWCXWXCx,fgXtn3MMwr6AnTJ-TuDN7w',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=GKnSb6CzKCuwm2mPFvBhW,de632_gieUP8LT72JaN-yw',
     architectureNotes:
       'Candidate input (text/audio) → assessment agent → multi-criteria scoring → VONQ EQO (review queue + stage update) → PDF dossier',
   },
@@ -144,6 +144,8 @@ export const PROJECTS: ProjectData[] = [
     company: 'A5 Labs',
     period: '2025',
     links: [],
+    diagramFile: 'a5-gto-engine.svg',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=Je7AlNXFvYZ36fBvb8x12,wn0GHF8pjxgugy66RyPbrA',
     architectureNotes:
       'Game state input → FastAPI (Python) → C++ inference server (GTO/RL model) → action recommendation + EV output → client application',
   },
@@ -152,7 +154,7 @@ export const PROJECTS: ProjectData[] = [
     title: 'Gorgias App Store',
     tagline: 'OAuth2 developer platform enabling third-party apps inside e-commerce support automation',
     description:
-      'Gorgias is an e-commerce helpdesk targeting Shopify merchants. Led the Developer Experience team and laid the technical foundation for an App Store: OAuth2 Authorization Code Grant flow (via Flask + authlib + Auth0), enabling external developers to publish and monetize integrations inside Gorgias. Improved the REST API and developer docs. Fast-paced startup environment with direct exposure to DX leadership and partner ecosystem building.',
+      'Gorgias is an e-commerce helpdesk targeting Shopify merchants. Led the Developer Experience team and built the technical foundation for the App Store: a Developer Portal for app registration and review, and an OAuth2 server (Flask + authlib) that issues tokens to third-party integrations. Auth0 handles merchant SSO login separately. External developers publish apps connecting their services to the Gorgias helpdesk platform, scoped per merchant account. Improved the REST API and developer docs.',
     category: 'professional',
     complexity: 'medium',
     status: 'shipped',
@@ -162,8 +164,10 @@ export const PROJECTS: ProjectData[] = [
     links: [
       { label: 'Docs', url: 'https://developers.gorgias.com/docs/private-vs-public-app' },
     ],
+    diagramFile: 'gorgias-appstore.svg',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=ZOqMjp6C3TSFrwp2qG9As,6Z1pzfP2NeZcjqNRjpqAXA',
     architectureNotes:
-      'External developer → OAuth2 Authorization Code Grant (Flask + authlib + Auth0) → Gorgias API access token → third-party app installed in merchant account',
+      'Developer Portal (Web UI) → App Store + OAuth Server (Flask + authlib): a) redirects to install URL, b) front-channel auth request / auth code, c) back-channel code-for-token. Auth0 = merchant SSO only. PostgreSQL: helpdesk data + app & OAuth state (configs, tokens, clients, codes). Third-party app calls Gorgias API with bearer token.',
   },
   {
     id: 'comfy-grpc',
@@ -174,10 +178,12 @@ export const PROJECTS: ProjectData[] = [
     category: 'professional',
     complexity: 'high',
     status: 'shipped',
-    tags: ['gRPC', 'Go', 'Python', 'Protocol Buffers', 'REST', 'Microservices', 'IoT', 'Kubernetes'],
+    tags: ['gRPC', 'Go', 'Python', 'Node.js', 'Protocol Buffers', 'REST', 'Microservices', 'IoT', 'Kubernetes'],
     company: 'Comfy (→ Siemens)',
     period: '2019-2020',
     links: [],
+    diagramFile: 'comfy-grpc.svg',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=SoxRhreg62Q8yU0yNyDRM,-KzHlsOQDVoFJyCaxwPy-w',
     architectureNotes:
       'REST clients → gRPC-gateway (reverse proxy) → gRPC services (Go/Python/Node) → IoT devices + DB → responses transcoded back to JSON',
   },
@@ -235,7 +241,7 @@ export const PROJECTS: ProjectData[] = [
     status: 'shipped',
     tags: ['Python', 'FastAPI', 'SQLModel', 'PostgreSQL', 'Redis', 'Pydantic', 'Docker', 'asyncio', 'pytest'],
     diagramFile: 'deep-ice.svg',
-    diagramExcalidrawUrl: 'https://excalidraw.com/#json=9nPeVYHlHKaIASVgrsBRL,fHrU53yBPlk02qu6RK5tPg',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=Gu0AaIUVZB367F-_KbwnI,nJQXIBVT5xYIHwxxKtx0hw',
     links: [
       { label: 'Repo', url: 'https://github.com/cmin764/deep-ice' },
     ],

@@ -12,6 +12,6 @@ Two punctuation symbols carry distinct semantic meaning on edge labels. Use them
 
 **Why:** Without this distinction, `/` reads ambiguously as "or" in English prose but visually implies a two-leg exchange on a diagram. Reserving `/` for req/resp and `|` for or makes the directionality of data explicit in the edge label itself.
 
-**Anti-pattern:** Using `/` for both "or" alternatives and req/resp splits — the reader cannot tell whether the label describes two options or two directions.
+**Anti-pattern:** Using `/` for both "or" alternatives and req/resp splits — the reader cannot tell whether the label describes two options or two directions. Concrete mistake: `triggers on push / cron` when you mean "either a push event or a cron schedule" — that is `|`, not `/`. `push / cron` implies push sends something and cron returns something, which is nonsensical.
 
 **Mermaid vs Excalidraw:** The fuller, more explicit form belongs in the Mermaid source. Excalidraw labels may be shortened for space, but must not contradict the symbol semantics.

@@ -15,3 +15,5 @@ Every Excalidraw arrow must include `startBinding` and `endBinding` with a non-z
 "endBinding":   { "elementId": "<target-id>", "focus": 0, "gap": 8 }
 ```
 For two parallel edges between the same node pair, offset them with `focus: -0.3` and `focus: 0.3` respectively so the lines separate and don't overlap each other.
+
+For fan-out from a single hub node to multiple different targets (e.g. an orchestrator routing to 3+ services), spread the `startBinding.focus` values across the hub's edge so arrows don't cluster at one exit point. Example for 3 outgoing arrows: `focus: -0.4`, `focus: 0`, `focus: 0.4`. Add a fourth at `focus: 0.5` (or adjust the spread) as needed.

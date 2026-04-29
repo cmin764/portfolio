@@ -167,38 +167,42 @@ Boundary `aiActions`: "AI Actions (Pydantic-typed Python, loaded from Action Pac
 ## 4. A5 GTO Engine
 
 **C4 level:** Container
-**Primary concern:** Python orchestration over C++ compute; low-latency service mesh
-**Flow direction:** Left-to-right (game client → Python layer → C++ inference)
+**Primary concern:** Polyglot service mesh; three sibling decision services behind a Glue router; C++/Python split
+**Flow direction:** Top-down (game client → Glue → GTO / Strategy / RL; CI lane on the right)
+**Diagram source:** `src/diagrams/a5-gto-engine.md`
 
 ### Nodes
 
 | Name | Role | Tech |
 |------|------|------|
 | Game Client | External system | Sends game state (hole cards, board, pot, action history) |
-| GTO Service | Container (API) | Python + FastAPI; implements GTO decision logic |
-| Strategy Service | Container (API) | Python + FastAPI; implements RL-based strategy |
-| Glue Service | Container (API) | Python + FastAPI; routes between GTO/Strategy under time constraints |
-| C++ Inference Server | Container (service) | C++ + Drogon framework; runs GTO/RL models |
-| Benchmark Runner | Container (tool) | Python; analysis + regression/performance benchmark |
-| Bitbucket CI | External system | Triggers benchmark runs on push |
+| Glue Service | Container (API) | Python + FastAPI; routing + orchestration under response-time budget |
+| GTO Service | Container (API) | Python + FastAPI; game-theory-optimal decision logic |
+| Strategy Service | Container (API) | Python + FastAPI; non-GTO strategy heuristics |
+| RL Service | Container (service) | C++ + Drogon; in-process inference server with trained RL models loaded at startup |
+| Acebench | Container (tool) | Python; MLOps benchmark: regression detection + quality/latency tracking against baselines |
+| Bitbucket CI | External system | Pipelines triggered on push / cron |
+
+### Boundaries
+
+- `Python tier (FastAPI)` — wraps Glue, GTO, Strategy
+- `CI / MLOps` — wraps Bitbucket CI and Acebench
 
 ### Key edges
 
-- Game Client → Glue Service: `game state` (sync, REST)
-- Glue Service → GTO Service: `route to GTO` (sync, internal)
-- Glue Service → Strategy Service: `route to Strategy` (sync, internal)
-- GTO Service → C++ Inference Server: `inference request` (sync, low-latency, HTTP)
-- Strategy Service → C++ Inference Server: `inference request` (sync, low-latency, HTTP)
-- C++ Inference Server → GTO Service / Strategy Service: `action + EV output` (sync)
-- Glue Service → Game Client: `recommended action + EV` (sync)
-- Bitbucket CI → Benchmark Runner: `trigger on push` (async)
-- Benchmark Runner → GTO Service / Strategy Service: `regression + quality test` (async)
+- Game Client → Glue Service: `game state / action + EV` (sync, combined req/resp)
+- Glue Service → GTO Service: `route under time budget` (sync)
+- Glue Service → Strategy Service: `route under time budget` (sync)
+- Glue Service → RL Service: `route under time budget` (sync, low-latency HTTP)
+- Bitbucket CI → Acebench: `triggers on push | cron` (dashed + filled triangle = cron trigger)
+- Acebench → Glue Service: `runs regression + quality benchmarks` (sync, system-level)
 
-### Design constraints worth showing visually
+### Design constraints
 
-- Label the **response-time constraint** on the Glue Service routing decision. It does not wait indefinitely for C++.
-- C++ Inference Server is the compute-heavy core. Visually separate Python orchestration layer (left) from C++ compute layer (right).
-- Benchmark Runner is a CI-only path. Show with dashed lines or a separate lane.
+- RL Service stands outside the Python boundary to mark the C++ runtime split.
+- Acebench targets Glue only (system-level end-to-end), not individual decision services.
+- Response-time budget is in Glue's description and edge labels, not a separate visual element.
+- Trained models live inside the RL Service description; no separate artifact node.
 
 ---
 
@@ -373,7 +377,7 @@ Chat lane (bottom lane):
 
 **Boundary structure:** `System_Boundary(deepice)` → `Container_Boundary(fastapi)` → `Component()` nodes. The outer System boundary holds all owned containers; the inner Container boundary zooms into the FastAPI app. External actors and systems sit outside both.
 
-**Color note:** All nodes outside the FastAPI boundary (postgres, redis, worker, alembic, sentry, nextjs, elk, prometheus) use the muted gray palette (`#e9ecef/#868e96`) to visually recede. Only the three Component nodes inside the FastAPI boundary use their role palette (mint). This is a deliberate visual hierarchy choice, not a role misclassification.
+**Color note:** All nodes use their runtime role palette (mint for services/workers, peach for data stores, blue for UI, gray for external systems). Role color takes precedence over boundary depth — no visual recede applied.
 
 ### Nodes
 
@@ -383,14 +387,14 @@ Chat lane (bottom lane):
 | `router` | FastAPI Router | Component | Python / FastAPI | Mint (Service) |
 | `service` | Service Layer | Component | Python | Mint (Service) |
 | `session` | SQLModel Session | Component | SQLModel / asyncpg | Mint (Service) |
-| `worker` | ARQ Worker | Container | Python / ARQ | Gray (muted) |
-| `postgres` | PostgreSQL | ContainerDb | PostgreSQL / asyncpg | Gray (muted) |
-| `redis` | Redis | ContainerDb | Redis | Gray (muted) |
-| `alembic` | Alembic | Container | Python / Alembic | Gray (muted) |
-| `sentry` | Sentry | System_Ext | — | Gray (muted) |
-| `nextjs` | Next.js Frontend | Container_Ext | TypeScript / Next.js | Gray (muted, planned) |
-| `elk` | ELK Stack | System_Ext | Logstash + Elasticsearch + Kibana | Gray (muted, planned) |
-| `prometheus` | Prometheus / Grafana | System_Ext | — | Gray (muted, planned) |
+| `worker` | ARQ Worker | Container | Python / ARQ | Mint (Service) |
+| `postgres` | PostgreSQL | ContainerDb | PostgreSQL / asyncpg | Peach (Data Store) |
+| `redis` | Redis | ContainerDb | Redis | Peach (Data Store) |
+| `alembic` | Alembic | Container | Python / Alembic | Mint (Service) |
+| `sentry` | Sentry | System_Ext | — | Gray (External) |
+| `nextjs` | Next.js Frontend | Container_Ext | TypeScript / Next.js | Blue (UI, planned) |
+| `elk` | ELK Stack | System_Ext | Logstash + Elasticsearch + Kibana | Gray (External, planned) |
+| `prometheus` | Prometheus / Grafana | System_Ext | — | Gray (External, planned) |
 
 ### Key edges
 
@@ -468,75 +472,102 @@ Chat lane (bottom lane):
 ## 11. Comfy gRPC Smart Building APIs
 
 **C4 level:** Container
-**Primary concern:** gRPC-gateway pattern enabling REST clients to consume gRPC services
+**Primary concern:** gRPC-gateway pattern enabling REST clients to consume polyglot gRPC services; spec-first contract per service
 **Flow direction:** Left-to-right
+
+### Boundaries
+
+| Alias | Label | Type | Notes |
+|-------|-------|------|-------|
+| `k8s` | Kubernetes Cluster | Outer (bronze-1) | Wraps all deployed containers; K8s is a boundary, not a runtime node |
+| `grpcSvcs` | gRPC Services | Inner (bronze-2) | Groups the three polyglot services + their per-service proto artifacts |
+| `bmw` | BMW Campus Track | Inner (bronze-2) | Separate parallel track for geolocation work |
 
 ### Nodes
 
-| Name | Role | Tech |
-|------|------|------|
-| REST Client (FE / mobile) | External system | Sends HTTP/JSON; never speaks gRPC directly |
-| gRPC-gateway | Container (reverse proxy) | Transcodes HTTP/JSON ↔ gRPC; generated from .proto |
-| gRPC Service (Go) | Container (service) | Go; occupancy sensing, core smart building logic |
-| gRPC Service (Python) | Container (service) | Python; data processing, analytics |
-| gRPC Service (Node.js) | Container (service) | Node.js; notification + event fanout |
-| IoT Devices | External system | Sensors, HVAC, access control |
-| Database | Database | Primary relational store |
-| Geolocation Service | Container (service) | Python + PostGIS + Mapbox; BMW campus nav |
-| Kubernetes | External system | Deployment + service discovery |
+| Alias | Name | Role | Tech | Palette |
+|-------|------|------|------|---------|
+| `restClient` | REST Client | External system | HTTP/JSON only; never speaks gRPC | Gray |
+| `iot` | IoT Devices | External system | Sensors, HVAC, access control hardware | Gray |
+| `gateway` | gRPC-gateway | Container (reverse proxy) | Go; transcodes HTTP/JSON ↔ gRPC | Mint |
+| `db` | Comfy DB | ContainerDb | PostgreSQL; sensor + occupancy records | Peach |
+| `goSvc` | Occupancy Service | Container (service) | Go; sensing + core smart-building logic | Mint |
+| `pySvc` | Data Service | Container (service) | Python; processing + analytics | Mint |
+| `nodeSvc` | Notification Service | Container (service) | Node.js; event fanout | Mint |
+| `protoOcc` | occupancy.proto | Artifact (diamond) | Protocol Buffers contract — occupancy + sensor API stubs | Amber |
+| `protoData` | analytics.proto | Artifact (diamond) | Protocol Buffers contract — analytics API stubs | Amber |
+| `protoNotif` | notification.proto | Artifact (diamond) | Protocol Buffers contract — notification + event API stubs | Amber |
+| `geoSvc` | Geolocation Service | Container (service) | Python + PostGIS + Mapbox; BMW campus navigation | Mint |
+| `geoDb` | 3D Maps DB | ContainerDb | PostgreSQL + PostGIS; spatial index for campus map data | Peach |
 
 ### Key edges
 
-- REST Client → gRPC-gateway: `HTTP/JSON` (sync)
-- gRPC-gateway → gRPC Service (Go): `gRPC call` (sync)
-- gRPC-gateway → gRPC Service (Python): `gRPC call` (sync)
-- gRPC-gateway → gRPC Service (Node.js): `gRPC call` (sync)
-- gRPC Service (Go) → IoT Devices: `read/write device state` (sync)
-- gRPC Service (Go) → Database: `persist` (sync)
-- gRPC-gateway → REST Client: `JSON response (transcoded)` (sync)
-- REST Client → Geolocation Service: `campus nav request` (sync, REST)
-- Geolocation Service → Database: `PostGIS spatial query` (sync)
+**Runtime (sync, solid + filled triangle):**
+- `restClient → gateway`: `HTTP/JSON req / resp`
+- `gateway → goSvc`: `gRPC: occupancy APIs`
+- `gateway → pySvc`: `gRPC: analytics APIs`
+- `gateway → nodeSvc`: `gRPC: notifications APIs`
+- `goSvc → iot`: `read / write device state`
+- `goSvc → db`: `persist sensor + occupancy data`
+- `restClient → geoSvc`: `campus nav request`
+- `geoSvc → geoDb`: `PostGIS spatial query`
+
+**Build-time dependencies (dashed + filled triangle, consumers → spec):**
+- `gateway → protoOcc`: `uses client stub`
+- `gateway → protoData`: `uses client stub`
+- `gateway → protoNotif`: `uses client stub`
+- `goSvc → protoOcc`: `consumes spec`
+- `pySvc → protoData`: `consumes spec`
+- `nodeSvc → protoNotif`: `consumes spec`
 
 ### Design constraints worth showing visually
 
-- All services share the same `.proto` definitions. Annotate the proto file as the contract between gateway and services.
-- Geolocation service is a separate, parallel track (BMW campus work). Can show in a separate bounded context box.
-- The mock-data pattern: during spec-first development, gateway returns mock responses until services are ready. Annotate as a dashed "mock path" that was replaced.
+- One proto artifact per service (diamond shape, amber). Each has two inbound build-time edges: one from its service (implements server stub) and one from the gateway (uses client stub). This makes the per-service client/server contract pairing visible.
+- Geolocation is a separate parallel track (BMW campus work) with its own spatial DB — isolated in the BMW Campus Track boundary.
+- Mock-data dev pattern excluded: diagram documents the shipped runtime only.
 
 ---
 
 ## 12. Gorgias App Store
 
 **C4 level:** Container
-**Primary concern:** OAuth2 Authorization Code Grant flow for third-party app installation
-**Flow direction:** Top-to-bottom (developer publishes → merchant installs → token exchange)
+**Primary concern:** OAuth2 Authorization Code Grant flow — front-channel vs back-channel split, Developer Portal lifecycle, Gorgias as the OAuth server
+**Flow direction:** Top-to-bottom
+
+**Architectural note:** Gorgias runs its own OAuth2 server (Flask + authlib). The third-party app is the OAuth client. Auth0 is the merchant SSO identity provider only — it does not participate in third-party token issuance. The Developer Portal is a Web UI; all DB writes go through the App Store Flask backend.
 
 ### Nodes
 
-| Name | Role | Tech |
-|------|------|------|
-| External Developer | Person | Builds and publishes an app to Gorgias App Store |
-| Merchant (Shopify) | Person | Installs a third-party app into their Gorgias account |
-| Gorgias App Store | Container (web UI) | App listing, install button |
-| Auth0 | External system (SaaS) | Identity provider; issues authorization codes |
-| authlib | Container (library) | Flask extension implementing OAuth2 flows |
-| Gorgias API | Container (API) | Flask + PostgreSQL; REST API for helpdesk data |
-| Third-party App | External system | Developer's app; receives access token and calls API |
+| Name | Role | Tech | Palette |
+|------|------|------|---------|
+| External Developer | Person | Registers app; drives install + token exchange | Indigo |
+| Merchant | Person | Browses App Store; authorizes third-party access | Indigo |
+| Auth0 | External system | Merchant SSO identity provider (Gorgias login only) | Gray |
+| Third-party App | External system | OAuth client; stores client credentials + tokens | Gray |
+| Developer Portal | Container (Web UI) | App registration, OAuth2 config, review gate | Blue |
+| App Store + OAuth Server | Container (API) | Flask + authlib + Auth0 SDK; app marketplace + OAuth2 server (/oauth/authorize, /oauth/token, consent UI) | Mint |
+| Gorgias API | Container (API) | Flask + REST; helpdesk REST API at /api/*; validates bearer tokens | Mint |
+| Gorgias DB | ContainerDb | PostgreSQL; helpdesk data + App & OAuth state: configs, tokens, clients, codes | Peach |
 
-### Key edges
+### Key edges (all sync)
 
-- External Developer → Gorgias App Store: `submits app` (sync)
-- Merchant → Gorgias App Store: `clicks Install` (sync)
-- Gorgias App Store → Auth0: `redirect: authorization request` (sync, OAuth2 redirect)
-- Auth0 → Merchant: `login + consent screen` (sync)
-- Auth0 → Gorgias App Store: `authorization code` (sync, redirect callback)
-- Gorgias App Store → Auth0: `exchange code for token` (sync, back-channel)
-- Auth0 → Gorgias App Store: `access token` (sync)
-- Gorgias App Store → Third-party App: `access token delivered` (sync)
-- Third-party App → Gorgias API: `API calls with token` (sync, REST)
-- Gorgias API → PostgreSQL: `data access` (sync)
+- External Developer → Developer Portal: `registers + configures app`
+- Developer Portal → App Store + OAuth Server: `publishes approved app listing`
+- Merchant → App Store + OAuth Server: `browses + clicks Install + authorizes consent`
+- Merchant → Auth0: `SSO login`
+- App Store + OAuth Server → Third-party App: `a) redirects to install URL`
+- Third-party App → App Store + OAuth Server: `b) auth request / auth code` (front-channel, browser redirect)
+- Third-party App → App Store + OAuth Server: `c) code-for-token / access + refresh tokens` (back-channel, server-to-server)
+- App Store + OAuth Server → Gorgias DB: `persists app registrations + review state`
+- App Store + OAuth Server → Gorgias DB: `persists OAuth state`
+- Third-party App → Gorgias API: `REST: bearer token`
+- Gorgias API → Gorgias DB: `validates token + queries helpdesk data`
+
+Note: edges b) and c) are parallel (same source/target pair). Mermaid renders only the last one; Excalidraw is authoritative. Same applies to the two App Store → DB edges.
 
 ### Design constraints worth showing visually
 
-- Show the **front-channel** (browser redirects) vs **back-channel** (server-to-server token exchange) split. This is the security-critical part of Authorization Code Grant.
-- Third-party app ends up installed in the merchant's account context; annotate with "merchant-scoped access token".
+- Step labels a/b/c on the install flow make the OAuth sequence readable without a separate sequence diagram.
+- Front-channel (b) vs back-channel (c) is the security-critical split — two visually distinct parallel arrows between Third-party App and App Store.
+- Developer Portal has no direct DB edge — all writes route through the App Store backend (Web UI → API → DB layering).
+- Auth0 has exactly one incoming arrow (SSO login) and zero outgoing — isolated from the OAuth code/token flow.
