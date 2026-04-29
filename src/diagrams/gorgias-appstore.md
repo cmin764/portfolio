@@ -26,9 +26,7 @@ C4Container
   Rel(merchant, appStore, "browses + clicks Install + authorizes consent")
   Rel(merchant, auth0, "SSO login")
   Rel(appStore, thirdParty, "a) redirects to install URL")
-  %% Mermaid drops all but the last Rel() between the same pair (mermaid-syntax-002).
-  %% Only edge (c) renders for thirdParty→appStore; only "persists OAuth state" renders for appStore→db.
-  %% Excalidraw is authoritative for all parallel edges.
+  %% Parallel edges collapse to last one (mermaid-syntax-002); Excalidraw is authoritative.
   Rel(thirdParty, appStore, "b) auth request / auth code")
   Rel(thirdParty, appStore, "c) code-for-token / access + refresh tokens")
   Rel(appStore, db, "persists app registrations + review state")

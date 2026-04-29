@@ -25,7 +25,7 @@ C4Container
   Rel(glue, gto, "route under time budget")
   Rel(glue, strategy, "route under time budget")
   Rel(glue, rl, "route under time budget")
-  Rel(ci, acebench, "triggers on push / cron")
+  Rel(ci, acebench, "triggers [cron]")
   Rel(acebench, glue, "runs regression + quality benchmarks")
 
   UpdateElementStyle(client, $bgColor="#e9ecef", $borderColor="#868e96", $fontColor="#868e96")

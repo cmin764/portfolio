@@ -170,7 +170,6 @@ Boundary `aiActions`: "AI Actions (Pydantic-typed Python, loaded from Action Pac
 **Primary concern:** Polyglot service mesh; three sibling decision services behind a Glue router; C++/Python split
 **Flow direction:** Top-down (game client → Glue → GTO / Strategy / RL; CI lane on the right)
 **Diagram source:** `src/diagrams/a5-gto-engine.md`
-**Excalidraw:** https://excalidraw.com/#json=Je7AlNXFvYZ36fBvb8x12,wn0GHF8pjxgugy66RyPbrA
 
 ### Nodes
 
