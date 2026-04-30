@@ -127,7 +127,7 @@ export const PROJECTS: ProjectData[] = [
     period: '2025-2026',
     links: [],
     diagramFile: 'vonq-candidate-assessment.svg',
-    diagramExcalidrawUrl: 'https://excalidraw.com/#json=GKnSb6CzKCuwm2mPFvBhW,de632_gieUP8LT72JaN-yw',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=zXa48TAkrMZ_Rt3rs2YgV,xjIHAfcJsg-gYVCD4FMZkA',
     architectureNotes:
       'Candidate input (text/audio) → assessment agent → multi-criteria scoring → VONQ EQO (review queue + stage update) → PDF dossier',
   },
