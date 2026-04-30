@@ -55,8 +55,8 @@ Boundary boxes use neutral bronze tints. Shade depth signals nesting level; ligh
 
 | Element | Fill | Stroke | Title text | When |
 |---------|------|--------|------------|------|
-| Outer / only boundary | `#f8f1ee` (bronze-1) | `#846358` | `#846358` | Default: the single boundary on a diagram, or the outermost in a nested pair |
-| Inner boundary (nested) | `#eaddd7` (bronze-2) | `#846358` | `#846358` | Only when a smaller boundary sits visually inside a larger one |
+| Outer / only boundary | `#f8f1ee` (bronze-1) | `#846358` | `#846358` | Default: the single boundary on a diagram, or the outermost in a nested pair. **Rounded corners** (`"roundness": {"type": 3}`). |
+| Inner boundary (nested) | `#eaddd7` (bronze-2) | `#846358` | `#846358` | Only when a smaller boundary sits visually inside a larger one. **Rounded corners** (`"roundness": {"type": 3}`). |
 
 Never go darker than bronze-2 unless you have three or more nesting levels (rare). Never use role-specific fills (blue, teal) for boundary boxes. The shade hierarchy provides depth; title color is the only other differentiator.
 

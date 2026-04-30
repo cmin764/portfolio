@@ -368,7 +368,7 @@ Follow `.claude/skills/diagram/references/integration-checklist.md` step by step
    - Use bound text elements (`containerId`) for all node labels; inline `label` shorthand is stripped by `export_to_excalidraw`
    - Set `"boundElements"` arrays on shapes pointing to their text and arrow IDs
    - **3-level text per node:** Name (larger, ~16px) / [Technology] (smaller, ~12px) / description (smaller, ~12px). All text at border color.
-   - **Boundary boxes:** fill `#eaddd7` (inner/nested) or `#f8f1ee` (outer), stroke `#846358`, title text `#846358` (never role-colored, never `#1e1e1e`). Two stroke semantics: `"strokeStyle": "dashed"` for grouping/trust/deployment boundaries; `"strokeStyle": "solid"` for expansion frames (one container zoomed in to show its internal components). Document both in the legend whenever a solid expansion frame appears on the diagram.
+   - **Boundary boxes:** fill `#eaddd7` (inner/nested) or `#f8f1ee` (outer), stroke `#846358`, **rounded corners** (`"roundness": {"type": 3}`), title text `#846358` (never role-colored, never `#1e1e1e`). Two stroke semantics: `"strokeStyle": "dashed"` for grouping/trust/deployment boundaries; `"strokeStyle": "solid"` for expansion frames (one container zoomed in to show its internal components). Document both in the legend whenever a solid expansion frame appears on the diagram.
 
    **Meta-tags on edge labels (Excalidraw only; strip them):**
    Remove `[async]`, `[cron]`, and `[async, secondary]` from all Excalidraw edge labels. Stroke style + arrowhead already encode the full meaning. Keep only semantic content (e.g., "reports errors" not "reports errors [async, secondary]"). Exception: keep `(planned)` and `(assumed)`; these are semantic, not style hints.

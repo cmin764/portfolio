@@ -182,7 +182,7 @@ The following is a condensed, implementation-ready set of rules for an automatio
   - Databases / caches / indexes: light peach bg `#ffd8a8`, stroke `#e8590c`.
   - Queues / streams / topics: light red bg `#ffc9c9`, stroke `#e03131`.
   - External systems: near-white bg `#e9ecef`, stroke `#868e96`.
-  - Boundary/grouping boxes: neutral bronze tint, stroke `#846358`. Two stroke styles carry distinct semantics: `strokeStyle: "dashed"` for grouping/trust/deployment boundaries (contains multiple containers); `strokeStyle: "solid"` for zoom-in/expansion frames (one container opened to show its internals). Never use role-specific fills on boundaries. Title text is always `#846358`.
+  - Boundary/grouping boxes: neutral bronze tint, stroke `#846358`, **rounded corners** (`"roundness": {"type": 3}`). Two stroke styles carry distinct semantics: `strokeStyle: "dashed"` for grouping/trust/deployment boundaries (contains multiple containers); `strokeStyle: "solid"` for zoom-in/expansion frames (one container opened to show its internals). Never use role-specific fills on boundaries. Title text is always `#846358`.
   - Legend boxes: yellow `#fff9db`, no border, **sharp corners** (`"roundness": null`), solid fill, `#1e1e1e` text.
   - Warning/callout boxes: pink fill `#fcc2d7`, stroke `#c2255c`, `#1e1e1e` text.
 - Arrow colors: `#1e1e1e` for all edges, no exceptions. Stroke style and arrowhead type (filled triangle for sync, open stick for async) encode the full semantic. Color adds nothing.
@@ -231,7 +231,7 @@ This system makes four deliberate choices that deviate from mainstream C4 or UML
 
 **Risk:** A reader fluent in standard notation may interpret "rectangle = active service" and miss that an orange rounded rectangle is a database.
 
-**Mitigation:** Mermaid renders `ContainerDb` and `ContainerQueue` with built-in type indicators. Every database and queue node carries an explicit type label (`<Database>`, `<Queue>`, etc.) in the node text. The legend states "All shapes are rounded rectangles; role = color + type label." Artifacts (passive outputs) use sharp-corner rectangles as the only shape exception, reinforcing that all other rounded-rect nodes are active runtime actors.
+**Mitigation:** Mermaid renders `ContainerDb` and `ContainerQueue` with built-in type indicators. Every database and queue node carries an explicit type label (`<Database>`, `<Queue>`, etc.) in the node text. The legend states "All shapes are rounded rectangles; role = color + type label." Artifacts (passive outputs) use sharp-corner rectangles as the only shape exception; legends use the same. All other shapes — nodes and boundary boxes — use rounded corners.
 
 ### Arrow semantics: arrowhead for sync/async
 

@@ -68,6 +68,8 @@ Labels use `verb + object` format ("creates order", "publishes event"). Protocol
 | Dashed bronze frame | Grouping / trust / deployment boundary: contains multiple containers |
 | Solid bronze frame | Zoom-in / expansion frame: one container opened to show its internals |
 
+Boundary boxes use **rounded corners** — same `roundness` as active nodes. This signals "real zone" rather than "annotation." Only legends and artifacts use sharp corners.
+
 Boundary title text is always the same bronze color, never role-colored.
 
 ---
