@@ -361,7 +361,7 @@ Follow `.claude/skills/diagram/references/integration-checklist.md` step by step
    - `"roughness": 1`, `"fontFamily": 1` (Virgil) on every element; non-negotiable, preserves hand-drawn aesthetic
    - Active runtime containers: rounded rectangle (`"type": "rectangle"`, `"roundness": {"type": 3}`)
    - **Person/Actor: circle/ellipse** (`"type": "ellipse"`) with the indigo palette (`#dbe4ff` fill, `#748ffc` stroke/text). Mermaid's `Person()` renders as a fixed box; Excalidraw is the only place this distinction can be made.
-   - **Artifact/generated file: non-rounded rectangle** (`"type": "rectangle"`, `"roundness": null`, sharp 90° corners) with amber palette (`#fef9c3` fill, `#ca8a04` stroke/text). Sharp corners signal "passive output, not a runtime actor." Mermaid: `System_Ext` with amber override.
+   - **Artifact/generated file: non-rounded rectangle** (`"type": "rectangle"`, `"roundness": null`, sharp 90° corners) with amber palette (`#ffec99` fill, `#f08c00` stroke/text). Sharp corners signal "passive output, not a runtime actor." Mermaid: `System_Ext` with amber override.
    - **Queue/stream/topic: rounded rectangle** with red palette (`#ffc9c9` fill, `#e03131` stroke/text). Same shape as active containers; differentiated by color only. Mermaid: `ContainerQueue`.
    - Use **pastel fills** from `color-palette.md` (not saturated): `#a5d8ff` UI, `#96f2d7` service, `#ffd8a8` DB/cache, `#ffc9c9` queue/stream, `#e9ecef` external
    - Text color = border color (same pairing as Mermaid: teal service nodes use `#099268` text, indigo person nodes use `#748ffc` text, etc.)
@@ -375,8 +375,8 @@ Follow `.claude/skills/diagram/references/integration-checklist.md` step by step
 
    **Legend box (mandatory on every diagram):**
    - Shape: **non-rounded rectangle** (`"type": "rectangle"`, `"roundness": null`, sharp 90° corners), **no border** (`"strokeColor": "transparent"`)
-   - Fill: `#ffec99` (light yellow)
-   - Fill style: **`"hachure"`** (diagonal hatching)
+   - Fill: `#fff9db` (light yellow)
+   - Fill style: **`"solid"`**
    - Text: `#1e1e1e`
    - Required content:
      - Arrow styles → interaction types (all four combinations)

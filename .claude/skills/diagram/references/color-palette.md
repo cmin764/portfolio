@@ -17,7 +17,7 @@ Each role has three paired values: a pastel fill, a darker border, and a matchin
 | Queue / Stream / Topic / Pub-Sub | #ffc9c9 | #e03131 | #e03131 | Light red bg, dark red border + text. Only true messaging primitives (queues, streams, topics, pub-sub buses). Mermaid: `ContainerQueue`. |
 | External System / SaaS | #e9ecef | #868e96 | #868e96 | Near-white bg, gray border + text |
 | Person | #dbe4ff | #748ffc | #748ffc | Light indigo bg, indigo border + text, distinct from UI sky blue. **Excalidraw: render as circle/ellipse** (`"type": "ellipse"`). Mermaid `Person()` is a fixed box with icon; no shape override possible. |
-| Generated artifact / file | #fef9c3 | #ca8a04 | #ca8a04 | Light amber bg, amber border + text: for files, exports, generated documents (not live runtime actors). **Excalidraw: non-rounded rectangle** (`"type": "rectangle"`, `"roundness": null`, sharp 90° corners). Sharp corners contrast with rounded rectangles used by all active containers. Mermaid has no artifact primitive; use `System_Ext` with amber override. |
+| Generated artifact / file | #ffec99 | #f08c00 | #f08c00 | Light amber bg, amber border + text: for files, exports, generated documents (not live runtime actors). **Excalidraw: non-rounded rectangle** (`"type": "rectangle"`, `"roundness": null`, sharp 90° corners). Sharp corners contrast with rounded rectangles used by all active containers. Mermaid has no artifact primitive; use `System_Ext` with amber override. |
 
 ## Node text structure
 
@@ -111,10 +111,10 @@ Strip noise: "via REST API" goes in the technology annotation field, not the lab
 
 | Element | Fill | Stroke | Text |
 |---------|------|--------|------|
-| Legend box (arrow key, notes) | #ffec99 | none (borderless), `hachure` fillStyle | #1e1e1e |
+| Legend box (arrow key, notes) | #fff9db | none (borderless), solid fill | #1e1e1e |
 | Warning / callout box | #fcc2d7 | #c2255c | #1e1e1e |
 
-Legend box style: light yellow (#ffec99), **no border** (`strokeColor: "transparent"` or stroke width 0), **sharp corners** (`"roundness": null`, non-rounded rectangle), **hachure fill** (`fillStyle: "hachure"`), black text. Sharp corners and diagonal hatching distinguish the legend from diagram nodes, which all use rounded rectangles with solid fills and borders.
+Legend box style: light yellow (#fff9db), **no border** (`strokeColor: "transparent"` or stroke width 0), **sharp corners** (`"roundness": null`, non-rounded rectangle), **solid fill**, black text. Sharp corners distinguish the legend from active diagram nodes (all rounded rectangles). Artifacts share the sharp-corner trait but are differentiated by their visible border (`#f08c00`) and slightly more saturated fill (`#ffec99`).
 
 **Canonical legend content (mandatory on every diagram):**
 ```
@@ -152,7 +152,7 @@ The portfolio uses `dark:invert` on the `<img>` tag for diagram SVGs. This means
 - **Avoid pure black** (#000000) fills: they become pure white when inverted
 - **Avoid very light fills below ~#e0e0e0**: they become very dark and swallow text
 - The bronze boundary tint (#eaddd7) inverts to a dark brown, acceptable as a boundary
-- The post-it yellow (#ffec99) inverts to a dark purple-blue, acceptable for legend boxes
+- The legend yellow (#fff9db) inverts to a dark blue-gray, acceptable for legend boxes; artifact amber (#ffec99) inverts similarly
 
 ---
 
@@ -166,7 +166,7 @@ UpdateElementStyle(alias, $fontColor="#e8590c", $bgColor="#ffd8a8", $borderColor
 UpdateElementStyle(alias, $fontColor="#e03131", $bgColor="#ffc9c9", $borderColor="#e03131")  // queue / stream / topic
 UpdateElementStyle(alias, $fontColor="#1971c2", $bgColor="#a5d8ff", $borderColor="#1971c2")  // UI
 UpdateElementStyle(alias, $fontColor="#868e96", $bgColor="#e9ecef", $borderColor="#868e96")  // external
-UpdateElementStyle(alias, $fontColor="#ca8a04", $bgColor="#fef9c3", $borderColor="#ca8a04")  // artifact (Mermaid: use System_Ext)
+UpdateElementStyle(alias, $fontColor="#f08c00", $bgColor="#ffec99", $borderColor="#f08c00")  // artifact (Mermaid: use System_Ext)
 ```
 
 Apply only when the default Mermaid C4 colors diverge from this palette. Always override Person nodes explicitly; the default is a dark navy that clashes with dark text.

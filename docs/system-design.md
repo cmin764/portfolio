@@ -173,7 +173,7 @@ The following is a condensed, implementation-ready set of rules for an automatio
   - `container`: rectangle or rounded rectangle.
   - `database|cache|index|registry`: rounded rectangle (`"roundness": {"type": 3}`) with orange palette: fill `#ffd8a8`, stroke/text `#e8590c`. Mermaid: `ContainerDb`. Includes any passive state holder (Redis, S3, Elasticsearch, etc.).
   - `queue|topic|stream|pubsub`: rounded rectangle with red palette: fill `#ffc9c9`, stroke/text `#e03131`. Mermaid: `ContainerQueue`. Only true messaging primitives; caches and registries stay orange.
-  - `artifact|generated-file|export`: **non-rounded rectangle** (`"type": "rectangle"`, `"roundness": null` — sharp 90° corners) with amber palette: fill `#fef9c3`, stroke/text `#ca8a04`. Sharp corners contrast with rounded rectangles on all active runtime elements. Mermaid: `System_Ext` with amber override.
+  - `artifact|generated-file|export`: **non-rounded rectangle** (`"type": "rectangle"`, `"roundness": null` — sharp 90° corners) with amber palette: fill `#ffec99`, stroke/text `#f08c00`. Sharp corners contrast with rounded rectangles on all active runtime elements. Mermaid: `System_Ext` with amber override.
   - `external-system|external-service`: rounded rectangle, near-white bg `#e9ecef`, gray border/text `#868e96`.
 - Label format (Excalidraw, 2–4 lines): Name on first line (bold, ~16px); optional `<Type>` on second line (role label, ~12px — omit when role is obvious from color); `[Technology / stack]` on next line (~12px); short responsibility with optional `(status)` on last line (~12px). In Mermaid C4: `Container(alias, "Name", "Technology", "Description")`. Bracket semantics: `<>` = C4 abstraction level; `[]` = technology; `()` = status qualifier.
 - Color mapping (authoritative hex values in `.claude/skills/diagram/references/color-palette.md`):
@@ -183,7 +183,7 @@ The following is a condensed, implementation-ready set of rules for an automatio
   - Queues / streams / topics: light red bg `#ffc9c9`, stroke `#e03131`.
   - External systems: near-white bg `#e9ecef`, stroke `#868e96`.
   - Boundary/grouping boxes: neutral bronze tint, stroke `#846358`. Two stroke styles carry distinct semantics: `strokeStyle: "dashed"` for grouping/trust/deployment boundaries (contains multiple containers); `strokeStyle: "solid"` for zoom-in/expansion frames (one container opened to show its internals). Never use role-specific fills on boundaries. Title text is always `#846358`.
-  - Legend boxes: yellow `#ffec99`, no border, **sharp corners** (`"roundness": null`), `hachure` fillStyle, `#1e1e1e` text.
+  - Legend boxes: yellow `#fff9db`, no border, **sharp corners** (`"roundness": null`), solid fill, `#1e1e1e` text.
   - Warning/callout boxes: pink fill `#fcc2d7`, stroke `#c2255c`, `#1e1e1e` text.
 - Arrow colors: `#1e1e1e` for all edges, no exceptions. Stroke style and arrowhead type (filled triangle for sync, open stick for async) encode the full semantic. Color adds nothing.
 ### 9.3 Edge rendering rules
@@ -212,7 +212,7 @@ The following is a condensed, implementation-ready set of rules for an automatio
   - **Direction rule (always present):** "Arrows point from initiator to dependency."
   - Color → role: blue=UI, teal=service, orange=DB/cache, red=queue/stream, gray=external, indigo=person, amber=artifact.
   - Boundary stroke vocabulary: dashed=grouping boundary, solid=zoom-in/expansion frame (include only when both are used on the diagram).
-- Legend box style: yellow `#ffec99`, no border, **sharp corners** (`"roundness": null`), `hachure` fillStyle, placed in a corner of the canvas.
+- Legend box style: yellow `#fff9db`, no border, **sharp corners** (`"roundness": null`), solid fill, placed in a corner of the canvas.
 - Add a diagram title: `"<Company>: <Project> (<period>) — <Diagram type>"`. Excalidraw: add a subtitle text element for the diagram level (e.g. "Container Diagram").[^7][^4]
 ### 9.6 Multiple views and scenarios
 - For each system, generate at most:

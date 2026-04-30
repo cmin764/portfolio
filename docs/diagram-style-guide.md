@@ -74,7 +74,7 @@ Boundary title text is always the same bronze color, never role-colored.
 
 ## Legend box
 
-Every diagram has a yellow hatched legend box in a corner. It shows the arrow key, the direction rule, and the color-to-role mapping. If both boundary frame types appear, it also lists the frame vocabulary.
+Every diagram has a yellow legend box in a corner (`#fff9db` fill, solid, no border, sharp corners). It shows the arrow key, the direction rule, and the color-to-role mapping. If both boundary frame types appear, it also lists the frame vocabulary.
 
 ---
 
