@@ -17,7 +17,7 @@ Every diagram follows these conventions consistently.
 | Light indigo | Person / User |
 | **Light amber + sharp corners** | **Generated artifact / file (passive output)** |
 
-Border and text are always the same darker shade as the fill. Active runtime elements use rounded corners. Artifacts use sharp corners — that contrast signals "passive output, not a live actor."
+Border and text are always the same darker shade as the fill. Active runtime elements use rounded corners. Artifacts use sharp corners; that contrast signals "passive output, not a live actor."
 
 ---
 
@@ -25,7 +25,7 @@ Border and text are always the same darker shade as the fill. Active runtime ele
 
 ```
 Name                  (bold, larger)
-<Type>                (optional — C4 abstraction level)
+<Type>                (optional, C4 abstraction level)
 [Technology / stack]
 Short responsibility  (planned) or (assumed) if applicable
 ```
@@ -36,10 +36,10 @@ Short responsibility  (planned) or (assumed) if applicable
 
 | Line | Head | Meaning |
 |------|------|---------|
-| Solid | Filled triangle | Sync call — sender blocks waiting for return |
-| Solid | Open stick | Async — fire-and-forget |
+| Solid | Filled triangle | Sync call, sender blocks waiting for return |
+| Solid | Open stick | Async, fire-and-forget |
 | Dashed | Filled triangle | Cron / polling / build-time dependency |
-| Dashed | Open stick | Background async — telemetry, log shipping, secondary path |
+| Dashed | Open stick | Background async: telemetry, log shipping, secondary path |
 
 **Direction rule: arrows point from initiator to dependency**, not in the direction data flows. If Service A calls Database B, the arrow goes A → B regardless of which way rows travel.
 
@@ -51,8 +51,8 @@ Labels use `verb + object` format ("creates order", "publishes event"). Protocol
 
 | Stroke | Meaning |
 |--------|---------|
-| Dashed bronze frame | Grouping / trust / deployment boundary — contains multiple containers |
-| Solid bronze frame | Zoom-in / expansion frame — one container opened to show its internals |
+| Dashed bronze frame | Grouping / trust / deployment boundary: contains multiple containers |
+| Solid bronze frame | Zoom-in / expansion frame: one container opened to show its internals |
 
 Boundary title text is always the same bronze color, never role-colored.
 

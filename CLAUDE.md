@@ -30,7 +30,7 @@ All text in `src/data/` and `src/pages/` is published content. Write like a pers
 - Period + new sentence when two independent thoughts follow each other
 - Parentheses for incidental asides
 
-Also avoid: "seamlessly", "robust", "leverage", trailing summaries restating what was just said, and any opener that could appear in a default ChatGPT response. One clear thought per sentence.
+Avoid AI-like wording: no "seamlessly", "robust", "leverage", "delve", "groundbreaking", "innovative", "revolutionize", "streamline", "cutting-edge", or any filler that a language model defaults to. No sycophantic openers ("Great question!", "Absolutely!"), no trailing summaries restating what was just said, no hollow transitions ("Now let's move on to..."). One clear thought per sentence. If a sentence could appear verbatim in a default ChatGPT response, rewrite it.
 
 ## Coding Rules
 
