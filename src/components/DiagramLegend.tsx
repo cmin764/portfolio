@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
 const NODE_ROLES = [
+  { label: "Person / User °", fill: "#dbe4ff", border: "#748ffc" },
   { label: "UI / Frontend", fill: "#a5d8ff", border: "#1971c2" },
   { label: "Service / API", fill: "#96f2d7", border: "#099268" },
   { label: "DB / Cache / Store", fill: "#ffd8a8", border: "#e8590c" },
   { label: "Queue / Stream / Topic", fill: "#ffc9c9", border: "#e03131" },
   { label: "External / SaaS", fill: "#e9ecef", border: "#868e96" },
-  { label: "Person / User", fill: "#dbe4ff", border: "#748ffc" },
   { label: "Artifact / generated file †", fill: "#fef9c3", border: "#ca8a04" },
 ] as const;
 
@@ -76,7 +76,7 @@ export function DiagramLegend() {
                   </li>
                 ))}
               </ul>
-              <p className="text-xs text-muted-foreground">† Artifacts use sharp corners. All other nodes use rounded rectangles; role is color + label, not shape.</p>
+              <p className="text-xs text-muted-foreground">° Person nodes use ellipses. † Artifacts use sharp corners. All other nodes use rounded rectangles; role is color + label.</p>
             </section>
 
             <section className="space-y-2">
