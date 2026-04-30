@@ -1,10 +1,10 @@
-# Robocorp: RPA Framework (2021–2024) — Container Diagram
+# Robocorp: RPA Framework & Automation Libraries (2021–2024) / Container Diagram
 
 Developer authors a task package, RCC builds the environment and runs it, `robocorp-tasks` dispatches into the automation library layer, and Control Room orchestrates runs at scale. Portal (example-\* repos on GitHub) feeds both the developer and RCC's `rcc pull` command.
 
 ```mermaid
 C4Container
-  title Robocorp: RPA Framework (2021–2024)
+  title Robocorp: RPA Framework & Automation Libraries (2021–2024)
 
   Person(dev, "Developer", "Automation engineer authoring robots")
   System_Ext(portal, "robocorp.com/portal + example-* repos", "Gallery of pullable example robots hosted on GitHub")
@@ -57,7 +57,7 @@ C4Container
   UpdateElementStyle(libCloud, $bgColor="#96f2d7", $borderColor="#099268", $fontColor="#099268")
   UpdateElementStyle(libData, $bgColor="#96f2d7", $borderColor="#099268", $fontColor="#099268")
   UpdateElementStyle(libLog, $bgColor="#96f2d7", $borderColor="#099268", $fontColor="#099268")
-  UpdateElementStyle(artifacts, $bgColor="#fef9c3", $borderColor="#ca8a04", $fontColor="#ca8a04")
+  UpdateElementStyle(artifacts, $bgColor="#ffec99", $borderColor="#f08c00", $fontColor="#f08c00")
   UpdateElementStyle(portal, $bgColor="#e9ecef", $borderColor="#868e96", $fontColor="#868e96")
   UpdateElementStyle(targets, $bgColor="#e9ecef", $borderColor="#868e96", $fontColor="#868e96")
   UpdateElementStyle(controlRoom, $bgColor="#e9ecef", $borderColor="#868e96", $fontColor="#868e96")

@@ -54,7 +54,7 @@ export const PROJECTS: ProjectData[] = [
     architectureNotes:
       'Client perimeter: AI application + traced-ai library → local SQLite (raw I/O) → self-hosted dashboard (Docker image or tracedai.co, reads local store only). Backend on Fly.io: FastAPI ingest API (receives hashes only) → a) rule lookup in rule registry (EU AI Act / ISO / SOC 2), b) appends signed entry to chained ledger. Library periodically pulls signed rule packages from rule registry. Data stores: Supabase (Postgres), Upstash (Redis). Cross-zone outbound only: hash(in) + hash(out) + rationale string. Raw data never crosses the network.',
     diagramFile: 'traced-ai.svg',
-    diagramExcalidrawUrl: 'https://excalidraw.com/#json=SbmFE1tRL0Yjwyir8d_AB,B_Syf48mjYf_8c672QG0FQ',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=SB1QPfIqUtb3kO5jcGZIz,-AVwb8XwY09W5jJmhLJNMQ',
   },
   {
     id: 'truestory',
@@ -127,7 +127,7 @@ export const PROJECTS: ProjectData[] = [
     period: '2025-2026',
     links: [],
     diagramFile: 'vonq-candidate-assessment.svg',
-    diagramExcalidrawUrl: 'https://excalidraw.com/#json=GKnSb6CzKCuwm2mPFvBhW,de632_gieUP8LT72JaN-yw',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=zXa48TAkrMZ_Rt3rs2YgV,xjIHAfcJsg-gYVCD4FMZkA',
     architectureNotes:
       'Candidate input (text/audio) → assessment agent → multi-criteria scoring → VONQ EQO (review queue + stage update) → PDF dossier',
   },
@@ -183,7 +183,7 @@ export const PROJECTS: ProjectData[] = [
     period: '2019-2020',
     links: [],
     diagramFile: 'comfy-grpc.svg',
-    diagramExcalidrawUrl: 'https://excalidraw.com/#json=SoxRhreg62Q8yU0yNyDRM,-KzHlsOQDVoFJyCaxwPy-w',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=mkgHQEkI6yhU1gNYdrWnX,WaJar2R8DyUqCS-FKznOiw',
     architectureNotes:
       'REST clients → gRPC-gateway (reverse proxy) → gRPC services (Go/Python/Node) → IoT devices + DB → responses transcoded back to JSON',
   },
@@ -205,7 +205,7 @@ export const PROJECTS: ProjectData[] = [
       { label: 'Portal', url: 'https://robocorp.com/portal' },
     ],
     diagramFile: 'robocorp-rpa.svg',
-    diagramExcalidrawUrl: 'https://excalidraw.com/#json=A700XbNd1TvXyZ4A0-fL9,Uc2184W-YKO7N2aNi1C1jw',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=c5J5N4GACWRUiIGcJcOrW,0ugltc1pWjiQtrf3MTWiIA',
     architectureNotes:
       'Developer → RCC CLI (builds env, rcc pull/run/cloud push) + robocorp-tasks (@task decorator) → Automation Libraries (robocorp-*: browser/windows/workitems/vault/storage/log; rpaframework-*: pdf/recognition/aws/google/openai/hubspot/windows) → Target Systems; robocorp-log → log.html + artifacts [async]; Control Room schedules + triggers RCC [async]; robocorp.com/portal feeds example-* repos to Developer + RCC',
   },

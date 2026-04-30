@@ -9,7 +9,7 @@ Three node categories share the same Excalidraw rounded-rectangle shape but diff
 |----------|-------|------|---------------|-------------------|
 | Database / cache / index / registry / key-value store | Rounded rect (`roundness: {type: 3}`) | `#ffd8a8` | `#e8590c` | `ContainerDb` |
 | Queue / stream / topic / pub-sub bus | Rounded rect (`roundness: {type: 3}`) | `#ffc9c9` | `#e03131` | `ContainerQueue` |
-| Generated artifact / file / export | **Non-rounded rect** (`roundness: null`) | `#fef9c3` | `#ca8a04` | `System_Ext` + amber override |
+| Generated artifact / file / export | **Non-rounded rect** (`roundness: null`) | `#ffec99` | `#f08c00` | `System_Ext` + amber override |
 
 **Decision boundary — DB vs Queue:** A node is a queue/stream (red) only if it is a true messaging primitive: its primary purpose is ordered message delivery between producers and consumers (Kafka topics, RabbitMQ queues, SQS, Redis Streams, Pub/Sub). Everything else that passively holds state — caches, registries, indexes, key-value stores, object stores — stays on the orange DB palette even if it is transient (Redis used as a cache, not a stream, stays orange).
 
