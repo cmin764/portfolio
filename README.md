@@ -1,6 +1,6 @@
 # Cosmin Poieana: Portfolio
 
-Senior software engineer and AI product builder. Building products via [Wandercode](https://wandercode.ltd).
+Senior software engineer and AI product builder. Doing consultancy work via [Wandercode](https://wandercode.ltd).
 
 Live at: **[cmin764.github.io/portfolio](https://cmin764.github.io/portfolio)**
 
