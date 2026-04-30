@@ -30,7 +30,7 @@ C4Container
     Person(recruiter, "Recruiter", "Reviews profile, approves/rejects")
     Container(ats, "VONQ EQO", "React", "Candidate journey platform — review queue + stage management")
     System_Ext(pdfService, "PDF Renderer", "HTML template + data → PDF")
-    Container(pdf, "PDF Dossier", "Generated file", "Shareable snapshot of candidate profile")
+    System_Ext(pdf, "PDF Dossier", "Shareable snapshot of candidate profile")
   }
 
   Rel(candidate, chat, "text answers")

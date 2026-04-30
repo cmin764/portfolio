@@ -23,7 +23,7 @@ export const PROJECTS: ProjectData[] = [
     title: 'NoMoreApply',
     tagline: 'Private engineer community for peer-based job referrals. No recruiters.',
     description:
-      'Co-founded with Angel Aytov and Cata Waack. A trust-based talent network where engineers refer each other directly to companies they\'ve worked at or know well. Vetting is peer-based, not algorithmic. The services brochure (linked below) was built with Claude-driven skill automation: a lightweight example of agentic content generation.',
+      'Co-founded with Angel Aytov and Cata Waack. A trust-based talent network where engineers refer each other directly to companies they\'ve worked at or know well. Vetting is peer-based, not algorithmic. The services brochure (linked below) was generated with the `/sync-sources` skill: takes scattered raw resources and produces polished **Markdown** sources, assembled into the team PDF brochure.',
     category: 'active-venture',
     complexity: 'medium',
     status: 'active',
@@ -42,12 +42,12 @@ export const PROJECTS: ProjectData[] = [
     title: 'Traced AI',
     tagline: 'AI audit trail for compliance: proof that the AI decided correctly, when, and under which rule',
     description:
-      'Built for regulated industries (banking, healthcare, defense) where "the AI decided" is not an acceptable answer. The traced-ai library auto-patches LLM clients (OpenAI, Anthropic, etc.) at import time. Raw inputs and outputs are written to a local SQLite store that never leaves the client perimeter. SHA-256 hashes of every I/O pair, plus the rationale string, are sent to an append-only chained ledger in the cloud. The dashboard ships as a Docker image for self-hosted deployments or as a hosted app on tracedai.co, backed by Supabase for managed Postgres and Upstash for Redis. The rule registry (EU AI Act, ISO 42001, SOC 2 mappings) is the moat: it translates regulatory text into concrete logging requirements per decision type, updated from real auditor interactions.',
+      'Built for regulated industries (banking, healthcare, defense) where "the AI decided" is not an acceptable answer. The **traced-ai** library auto-patches LLM clients ([OpenAI](https://openai.com), [Anthropic](https://anthropic.com), etc.) at import time. Raw inputs and outputs are written to a local SQLite store that never leaves the client perimeter. *SHA-256* hashes of every I/O pair, plus the rationale string, are sent to an append-only chained ledger in the cloud. The dashboard ships as a Docker image for self-hosted deployments or as a hosted app on tracedai.co, backed by [Supabase](https://supabase.com) for managed Postgres and [Upstash](https://upstash.com) for Redis. Deployed on [Fly.io](https://fly.io). The rule registry (EU AI Act, ISO 42001, SOC 2 mappings) is the moat: it translates regulatory text into concrete logging requirements per decision type, updated from real auditor interactions.',
     category: 'startup-trial',
     complexity: 'high',
     status: 'stealth',
     period: 'Apr 2026 – present',
-    tags: ['Python', 'FastAPI', 'PostgreSQL', 'Redis', 'Next.js', 'TypeScript', 'Fly.io', 'Vercel', 'Supabase', 'Compliance', 'EU AI Act'],
+    tags: ['Python', 'FastAPI', 'PostgreSQL', 'Redis', 'Next.js', 'TypeScript', 'Fly.io', 'Vercel', 'Supabase', 'Upstash', 'Compliance', 'EU AI Act'],
     links: [
       { label: 'In stealth. Talk to me.', url: 'https://cal.com/wandercode/discovery-call' },
     ],
@@ -82,7 +82,7 @@ export const PROJECTS: ProjectData[] = [
     title: 'Meeting Assistant',
     tagline: 'AI agent that joins Google Meet interviews, analyzes conversations, and gives private live insights to interviewers',
     description:
-      'VONQ is a recruitment marketing platform distributing jobs to 5,000+ channels. This feature was the first of its kind at VONQ. Recall.ai connects to Google Meet as a bot participant and streams real-time transcripts via webhooks to the Django backend. OpenAI API analyzes the conversation and generates a live reply when the agent decides to intervene. ElevenLabs converts that text to speech, which streams back through Recall\'s listened page into the active call. The result: private live hints for the interviewer and optional unblocking dialogue, all without disrupting the session.',
+      'VONQ is a recruitment marketing platform distributing jobs to 5,000+ channels. This feature was the first of its kind at VONQ. [Recall.ai](https://recall.ai) connects to Google Meet as a bot participant and streams real-time transcripts via webhooks to the Django backend. [OpenAI](https://openai.com) API analyzes the conversation and generates a live reply when the agent decides to intervene. [ElevenLabs](https://elevenlabs.io) converts that text to speech, which streams back through Recall\'s listened page into the active call. The result: private live hints for the interviewer and optional unblocking dialogue, all without disrupting the session.',
     category: 'professional',
     complexity: 'high',
     status: 'shipped',
@@ -100,11 +100,11 @@ export const PROJECTS: ProjectData[] = [
     title: 'Knowledge Base & Careers Agent',
     tagline: 'Automatic career site crawler feeding an AI agent that recommends jobs from uploaded CVs',
     description:
-      'Built a Firecrawl-powered crawler that ingests company career pages on a cron schedule and indexes job listings into Pinecone using OpenAI embeddings. The Careers Agent is delivered as an embeddable chat widget on the client\'s career site: candidates upload their CV and chat, the agent embeds the query with the same model used at index time, runs a k-NN search against the stored vectors, and feeds the retrieved listings into a completion call to narrow down matching roles. High-confidence matches route the candidate directly to the right job URL. Removed the need to manually browse job boards.',
+      'Built a [Firecrawl](https://firecrawl.dev)-powered crawler that ingests company career pages on a cron schedule and indexes job listings into [Pinecone](https://pinecone.io) using [OpenAI](https://openai.com) embeddings. The Careers Agent is delivered as an embeddable chat widget on the client\'s career site: candidates upload their CV and chat, the agent embeds the query with the same model used at index time, runs a k-NN search against the stored vectors, and feeds the retrieved listings into a completion call to narrow down matching roles. High-confidence matches route the candidate directly to the right job URL. Removed the need to manually browse job boards.',
     category: 'professional',
-    complexity: 'high',
+    complexity: 'medium',
     status: 'shipped',
-    tags: ['Python', 'Django', 'Firecrawl', 'RAG', 'Pinecone', 'LLM', 'React', 'AI Agents'],
+    tags: ['Python', 'Django', 'Firecrawl', 'RAG', 'Pinecone', 'OpenAI', 'LLM', 'React', 'AI Agents'],
     company: 'VONQ',
     period: '2025-2026',
     links: [],
@@ -118,9 +118,9 @@ export const PROJECTS: ProjectData[] = [
     title: 'Candidate Assessment & Language Evaluator',
     tagline: 'Agentic pipeline for evaluating candidate quality, including a live language assessment MVP',
     description:
-      'Built an agentic automation system to evaluate candidates across multiple criteria (skills alignment, communication quality, role fit). Added retry capability for audio web interviews via Retell: when a connection drops or the candidate cannot be heard, the session recovers gracefully. Delivered a language assessment MVP for a major European client, from initial chat-based screening through to a final PDF dossier for the recruiter with embedded language scores (vocabulary, speech fluency, semantics, coherence) exportable and shareable directly.',
+      'Built an agentic automation system to evaluate candidates across multiple criteria (skills alignment, communication quality, role fit). Added retry capability for audio web interviews via [Retell](https://retellai.com): when a connection drops or the candidate cannot be heard, the session recovers gracefully. Delivered a language assessment MVP for a major European client, from initial chat-based screening through to a final PDF dossier for the recruiter with embedded language scores (vocabulary, speech fluency, semantics, coherence) exportable and shareable directly.',
     category: 'professional',
-    complexity: 'high',
+    complexity: 'medium',
     status: 'shipped',
     tags: ['Python', 'Django', 'Retell', 'AI Agents', 'Audio Processing', 'React', 'Assessment', 'PDF', 'VONQ EQO'],
     company: 'VONQ',
@@ -178,7 +178,7 @@ export const PROJECTS: ProjectData[] = [
     category: 'professional',
     complexity: 'high',
     status: 'shipped',
-    tags: ['gRPC', 'Go', 'Python', 'Node.js', 'Protocol Buffers', 'REST', 'Microservices', 'IoT', 'Kubernetes'],
+    tags: ['gRPC', 'Go', 'Python', 'Node.js', 'Protocol Buffers', 'REST', 'Microservices', 'IoT', 'Kubernetes', 'PostGIS', 'Mapbox'],
     company: 'Comfy (→ Siemens)',
     period: '2019-2020',
     links: [],
@@ -195,7 +195,7 @@ export const PROJECTS: ProjectData[] = [
     description:
       'Core contributor to Robocorp\'s open-source RPA framework, the Python-native successor to Robot Framework for enterprise automation. Built and maintained libraries for web automation, desktop automation, OCR, document processing, and data pipelines. These libraries are the foundation that hundreds of enterprise customers use to automate their workflows. Led library design, API surface, versioning, and contributor onboarding.',
     category: 'oss-hobby',
-    complexity: 'high',
+    complexity: 'medium',
     status: 'shipped',
     tags: ['Python', 'Robot Framework', 'RPA', 'Selenium', 'Playwright', 'OCR', 'Automation', 'PyPI', 'Open Source'],
     company: 'Robocorp / Sema4.ai',
@@ -214,7 +214,7 @@ export const PROJECTS: ProjectData[] = [
     title: 'Action Server + AI Actions',
     tagline: 'MCP-like FastAPI server giving GPT "hands and legs": pluggable business logic executed post-reasoning',
     description:
-      'Before MCP was standardized, Sema4.ai (formerly Robocorp) built their own protocol for exposing callable actions to LLMs. Action Server is a FastAPI-based server that hosts AI Actions: discrete, type-safe Python functions with metadata that GPT can discover and invoke. Each action is a pluggable unit of business logic: read a spreadsheet, query a database, trigger a workflow, post to Slack. The gallery of actions became a reference implementation used by enterprise customers. Led the engineering effort from architecture to production.',
+      'Before MCP was standardized, Sema4.ai (formerly Robocorp) built their own protocol for exposing callable actions to LLMs. Action Server is a **FastAPI**-based server that hosts AI Actions: discrete, type-safe Python functions annotated with `@action` or `@tool` and described in a `package.yaml`. GPT can discover and invoke them. Each action is a pluggable unit of business logic: read a spreadsheet, query a database, trigger a workflow, post to Slack. The gallery of actions became a reference implementation used by enterprise customers. Led the engineering effort from architecture to production.',
     category: 'oss-hobby',
     complexity: 'high',
     status: 'shipped',
@@ -235,11 +235,11 @@ export const PROJECTS: ProjectData[] = [
     title: 'DeepIce',
     tagline: 'Idiomatic async Python web server template, showing how I approach backend development from scratch',
     description:
-      'A reference implementation of a production-grade FastAPI application. Shows the full stack: async request handling, SQLModel for combined Pydantic + SQLAlchemy ORM, Alembic migrations, uv for dependency management, invoke for task automation, Redis for caching, Docker Compose setup, and pytest with async test fixtures. Built to answer "what does well-structured Python API code look like" with a concrete, runnable example rather than a tutorial.',
+      'A reference implementation of a production-grade FastAPI application. Shows the full stack: async request handling, **SQLModel** for combined Pydantic + SQLAlchemy ORM, **Alembic** migrations, *uv* for dependency management, *invoke* for task automation, Redis for caching, *Docker Compose* setup, and **pytest** with async test fixtures. Built to answer "what does well-structured Python API code look like" with a concrete, runnable example rather than a tutorial.',
     category: 'oss-hobby',
-    complexity: 'medium',
-    status: 'shipped',
-    tags: ['Python', 'FastAPI', 'SQLModel', 'PostgreSQL', 'Redis', 'Pydantic', 'Docker', 'asyncio', 'pytest'],
+    complexity: 'low',
+    status: 'in-progress',
+    tags: ['Python', 'FastAPI', 'SQLModel', 'PostgreSQL', 'Redis', 'Pydantic', 'Docker', 'asyncio', 'pytest', 'Alembic'],
     diagramFile: 'deep-ice.svg',
     diagramExcalidrawUrl: 'https://excalidraw.com/#json=Gu0AaIUVZB367F-_KbwnI,nJQXIBVT5xYIHwxxKtx0hw',
     links: [
@@ -256,7 +256,7 @@ export const PROJECTS: ProjectData[] = [
     description:
       'Built to solve the problem of coordinating multiple AI agents across a DAG of steps with state management, retry logic, and observability. Inspired by ZenML and Prefect but focused on AI agent workflows rather than ML training pipelines. Agents are registered as pipeline steps, dependencies are declared explicitly, and execution is orchestrated via a FastAPI control plane.',
     category: 'oss-hobby',
-    complexity: 'high',
+    complexity: 'medium',
     status: 'in-progress',
     tags: ['Python', 'FastAPI', 'MLOps', 'AI Agents', 'DAG', 'Orchestration', 'Pipeline', 'async'],
     links: [
@@ -274,9 +274,9 @@ export const PROJECTS: ProjectData[] = [
     title: 'Wandercode website',
     tagline: 'Company site for the consultancy, built with the same stack I recommend to clients',
     description:
-      'The public-facing site for Wandercode, deployed on Vercel. Built to practice what I preach: fast, accessible, and maintainable. Stack: Vite + React + TypeScript + Tailwind + shadcn/ui, managed with bun. Uses a /frontend-review skill for agentic self-review before merging.',
+      'The public-facing site for Wandercode, deployed on Vercel. Built to practice what I preach: fast, accessible, and maintainable. Stack: Vite + React + TypeScript + Tailwind + shadcn/ui, managed with bun. Uses a `/frontend-review` skill for agentic self-review before merging.',
     category: 'frontend-brand',
-    complexity: 'medium',
+    complexity: 'low',
     status: 'active',
     tags: ['TypeScript', 'React', 'Vite', 'Tailwind', 'shadcn/ui', 'React Router', 'Vercel'],
     links: [
@@ -289,9 +289,9 @@ export const PROJECTS: ProjectData[] = [
     title: "Nomad's Nest website",
     tagline: 'Short-term rental site for a self-catering apartment in Cyprus, built for digital nomads',
     description:
-      'A Next.js site for a short-term rental property in Cyprus. 10+ page types: marketing, gallery with per-room sub-pages, booking, check-in guide, and legal. Framer Motion for scroll-triggered animations, lightbox gallery, reviews carousel, transport modal. Deployed on Vercel, managed with bun. Uses a /frontend-review skill for agentic self-review before merging.',
+      'A Next.js site for a short-term rental property in Cyprus. 10+ page types: marketing, gallery with per-room sub-pages, booking, check-in guide, and legal. Framer Motion for scroll-triggered animations, lightbox gallery, reviews carousel, transport modal. Deployed on Vercel, managed with bun. Uses a `/frontend-review` skill for agentic self-review before merging.',
     category: 'frontend-brand',
-    complexity: 'medium',
+    complexity: 'low',
     status: 'active',
     tags: ['TypeScript', 'Next.js', 'Tailwind', 'shadcn/ui', 'Framer Motion', 'Vercel Analytics', 'Vercel'],
     links: [

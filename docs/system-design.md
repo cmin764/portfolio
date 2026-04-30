@@ -171,18 +171,20 @@ The following is a condensed, implementation-ready set of rules for an automatio
   - `person`: **Excalidraw: circle/ellipse** (`"type": "ellipse"`); Mermaid `Person()` renders as a fixed box with icon, no shape override possible.
   - `system`: rounded rectangle with thicker border.
   - `container`: rectangle or rounded rectangle.
-  - `database`: cylinder or rounded rectangle (Excalidraw uses rounded rect differentiated by color).
-  - `queue|topic|stream`: pill or cylinder labeled as such; same peach/orange palette as data stores.
-  - `external-system|external-service`: same shape as container, near-white bg `#e9ecef`, gray border `#868e96`.
-- Label format (3-level): Name on first line; `[Technology / stack]` on second line; short responsibility on third line. In Mermaid C4: `Container(alias, "Name", "Technology", "Description")`.
+  - `database|cache|index|registry`: rounded rectangle (`"roundness": {"type": 3}`) with orange palette: fill `#ffd8a8`, stroke/text `#e8590c`. Mermaid: `ContainerDb`. Includes any passive state holder (Redis, S3, Elasticsearch, etc.).
+  - `queue|topic|stream|pubsub`: rounded rectangle with red palette: fill `#ffc9c9`, stroke/text `#e03131`. Mermaid: `ContainerQueue`. Only true messaging primitives; caches and registries stay orange.
+  - `artifact|generated-file|export`: **non-rounded rectangle** (`"type": "rectangle"`, `"roundness": null` — sharp 90° corners) with amber palette: fill `#fef9c3`, stroke/text `#ca8a04`. Sharp corners contrast with rounded rectangles on all active runtime elements. Mermaid: `System_Ext` with amber override.
+  - `external-system|external-service`: rounded rectangle, near-white bg `#e9ecef`, gray border/text `#868e96`.
+- Label format (Excalidraw, 2–4 lines): Name on first line (bold, ~16px); optional `<Type>` on second line (role label, ~12px — omit when role is obvious from color); `[Technology / stack]` on next line (~12px); short responsibility with optional `(status)` on last line (~12px). In Mermaid C4: `Container(alias, "Name", "Technology", "Description")`. Bracket semantics: `<>` = C4 abstraction level; `[]` = technology; `()` = status qualifier.
 - Color mapping (authoritative hex values in `.claude/skills/diagram/references/color-palette.md`):
   - UI/frontends: light blue bg `#a5d8ff`, stroke `#1971c2`.
   - Services/APIs: light mint bg `#96f2d7`, stroke `#099268`.
-  - Data stores, caches, queues: light peach bg `#ffd8a8`, stroke `#e8590c`.
+  - Databases / caches / indexes: light peach bg `#ffd8a8`, stroke `#e8590c`.
+  - Queues / streams / topics: light red bg `#ffc9c9`, stroke `#e03131`.
   - External systems: near-white bg `#e9ecef`, stroke `#868e96`.
-  - Boundary/grouping boxes: neutral bronze tint `#eaddd7`, stroke `#846358`, `strokeStyle: "dashed"` — all boundaries use this regardless of what they contain. Role distinction via title color only. Dashed stroke is mandatory: it distinguishes the grouping frame from solid container boxes.
-  - Legend/annotation boxes: post-it yellow `#ffec99`, no border, `hachure` fillStyle, `#1e1e1e` text.
-  - Boundary title text: `#846358` always, matching the stroke — never role-colored, never `#1e1e1e`.
+  - Boundary/grouping boxes: neutral bronze tint, stroke `#846358`. Two stroke styles carry distinct semantics: `strokeStyle: "dashed"` for grouping/trust/deployment boundaries (contains multiple containers); `strokeStyle: "solid"` for zoom-in/expansion frames (one container opened to show its internals). Never use role-specific fills on boundaries. Title text is always `#846358`.
+  - Legend boxes: yellow `#ffec99`, no border, **sharp corners** (`"roundness": null`), `hachure` fillStyle, `#1e1e1e` text.
+  - Warning/callout boxes: pink fill `#fcc2d7`, stroke `#c2255c`, `#1e1e1e` text.
 - Arrow colors: `#1e1e1e` for all edges, no exceptions. Stroke style and arrowhead type (filled triangle for sync, open stick for async) encode the full semantic. Color adds nothing.
 ### 9.3 Edge rendering rules
 - For `type = call` or `data`:
@@ -205,13 +207,13 @@ The following is a condensed, implementation-ready set of rules for an automatio
 - Maintain ample spacing; enforce minimum distance between nodes.
 - Route connectors orthogonally and attempt simple re-layout to reduce edge crossings.
 ### 9.5 Legends and metadata
-- Always create a small legend box describing:
-  - Shape → role mapping.
-  - Color → layer/type mapping.
-  - Line style and arrowhead semantics.
-- Add a header with:
-  - Title: `"<Level> diagram for <System> – <View>"`.
-  - Optional metadata: date and version.[^7][^4]
+- **Legend is mandatory on every diagram.** A reader must understand the diagram without external documentation. Minimum canonical content:
+  - Arrow-style → interaction type: solid+filled = sync, solid+open = async, dashed+filled = cron/polling, dashed+open = secondary background async.
+  - **Direction rule (always present):** "Arrows point from initiator to dependency."
+  - Color → role: blue=UI, teal=service, orange=DB/cache, red=queue/stream, gray=external, indigo=person, amber=artifact.
+  - Boundary stroke vocabulary: dashed=grouping boundary, solid=zoom-in/expansion frame (include only when both are used on the diagram).
+- Legend box style: yellow `#ffec99`, no border, **sharp corners** (`"roundness": null`), `hachure` fillStyle, placed in a corner of the canvas.
+- Add a diagram title: `"<Company>: <Project> (<period>) — <Diagram type>"`. Excalidraw: add a subtitle text element for the diagram level (e.g. "Container Diagram").[^7][^4]
 ### 9.6 Multiple views and scenarios
 - For each system, generate at most:
   - One context diagram.
@@ -219,6 +221,44 @@ The following is a condensed, implementation-ready set of rules for an automatio
   - Component diagrams only for complex containers.
   - Optional sequence diagrams for key scenarios.
 - Use consistent naming and color coding across diagrams so that nodes are recognizable between views.[^5][^20]
+## 9.7 Known deviations from industry norms
+
+This system makes four deliberate choices that deviate from mainstream C4 or UML conventions. Each is intentional and carries a defined mitigation.
+
+### Shape uniformity
+
+**Deviation:** Rounded rectangles are used for all node roles — including databases, caches, and queues — rather than cylinders or ellipses, which are the conventional data-store shapes in flowcharts and many C4 examples.
+
+**Risk:** A reader fluent in standard notation may interpret "rectangle = active service" and miss that an orange rounded rectangle is a database.
+
+**Mitigation:** Mermaid renders `ContainerDb` and `ContainerQueue` with built-in type indicators. Every database and queue node carries an explicit type label (`<Database>`, `<Queue>`, etc.) in the node text. The legend states "All shapes are rounded rectangles; role = color + type label." Artifacts (passive outputs) use sharp-corner rectangles as the only shape exception, reinforcing that all other rounded-rect nodes are active runtime actors.
+
+### Arrow semantics: arrowhead for sync/async
+
+**Deviation:** This system uses arrowhead style (filled triangle vs. open stick) to distinguish synchronous from asynchronous calls. That is a UML sequence-diagram convention, not standard C4. C4 typically encodes sync/async via line style or edge labels rather than arrowhead shape.
+
+**Risk:** A reader expecting C4 conventions may not read the arrowhead distinction. They will see "solid arrow" as "sync" and "dashed arrow" as "async/background" — which partially aligns with this system's line-style axis — but miss the finer arrowhead distinction.
+
+**Mitigation:** The primary encoding axis is **line style** (solid = primary runtime path, dashed = secondary/background). The arrowhead is a secondary reinforcement. Every edge carries a verb-object label. The legend explicitly lists all four combinations with their meanings. Readers who ignore the arrowhead still get the primary signal from the line style and label.
+
+### Color count: seven semantic roles
+
+**Deviation:** Best-practice guides recommend 3-4 accent colors maximum. This system uses seven: blue (UI), teal (service), orange (DB/cache), red (queue/stream), gray (external), indigo (person), amber (artifact).
+
+**Risk:** Visual overload, especially for color-blind readers or black-and-white output.
+
+**Mitigation:** Each color maps to a genuinely distinct runtime character that appears repeatedly across diagrams. Roles are always paired with a type label, so meaning is not lost if colors are indistinguishable. The amber artifact color is used conditionally (only when a node is explicitly a generated file/export); the indigo person color is rare (usually one node per diagram). In practice, most diagrams use 4-5 of the seven roles.
+
+### Boundary stroke semantics
+
+**Deviation:** This system assigns distinct meanings to dashed vs. solid boundary strokes (grouping boundary vs. zoom-in frame). No published C4 or architecture guidance defines this distinction.
+
+**Risk:** A reader unfamiliar with this system will see a solid bronze box and have no standard cue for what it means.
+
+**Mitigation:** The legend includes the boundary stroke vocabulary (`╌╌╌ GROUPING BOUNDARY` / `─── ZOOM-IN`) whenever both types appear on a diagram. A solid expansion frame is also titled with its source container name, providing a textual cue even without the legend.
+
+---
+
 ## 10. Limitations and open choices
 There is no single globally enforced standard for informal system diagrams; C4 is intentionally notation independent, and UML is often considered too heavyweight for day-to-day architecture sketches. The conventions above intentionally borrow widely adopted practices from C4, UML, flowcharts, and architecture tooling to create a pragmatic, Excalidraw-friendly subset.[^3][^13][^4][^15][^5]
 

@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { DiagramLegend } from "@/components/DiagramLegend";
 
 interface Props {
   diagramFile: string;
@@ -15,12 +16,14 @@ export function DiagramViewer({ diagramFile, projectTitle, excalidrawUrl }: Prop
       className={cn("w-full rounded-md", "dark:invert")}
     />
   );
-  if (excalidrawUrl) {
-    return (
-      <a href={excalidrawUrl} target="_blank" rel="noopener noreferrer" aria-label={`Open ${projectTitle} diagram in Excalidraw`}>
-        {img}
-      </a>
-    );
-  }
-  return img;
+  return (
+    <div>
+      {excalidrawUrl ? (
+        <a href={excalidrawUrl} target="_blank" rel="noopener noreferrer" aria-label={`Open ${projectTitle} diagram in Excalidraw`}>
+          {img}
+        </a>
+      ) : img}
+      <DiagramLegend />
+    </div>
+  );
 }

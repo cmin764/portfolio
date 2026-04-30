@@ -108,7 +108,7 @@ The Excalidraw path (Phase 6B) is where system-design.md rules get fully applied
 
 **Naming**
 - Node labels: domain vocabulary from the brief. No generic names like "Backend", "Service", "API" alone.
-- Edge labels: verb + object format. "creates order", "publishes event", "reads profile". Strip "via REST" — put the protocol in the technology field.
+- Edge labels: verb + object format. "creates order", "publishes event", "reads profile". Strip "via REST"; put the protocol in the technology field.
 - Boundary labels: describe what the boundary represents (team, deployment zone, trust perimeter), not just "System".
 
 **Scenario detection**
@@ -136,14 +136,15 @@ The Excalidraw path (Phase 6B) is where system-design.md rules get fully applied
 
 ### Color application
 
-Apply colors from `.claude/skills/diagram/references/color-palette.md`. Font color always equals border color — they form the "dark" half of the pastel pair:
-- Person: `$bgColor="#dbe4ff" $borderColor="#748ffc" $fontColor="#748ffc"` — always override; default is dark navy
+Apply colors from `.claude/skills/diagram/references/color-palette.md`. Font color always equals border color; they form the "dark" half of the pastel pair:
+- Person: `$bgColor="#dbe4ff" $borderColor="#748ffc" $fontColor="#748ffc"` (always override); default is dark navy
 - UI/frontend: `$bgColor="#a5d8ff" $borderColor="#1971c2" $fontColor="#1971c2"`
 - Service/API: `$bgColor="#96f2d7" $borderColor="#099268" $fontColor="#099268"`
-- Database/queue: `$bgColor="#ffd8a8" $borderColor="#e8590c" $fontColor="#e8590c"`
-- External systems: `$bgColor="#e9ecef" $borderColor="#868e96" $fontColor="#868e96"` — always override; default is dark navy
+- Database/cache/store: `$bgColor="#ffd8a8" $borderColor="#e8590c" $fontColor="#e8590c"`
+- Queue/stream/topic: `$bgColor="#ffc9c9" $borderColor="#e03131" $fontColor="#e03131"`; use `ContainerQueue` primitive
+- External systems: `$bgColor="#e9ecef" $borderColor="#868e96" $fontColor="#868e96"` (always override); default is dark navy
 
-Apply via `UpdateElementStyle(alias, ...)` for each non-default node. Person shape in C4Container is a fixed box with icon — no circle override is possible via the Mermaid API.
+Apply via `UpdateElementStyle(alias, ...)` for each non-default node. Person shape in C4Container is a fixed box with icon ; no circle override is possible via the Mermaid API.
 
 ### Node text structure (3-level)
 
@@ -151,7 +152,7 @@ Each node carries three tiers of information:
 ```
 Name
 [Technology / stack]
-Short responsibility — one clause
+Short responsibility: one clause
 ```
 
 In Mermaid C4, this maps directly to the four-parameter primitive:
@@ -161,21 +162,21 @@ In Excalidraw, use a multiline bound text element with the name on the first lin
 
 ### Title format
 
-- Mermaid `title` field: `<Company>: <Project> (<period>)` — e.g. `VONQ: Meeting Assistant (2025–2026)`. For personal/OSS projects with no employer: `<Project> (<period>)` — e.g. `DeepIce: FastAPI Reference App (2023–present)`.
-- H1 heading in the `.md` file: `# <Company>: <Project> (<period>) — <Diagram type>` — e.g. `# VONQ: Meeting Assistant (2025–2026) — Container Diagram`.
-- Excalidraw: add a subtitle text element below the diagram title — e.g. "Container Diagram".
+- Mermaid `title` field: `<Company>: <Project> (<period>)`, e.g. `VONQ: Meeting Assistant (2025–2026)`. For personal/OSS projects with no employer: `<Project> (<period>)`, e.g. `DeepIce: FastAPI Reference App (2023–present)`.
+- H1 heading in the `.md` file: `# <Company>: <Project> (<period>) / <Diagram type>`, e.g. `# VONQ: Meeting Assistant (2025–2026) / Container Diagram`.
+- Excalidraw: add a subtitle text element below the diagram title, e.g. "Container Diagram".
 
-### Edge mapping — directional hints
+### Edge mapping: directional hints
 
-- Never use `Rel_D`, `Rel_U`, `Rel_L`, `Rel_R` — directional Rel variants collapse layout when combined with `Boundary`. Use plain `Rel()` only.
+- Never use `Rel_D`, `Rel_U`, `Rel_L`, `Rel_R` ; directional Rel variants collapse layout when combined with `Boundary`. Use plain `Rel()` only.
 
 ### Output
 
-Write the diagram to **`src/diagrams/<id>.md`** as a Markdown file with a mermaid code block. This is the single source file — it serves as both the committed diagram source and the Cursor-previewable file. Do NOT create a separate `.mmd` file alongside it.
+Write the diagram to **`src/diagrams/<id>.md`** as a Markdown file with a mermaid code block. This is the single source file ; it serves as both the committed diagram source and the Cursor-previewable file. Do NOT create a separate `.mmd` file alongside it.
 
 Format:
 ```markdown
-# <Company>: <Project> (<period>) — <Diagram type>
+# <Company>: <Project> (<period>) / <Diagram type>
 
 ```mermaid
 [MERMAID CODE]
@@ -197,7 +198,7 @@ Create `src/diagrams/` if it doesn't exist.
 
 2. Tell the user: "Press **Cmd+Shift+V** (or Cmd+K V for side-by-side) to preview the diagram."
 
-The `.md` file IS the source — no separate preview file needed. It is committed to git.
+The `.md` file IS the source; no separate preview file needed. It is committed to git.
 
 **Fallback (browser):**
 
@@ -208,13 +209,13 @@ If Cursor isn't available, write `src/diagrams/<id>-preview.html` (gitignored):
 <html>
 <head>
   <meta charset="utf-8">
-  <title><Project Title> — Diagram Preview</title>
+  <title><Project Title>: Diagram Preview</title>
   <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
   <script>mermaid.initialize({ startOnLoad: true, theme: 'default' });</script>
   <style>body { font-family: sans-serif; padding: 2rem; background: white; }</style>
 </head>
 <body>
-  <h2><Project Title> — Architecture Diagram</h2>
+  <h2><Project Title>: Architecture Diagram</h2>
   <div class="mermaid">
 [MERMAID CODE]
   </div>
@@ -237,10 +238,10 @@ Then: `open src/diagrams/<id>-preview.html`
 - If it's project-specific (e.g., "add the Redis cache node here"): apply it but don't save.
 - If ambiguous: ask "Should I remember this rule for future diagrams?"
 
-**Learning quality bar — apply before saving:**
+**Learning quality bar: apply before saving:**
 Learnings must be project-agnostic principles, not records of what happened on a specific diagram. Before writing, ask: "Would this rule apply unchanged to a completely different project?" If the answer requires substituting project names, it's too specific. Generalize or don't save.
 
-- Good: "Never use `System_Boundary` with directional Rel hints — it collapses layout."
+- Good: "Never use `System_Boundary` with directional Rel hints; it collapses layout."
 - Bad: "For TrueStory, removed System_Boundary because layout broke."
 - Good: "For pull-based relationships, draw arrows FROM initiator TO dependency."
 - Bad: "Reversed the news→api arrow because TrueStory's API initiates the crawl."
@@ -255,9 +256,9 @@ topic: layout | styling | mermaid-syntax | labeling | edge-semantics | integrati
 source: <project name> session (<date>)
 ---
 
-<Universal rule — one or two sentences. Must apply to any diagram, not just the source project.>
+<Universal rule: one or two sentences. Must apply to any diagram, not just the source project.>
 
-**Why:** <reasoning that holds for any diagram — no project names>
+**Why:** <reasoning that holds for any diagram, no project names>
 
 **Anti-pattern:** <generic description of what to avoid>
 
@@ -266,7 +267,7 @@ source: <project name> session (<date>)
 
 After saving any learning, update `.claude/skills/diagram/learnings/_index.md` to add a one-line entry:
 ```
-- [<topic> — <one-line summary>](<filename>) — source: <project>, <date>
+- [<topic>: <one-line summary>](<filename>), source: <project>, <date>
 ```
 
 ---
@@ -276,8 +277,8 @@ After saving any learning, update `.claude/skills/diagram/learnings/_index.md` t
 Once the user approves the diagram, ask one question before exporting:
 
 > "The Mermaid diagram is approved. How would you like to export it?
-> (a) SVG via mermaid-cli — generates a static SVG, integrated directly into the site
-> (b) Excalidraw via MCP — opens in Excalidraw for manual polish, then export from there
+> (a) SVG via mermaid-cli: generates a static SVG, integrated directly into the site
+> (b) Excalidraw via MCP: opens in Excalidraw for manual polish, then export from there
 >
 > Type 'a' or 'b'."
 
@@ -334,7 +335,7 @@ Follow `.claude/skills/diagram/references/integration-checklist.md` step by step
    )}
    ```
 
-6. **Update `.gitignore`** (first diagram only) — add:
+6. **Update `.gitignore`** (first diagram only):
    ```
    # Diagram preview files (dev only)
    src/diagrams/*-preview.md
@@ -350,34 +351,44 @@ Follow `.claude/skills/diagram/references/integration-checklist.md` step by step
 
 ### Option B: Excalidraw via MCP
 
-**Style rule (always apply):** All Excalidraw elements must use `"roughness": 1` and `"fontFamily": 1` (Virgil, the handwriting font). Never use `roughness: 0` — it produces a sterile CAD look. The hand-drawn sketch aesthetic is intentional and must be preserved across all diagram exports.
+**Style rule (always apply):** All Excalidraw elements must use `"roughness": 1` and `"fontFamily": 1` (Virgil, the handwriting font). Never use `roughness: 0`; it produces a sterile CAD look. The hand-drawn sketch aesthetic is intentional and must be preserved across all diagram exports.
 
 1. Check if the `mcp__claude_ai_Excalidraw__export_to_excalidraw` tool is available. If not, tell the user: "The Excalidraw MCP is not connected in this session. Start it and re-run, or choose option (a) instead."
 
-2. Translate the approved Mermaid diagram into Excalidraw element JSON. Apply these rules — all derived from `docs/system-design.md` §9.2–9.3 and `references/color-palette.md`:
+2. Translate the approved Mermaid diagram into Excalidraw element JSON. Apply these rules, all derived from `docs/system-design.md` §9.2–9.3 and `references/color-palette.md`:
 
    **Node styling (boxes):**
-   - `"roughness": 1`, `"fontFamily": 1` (Virgil) on every element — non-negotiable, preserves hand-drawn aesthetic
-   - All nodes: rounded rectangle (`"type": "rectangle"`, `"roundness": {"type": 3}`)
-   - **Person/Actor: circle/ellipse** (`"type": "ellipse"`) with the indigo palette (`#dbe4ff` fill, `#748ffc` stroke/text). Mermaid's `Person()` renders as a fixed box — Excalidraw is the only place this distinction can be made.
-   - Use **pastel fills** from `color-palette.md` (not saturated): `#a5d8ff` UI, `#96f2d7` service, `#ffd8a8` data store, `#e9ecef` external
+   - `"roughness": 1`, `"fontFamily": 1` (Virgil) on every element; non-negotiable, preserves hand-drawn aesthetic
+   - Active runtime containers: rounded rectangle (`"type": "rectangle"`, `"roundness": {"type": 3}`)
+   - **Person/Actor: circle/ellipse** (`"type": "ellipse"`) with the indigo palette (`#dbe4ff` fill, `#748ffc` stroke/text). Mermaid's `Person()` renders as a fixed box; Excalidraw is the only place this distinction can be made.
+   - **Artifact/generated file: non-rounded rectangle** (`"type": "rectangle"`, `"roundness": null`, sharp 90° corners) with amber palette (`#fef9c3` fill, `#ca8a04` stroke/text). Sharp corners signal "passive output, not a runtime actor." Mermaid: `System_Ext` with amber override.
+   - **Queue/stream/topic: rounded rectangle** with red palette (`#ffc9c9` fill, `#e03131` stroke/text). Same shape as active containers; differentiated by color only. Mermaid: `ContainerQueue`.
+   - Use **pastel fills** from `color-palette.md` (not saturated): `#a5d8ff` UI, `#96f2d7` service, `#ffd8a8` DB/cache, `#ffc9c9` queue/stream, `#e9ecef` external
    - Text color = border color (same pairing as Mermaid: teal service nodes use `#099268` text, indigo person nodes use `#748ffc` text, etc.)
-   - Use bound text elements (`containerId`) for all node labels — inline `label` shorthand is stripped by `export_to_excalidraw`
+   - Use bound text elements (`containerId`) for all node labels; inline `label` shorthand is stripped by `export_to_excalidraw`
    - Set `"boundElements"` arrays on shapes pointing to their text and arrow IDs
    - **3-level text per node:** Name (larger, ~16px) / [Technology] (smaller, ~12px) / description (smaller, ~12px). All text at border color.
-   - **Boundary boxes:** fill `#eaddd7`, stroke `#846358`, title text `#846358` (never role-colored, never `#1e1e1e`)
+   - **Boundary boxes:** fill `#eaddd7` (inner/nested) or `#f8f1ee` (outer), stroke `#846358`, title text `#846358` (never role-colored, never `#1e1e1e`). Two stroke semantics: `"strokeStyle": "dashed"` for grouping/trust/deployment boundaries; `"strokeStyle": "solid"` for expansion frames (one container zoomed in to show its internal components). Document both in the legend whenever a solid expansion frame appears on the diagram.
 
-   **Meta-tags on edge labels (Excalidraw only — strip them):**
-   Remove `[async]`, `[cron]`, and `[async, secondary]` from all Excalidraw edge labels. Stroke style + arrowhead already encode the full meaning. Keep only semantic content (e.g., "reports errors" not "reports errors [async, secondary]"). Exception: keep `(planned)` and `(assumed)` — these are semantic, not style hints.
+   **Meta-tags on edge labels (Excalidraw only; strip them):**
+   Remove `[async]`, `[cron]`, and `[async, secondary]` from all Excalidraw edge labels. Stroke style + arrowhead already encode the full meaning. Keep only semantic content (e.g., "reports errors" not "reports errors [async, secondary]"). Exception: keep `(planned)` and `(assumed)`; these are semantic, not style hints.
 
-   **Legend box (include when diagram has varied edge types):**
-   - Shape: rounded rectangle, **no border** (`"strokeColor": "transparent"`)
-   - Fill: `#ffec99` (light amber)
+   **Legend box (mandatory on every diagram):**
+   - Shape: **non-rounded rectangle** (`"type": "rectangle"`, `"roundness": null`, sharp 90° corners), **no border** (`"strokeColor": "transparent"`)
+   - Fill: `#ffec99` (light yellow)
    - Fill style: **`"hachure"`** (diagonal hatching)
    - Text: `#1e1e1e`
-   - Contents: color → role key, line style → interaction type key
+   - Required content:
+     - Arrow styles → interaction types (all four combinations)
+     - **"Arrows point from initiator to dependency"** (mandatory direction rule)
+     - Color → role mapping (blue=UI, teal=service, orange=DB/cache, red=queue/stream, gray=external, indigo=person, amber=artifact)
+     - **Shape note:** "All nodes: rounded rect. Role = color + label." (always include; compensates for deviation from cylinder-for-DB convention)
+     - **Bracket key:** "`<>` = C4 type, `[]` = tech, `()` = status" (always include)
+     - Boundary stroke vocabulary when both types appear: `╌╌╌ GROUPING BOUNDARY` / `─── ZOOM-IN / EXPANDED CONTAINER`
 
    **Arrow styling (edges):**
+
+   Two encoding axes: **line style** (primary — solid = on the primary runtime path, dashed = secondary or background) and **arrowhead** (secondary — `"triangle"` = sender blocks, `"arrow"` = fire-and-forget). Together they produce exactly four combinations.
 
    | Interaction type | `strokeStyle` | `endArrowhead` | When |
    |-----------------|--------------|----------------|------|
@@ -386,7 +397,7 @@ Follow `.claude/skills/diagram/references/integration-checklist.md` step by step
    | Cron / polling / dependency | `"dashed"` | `"triangle"` | Scheduled/periodic fetch; build-time dependency; sender blocks when it runs |
    | Secondary / background async | `"dashed"` | `"arrow"` | Use ONLY when both conditions hold: (1) not on main request path AND (2) fire-and-forget. Canonical: error reporting to Sentry, log shipping, telemetry push. If the primary user action still succeeds when this call fails, it qualifies. |
 
-   **Exactly four combinations.** Two arrowhead values — `"triangle"` (filled, sync) and `"arrow"` (open stick, async) — never `"triangle_outline"`. **All arrows use `#1e1e1e`.** Stroke/head encodes the full meaning; color adds nothing and must not vary.
+   **Exactly four combinations.** Two arrowhead values: `"triangle"` (filled, sync) and `"arrow"` (open stick, async); never `"triangle_outline"`. **All arrows use `#1e1e1e`.** Stroke/head encodes the full meaning; color adds nothing and must not vary.
 
    - Arrow stroke color: `#1e1e1e` for all edges, no exceptions
    - Arrow label: bound text element with `containerId` pointing to the arrow id
@@ -400,7 +411,7 @@ Follow `.claude/skills/diagram/references/integration-checklist.md` step by step
 
    - `gap`: minimum 8px; increase to 12–16px for nodes with dense incoming edges
    - `focus`: use `0` for a single edge between two nodes; use `-0.3` / `+0.3` (or similar offsets) when two parallel edges connect the same pair of nodes, so the lines separate visually
-   - Never omit `startBinding`/`endBinding` — floating arrows (no binding) drift on every render and lose their attachment to nodes entirely
+   - Never omit `startBinding`/`endBinding`; floating arrows (no binding) drift on every render and lose their attachment to nodes entirely
 
 3. Call `mcp__claude_ai_Excalidraw__export_to_excalidraw` with the full Excalidraw JSON and return the shareable URL to the user.
 
@@ -414,11 +425,11 @@ Follow `.claude/skills/diagram/references/integration-checklist.md` step by step
 
 This phase runs after the user provides the final SVG path and Excalidraw URL. It closes the loop between the polished diagram and all four source-of-truth files.
 
-### Step 1 — Wire up the project entry
+### Step 1: Wire up the project entry
 
 Add `diagramFile: '<id>.svg'` and `diagramExcalidrawUrl: '<url>'` to the matching entry in `src/data/projects.ts`. Run `bun run build` to confirm no type errors.
 
-### Step 2 — Review the exported diagram against three sources
+### Step 2: Review the exported diagram against three sources
 
 Compare the final Excalidraw rendering against:
 - The approved Mermaid source (`src/diagrams/<id>.md`)
@@ -433,7 +444,7 @@ Common correction types to look for:
 - Combined vs split edges (e.g., two req-resp arrows → one combined edge)
 - New insight surfaced during review (e.g., same embedding model constraint)
 
-### Step 3 — Backpropagate corrections to all four files
+### Step 3: Backpropagate corrections to all four files
 
 Apply the CLAUDE.md Content Sync Rule. For every correction identified in Step 2:
 
@@ -444,11 +455,11 @@ Apply the CLAUDE.md Content Sync Rule. For every correction identified in Step 2
 | `src/data/projects.ts` | Description if a new architectural insight emerged |
 | `docs/portfolio-blueprint.md` | Only if project scope or status changed |
 
-### Step 4 — Save new learnings
+### Step 4: Save new learnings
 
 Evaluate every correction from Step 2 against the Phase 5 quality bar. Save any that are project-agnostic principles to `learnings/` and update `learnings/_index.md`.
 
-### Step 5 — Commit discipline
+### Step 5: Commit discipline
 
 Always commit in two separate commits:
 1. **Skill/learnings first**: `.claude/skills/diagram/` changes, any updated `docs/system-design.md`
@@ -460,13 +471,13 @@ This keeps learning evolution distinct from project work in git history, and ens
 
 ## Reference files
 
-- `.claude/skills/diagram/references/mermaid-c4-syntax.md` — C4 syntax, primitives, working TrueStory example
-- `.claude/skills/diagram/references/color-palette.md` — node/edge color mappings, dark mode notes
-- `.claude/skills/diagram/references/integration-checklist.md` — Phase 6 detailed checklist
+- `.claude/skills/diagram/references/mermaid-c4-syntax.md`: C4 syntax, primitives, working TrueStory example
+- `.claude/skills/diagram/references/color-palette.md`: node/edge color mappings, dark mode notes
+- `.claude/skills/diagram/references/integration-checklist.md`: Phase 6 detailed checklist
 
 ## Learnings directory
 
-- `.claude/skills/diagram/learnings/` — auto-maintained across sessions
+- `.claude/skills/diagram/learnings/`: auto-maintained across sessions
 - Read all `.md` files here at Phase 1 startup
 - Write new files here after generic corrections in Phase 5
 - Keep `_index.md` up to date after every write
