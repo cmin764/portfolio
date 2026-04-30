@@ -183,7 +183,7 @@ export const PROJECTS: ProjectData[] = [
     period: '2019-2020',
     links: [],
     diagramFile: 'comfy-grpc.svg',
-    diagramExcalidrawUrl: 'https://excalidraw.com/#json=SoxRhreg62Q8yU0yNyDRM,-KzHlsOQDVoFJyCaxwPy-w',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=mkgHQEkI6yhU1gNYdrWnX,WaJar2R8DyUqCS-FKznOiw',
     architectureNotes:
       'REST clients → gRPC-gateway (reverse proxy) → gRPC services (Go/Python/Node) → IoT devices + DB → responses transcoded back to JSON',
   },
