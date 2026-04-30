@@ -1,4 +1,4 @@
-# VONQ: Candidate Assessment (2025–2026) — Container Diagram
+# VONQ: Candidate Assessment & Language Evaluator (2025–2026) / Container Diagram
 
 <!-- Abstraction level: Container (C4)
      Four boundaries force a LR column layout: input | pipeline | lang-eval | review.
@@ -8,7 +8,7 @@
 
 ```mermaid
 C4Container
-  title VONQ: Candidate Assessment (2025–2026)
+  title VONQ: Candidate Assessment & Language Evaluator (2025–2026)
 
   Boundary(inputSide, "Candidate Input", "external") {
     Person(candidate, "Candidate", "Provides text or audio input")
@@ -57,7 +57,7 @@ C4Container
   UpdateElementStyle(agent, $fontColor="#099268", $bgColor="#96f2d7", $borderColor="#099268")
   UpdateElementStyle(scorer, $fontColor="#099268", $bgColor="#96f2d7", $borderColor="#099268")
   UpdateElementStyle(profile, $fontColor="#e8590c", $bgColor="#ffd8a8", $borderColor="#e8590c")
-  UpdateElementStyle(pdf, $fontColor="#ca8a04", $bgColor="#fef9c3", $borderColor="#ca8a04")
+  UpdateElementStyle(pdf, $fontColor="#f08c00", $bgColor="#ffec99", $borderColor="#f08c00")
   UpdateElementStyle(pdfService, $bgColor="#e9ecef", $borderColor="#868e96", $fontColor="#868e96")
   UpdateElementStyle(openai, $bgColor="#e9ecef", $borderColor="#868e96", $fontColor="#868e96")
   UpdateElementStyle(retell, $bgColor="#e9ecef", $borderColor="#868e96", $fontColor="#868e96")
