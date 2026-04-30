@@ -83,8 +83,7 @@ export function DiagramLegend() {
                   </li>
                 ))}
               </ul>
-              <p className="text-xs text-muted-foreground">† Artifacts use sharp corners; all other nodes use rounded corners.</p>
-              <p className="text-xs text-muted-foreground">All active nodes use rounded rectangles. Role is identified by color + label, not shape.</p>
+              <p className="text-xs text-muted-foreground">† Artifacts use sharp corners. All other nodes use rounded rectangles; role is color + label, not shape.</p>
             </section>
 
             <section className="space-y-2">
@@ -113,17 +112,27 @@ export function DiagramLegend() {
                 </table>
               </div>
               <p className="text-xs text-muted-foreground">Arrows point from initiator to dependency, not in the direction data flows.</p>
-              <p className="text-xs text-muted-foreground">Line style is the primary axis (solid = primary path, dashed = secondary/background). Arrowhead is secondary (filled = sender blocks, open = fire-and-forget).</p>
             </section>
 
             <section className="space-y-2">
               <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Label format</h3>
-              <ul className="space-y-1 text-xs font-mono">
-                <li><span className="text-foreground">Name</span> <span className="text-muted-foreground">(bold)</span></li>
-                <li><span className="text-foreground">&lt;Type&gt;</span> <span className="text-muted-foreground">C4 abstraction level</span></li>
-                <li><span className="text-foreground">[Technology]</span> <span className="text-muted-foreground">runtime stack</span></li>
-                <li><span className="text-foreground">(status)</span> <span className="text-muted-foreground">(planned) or (assumed)</span></li>
-              </ul>
+              <div className="text-xs">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr>
+                      <th className="text-left text-muted-foreground font-medium pb-1.5 pr-3">Pattern</th>
+                      <th className="text-left text-muted-foreground font-medium pb-1.5">Meaning</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td className="text-foreground font-mono pr-3 py-0.5 align-top">Name</td><td className="text-muted-foreground py-0.5 align-top">node name</td></tr>
+                    <tr><td className="text-foreground font-mono pr-3 py-0.5 align-top">&lt;Type&gt;</td><td className="text-muted-foreground py-0.5 align-top">C4 abstraction level (optional)</td></tr>
+                    <tr><td className="text-foreground font-mono pr-3 py-0.5 align-top">[Technology]</td><td className="text-muted-foreground py-0.5 align-top">runtime stack</td></tr>
+                    <tr><td className="text-foreground font-mono pr-3 py-0.5 align-top">(status)</td><td className="text-muted-foreground py-0.5 align-top">lifecycle qualifier, e.g. planned, assumed, deprecated</td></tr>
+                    <tr><td className="text-foreground font-mono pr-3 py-1 align-top">out / in</td><td className="text-muted-foreground py-1 align-top">edge label: outbound data / inbound response</td></tr>
+                  </tbody>
+                </table>
+              </div>
             </section>
 
             <section className="space-y-2">
@@ -131,11 +140,11 @@ export function DiagramLegend() {
               <ul className="space-y-1.5 text-xs">
                 <li className="flex items-start gap-2.5">
                   <span className="text-muted-foreground shrink-0 w-20">Dashed</span>
-                  <span className="text-foreground">Deployment / trust boundary — groups multiple containers</span>
+                  <span className="text-foreground">Deployment / trust boundary: groups multiple containers</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <span className="text-muted-foreground shrink-0 w-20">Solid</span>
-                  <span className="text-foreground">Expansion frame — one container opened to show its internals</span>
+                  <span className="text-foreground">Expansion frame: one container opened to show its internals</span>
                 </li>
               </ul>
             </section>
