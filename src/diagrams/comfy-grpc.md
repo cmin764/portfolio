@@ -1,8 +1,8 @@
-# Comfy → Siemens: gRPC Smart Building APIs (2019–2020) — Container Diagram
+# Comfy: gRPC Smart Building APIs (2019–2020) / Container Diagram
 
 ```mermaid
 C4Container
-  title Comfy → Siemens: gRPC Smart Building APIs (2019–2020)
+  title Comfy: gRPC Smart Building APIs (2019–2020)
 
   System_Ext(restClient, "REST Client", "FE / mobile app — HTTP/JSON only, never speaks gRPC")
   System_Ext(iot, "IoT Devices", "Sensors, HVAC, access control hardware")
@@ -29,13 +29,13 @@ C4Container
       UpdateElementStyle(nodeSvc, $fontColor="#099268", $bgColor="#96f2d7", $borderColor="#099268")
 
       System_Ext(protoOcc, "occupancy.proto", "Protocol Buffers contract — occupancy + sensor API stubs")
-      UpdateElementStyle(protoOcc, $fontColor="#ca8a04", $bgColor="#fef9c3", $borderColor="#ca8a04")
+      UpdateElementStyle(protoOcc, $fontColor="#f08c00", $bgColor="#ffec99", $borderColor="#f08c00")
 
       System_Ext(protoData, "analytics.proto", "Protocol Buffers contract — analytics API stubs")
-      UpdateElementStyle(protoData, $fontColor="#ca8a04", $bgColor="#fef9c3", $borderColor="#ca8a04")
+      UpdateElementStyle(protoData, $fontColor="#f08c00", $bgColor="#ffec99", $borderColor="#f08c00")
 
       System_Ext(protoNotif, "notification.proto", "Protocol Buffers contract — notification + event API stubs")
-      UpdateElementStyle(protoNotif, $fontColor="#ca8a04", $bgColor="#fef9c3", $borderColor="#ca8a04")
+      UpdateElementStyle(protoNotif, $fontColor="#f08c00", $bgColor="#ffec99", $borderColor="#f08c00")
     }
 
     Boundary(bmw, "BMW Campus Track", "parallel track") {
