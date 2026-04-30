@@ -8,6 +8,8 @@ Live at: **[cmin764.github.io/portfolio](https://cmin764.github.io/portfolio)**
 
 Every non-trivial project has an interactive C4 architecture diagram, exported to [Excalidraw](https://excalidraw.com) for polish and linked directly from the card. You can open any diagram and edit it live.
 
+See [docs/diagram-style-guide.md](docs/diagram-style-guide.md) for the color, shape, and arrow conventions used across all diagrams.
+
 ## Projects
 
 - **Startup Trials**: Traced AI (AI audit trail), TrueStory (news aggregator)
