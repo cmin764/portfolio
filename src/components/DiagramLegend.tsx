@@ -11,13 +11,6 @@ const NODE_ROLES = [
   { label: "Artifact / generated file †", fill: "#fef9c3", border: "#ca8a04" },
 ] as const;
 
-const ARROW_STYLES = [
-  { line: "Solid", head: "Filled", meaning: "Sync call — sender waits for return" },
-  { line: "Solid", head: "Open", meaning: "Async — fire-and-forget" },
-  { line: "Dashed", head: "Filled", meaning: "Cron / polling / dependency" },
-  { line: "Dashed", head: "Open", meaning: "Background async (telemetry, logs)" },
-] as const;
-
 export function DiagramLegend() {
   const [open, setOpen] = useState(false);
 

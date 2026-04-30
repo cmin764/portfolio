@@ -1,4 +1,4 @@
-# Cosmin Poieana — Portfolio
+# Cosmin Poieana: Portfolio
 
 Senior software engineer and AI product builder. Fractional CTO at [Wandercode](https://wandercode.ltd).
 

@@ -136,13 +136,13 @@ The Excalidraw path (Phase 6B) is where system-design.md rules get fully applied
 
 ### Color application
 
-Apply colors from `.claude/skills/diagram/references/color-palette.md`. Font color always equals border color ; they form the "dark" half of the pastel pair:
-- Person: `$bgColor="#dbe4ff" $borderColor="#748ffc" $fontColor="#748ffc"`` (always override); default is dark navy
+Apply colors from `.claude/skills/diagram/references/color-palette.md`. Font color always equals border color; they form the "dark" half of the pastel pair:
+- Person: `$bgColor="#dbe4ff" $borderColor="#748ffc" $fontColor="#748ffc"` (always override); default is dark navy
 - UI/frontend: `$bgColor="#a5d8ff" $borderColor="#1971c2" $fontColor="#1971c2"`
 - Service/API: `$bgColor="#96f2d7" $borderColor="#099268" $fontColor="#099268"`
 - Database/cache/store: `$bgColor="#ffd8a8" $borderColor="#e8590c" $fontColor="#e8590c"`
-- Queue/stream/topic: `$bgColor="#ffc9c9" $borderColor="#e03131" $fontColor="#e03131"``: use `ContainerQueue` primitive
-- External systems: `$bgColor="#e9ecef" $borderColor="#868e96" $fontColor="#868e96"`` (always override); default is dark navy
+- Queue/stream/topic: `$bgColor="#ffc9c9" $borderColor="#e03131" $fontColor="#e03131"`; use `ContainerQueue` primitive
+- External systems: `$bgColor="#e9ecef" $borderColor="#868e96" $fontColor="#868e96"` (always override); default is dark navy
 
 Apply via `UpdateElementStyle(alias, ...)` for each non-default node. Person shape in C4Container is a fixed box with icon ; no circle override is possible via the Mermaid API.
 
