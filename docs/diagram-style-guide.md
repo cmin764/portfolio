@@ -19,6 +19,8 @@ Every diagram follows these conventions consistently.
 
 Border and text are always the same darker shade as the fill. Active runtime elements use rounded corners. Artifacts use sharp corners; that contrast signals "passive output, not a live actor."
 
+> **Shape note:** All active nodes use rounded rectangles. Role is identified by **color + type label together**, not shape alone. A reader should not expect cylinders for databases or ellipses for queues; the orange color and `<Database>` label carry that meaning instead.
+
 ---
 
 ## Node label format
@@ -29,6 +31,16 @@ Name                  (bold, larger)
 [Technology / stack]
 Short responsibility  (planned) or (assumed) if applicable
 ```
+
+**Bracket key:**
+
+| Bracket | Meaning | Example |
+|---------|---------|---------|
+| `<Type>` | C4 abstraction level or role | `<Container>`, `<Database>`, `<Queue>` |
+| `[Technology]` | Runtime tech stack or protocol | `[Flask + REST]`, `[PostgreSQL]` |
+| `(status)` | Lifecycle qualifier | `(planned)`, `(assumed)` |
+
+Never use the same bracket style for two different fields on the same node (e.g., `[Container]` for type is wrong; use `<Container>`).
 
 ---
 
@@ -42,6 +54,8 @@ Short responsibility  (planned) or (assumed) if applicable
 | Dashed | Open stick | Background async: telemetry, log shipping, secondary path |
 
 **Direction rule: arrows point from initiator to dependency**, not in the direction data flows. If Service A calls Database B, the arrow goes A → B regardless of which way rows travel.
+
+**Axis framing:** Line style is the **primary axis**: solid = on the primary runtime path, dashed = secondary or background. Arrowhead is the **secondary axis**: filled triangle = sender blocks, open stick = fire-and-forget. The four combinations encode four distinct interaction models; the legend on every diagram lists them explicitly.
 
 Labels use `verb + object` format ("creates order", "publishes event"). Protocol notes ("via REST") go in the technology field, not the label.
 

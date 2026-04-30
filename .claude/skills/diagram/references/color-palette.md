@@ -43,7 +43,7 @@ Never use `[]` for both type and technology on the same node. All text color = n
 
 ---
 
-Limit to these 4-5 fill colors. More than that reduces clarity. The artifact amber is an exception: use only when a node is explicitly a generated file/export artifact, not a live data store.
+Seven semantic roles, each mapping to a genuinely distinct runtime character (UI, service, data store, messaging, external, person, artifact). Do not collapse them. The artifact amber applies only when a node is explicitly a generated file/export, not a live actor. The indigo person color is typically one node per diagram. In practice most diagrams use 4-5 of the seven roles.
 
 **Color by runtime role, not technology.** Ask: "does this node execute business logic and respond to requests, or does it passively hold data?" If the latter, use the data store palette (peach/orange); even if it is Redis, Memcached, S3, or any product with "service" in its name. Caches, registries, indexes, and key-value stores that hold reference data are data stores. Only use teal if the node has its own endpoints and executes logic.
 

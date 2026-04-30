@@ -23,3 +23,4 @@ Auto-maintained index. Each entry links to a learning file with context and rati
 - [mermaid-syntax-003 — Cross-boundary edges force Mermaid TB ranker to place outside node above the boundary; fix by wrapping CI/tool nodes in their own boundary](mermaid-syntax-003.md) — source: A5 GTO Engine, 2026-04-27
 - [legend-001 — Legend is mandatory; canonical content includes direction rule, all 4 arrow styles, color-role key, and boundary vocabulary](legend-001.md) — source: convention review, 2026-04-29
 - [node-semantics-004 — Queue/stream=red (#ffc9c9/#e03131); DB/cache=orange (#ffd8a8/#e8590c); artifact=sharp-corner rect in amber (#fef9c3/#ca8a04)](node-semantics-004.md) — source: convention review, 2026-04-29
+- [node-semantics-005 — Rounded rects for all roles (DB/queue too); compensate with explicit type label + legend shape disclaimer](node-semantics-005.md) — source: convention review, 2026-04-30

@@ -84,6 +84,7 @@ export function DiagramLegend() {
                 ))}
               </ul>
               <p className="text-xs text-muted-foreground">† Artifacts use sharp corners; all other nodes use rounded corners.</p>
+              <p className="text-xs text-muted-foreground">All active nodes use rounded rectangles. Role is identified by color + label, not shape.</p>
             </section>
 
             <section className="space-y-2">
@@ -112,6 +113,17 @@ export function DiagramLegend() {
                 </table>
               </div>
               <p className="text-xs text-muted-foreground">Arrows point from initiator to dependency, not in the direction data flows.</p>
+              <p className="text-xs text-muted-foreground">Line style is the primary axis (solid = primary path, dashed = secondary/background). Arrowhead is secondary (filled = sender blocks, open = fire-and-forget).</p>
+            </section>
+
+            <section className="space-y-2">
+              <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Label format</h3>
+              <ul className="space-y-1 text-xs font-mono">
+                <li><span className="text-foreground">Name</span> <span className="text-muted-foreground">(bold)</span></li>
+                <li><span className="text-foreground">&lt;Type&gt;</span> <span className="text-muted-foreground">C4 abstraction level</span></li>
+                <li><span className="text-foreground">[Technology]</span> <span className="text-muted-foreground">runtime stack</span></li>
+                <li><span className="text-foreground">(status)</span> <span className="text-muted-foreground">(planned) or (assumed)</span></li>
+              </ul>
             </section>
 
             <section className="space-y-2">

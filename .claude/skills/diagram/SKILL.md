@@ -382,9 +382,13 @@ Follow `.claude/skills/diagram/references/integration-checklist.md` step by step
      - Arrow styles → interaction types (all four combinations)
      - **"Arrows point from initiator to dependency"** (mandatory direction rule)
      - Color → role mapping (blue=UI, teal=service, orange=DB/cache, red=queue/stream, gray=external, indigo=person, amber=artifact)
+     - **Shape note:** "All nodes: rounded rect. Role = color + label." (always include; compensates for deviation from cylinder-for-DB convention)
+     - **Bracket key:** "`<>` = C4 type, `[]` = tech, `()` = status" (always include)
      - Boundary stroke vocabulary when both types appear: `╌╌╌ GROUPING BOUNDARY` / `─── ZOOM-IN / EXPANDED CONTAINER`
 
    **Arrow styling (edges):**
+
+   Two encoding axes: **line style** (primary — solid = on the primary runtime path, dashed = secondary or background) and **arrowhead** (secondary — `"triangle"` = sender blocks, `"arrow"` = fire-and-forget). Together they produce exactly four combinations.
 
    | Interaction type | `strokeStyle` | `endArrowhead` | When |
    |-----------------|--------------|----------------|------|

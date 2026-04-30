@@ -221,6 +221,44 @@ The following is a condensed, implementation-ready set of rules for an automatio
   - Component diagrams only for complex containers.
   - Optional sequence diagrams for key scenarios.
 - Use consistent naming and color coding across diagrams so that nodes are recognizable between views.[^5][^20]
+## 9.7 Known deviations from industry norms
+
+This system makes four deliberate choices that deviate from mainstream C4 or UML conventions. Each is intentional and carries a defined mitigation.
+
+### Shape uniformity
+
+**Deviation:** Rounded rectangles are used for all node roles — including databases, caches, and queues — rather than cylinders or ellipses, which are the conventional data-store shapes in flowcharts and many C4 examples.
+
+**Risk:** A reader fluent in standard notation may interpret "rectangle = active service" and miss that an orange rounded rectangle is a database.
+
+**Mitigation:** Mermaid renders `ContainerDb` and `ContainerQueue` with built-in type indicators. Every database and queue node carries an explicit type label (`<Database>`, `<Queue>`, etc.) in the node text. The legend states "All shapes are rounded rectangles; role = color + type label." Artifacts (passive outputs) use sharp-corner rectangles as the only shape exception, reinforcing that all other rounded-rect nodes are active runtime actors.
+
+### Arrow semantics: arrowhead for sync/async
+
+**Deviation:** This system uses arrowhead style (filled triangle vs. open stick) to distinguish synchronous from asynchronous calls. That is a UML sequence-diagram convention, not standard C4. C4 typically encodes sync/async via line style or edge labels rather than arrowhead shape.
+
+**Risk:** A reader expecting C4 conventions may not read the arrowhead distinction. They will see "solid arrow" as "sync" and "dashed arrow" as "async/background" — which partially aligns with this system's line-style axis — but miss the finer arrowhead distinction.
+
+**Mitigation:** The primary encoding axis is **line style** (solid = primary runtime path, dashed = secondary/background). The arrowhead is a secondary reinforcement. Every edge carries a verb-object label. The legend explicitly lists all four combinations with their meanings. Readers who ignore the arrowhead still get the primary signal from the line style and label.
+
+### Color count: seven semantic roles
+
+**Deviation:** Best-practice guides recommend 3-4 accent colors maximum. This system uses seven: blue (UI), teal (service), orange (DB/cache), red (queue/stream), gray (external), indigo (person), amber (artifact).
+
+**Risk:** Visual overload, especially for color-blind readers or black-and-white output.
+
+**Mitigation:** Each color maps to a genuinely distinct runtime character that appears repeatedly across diagrams. Roles are always paired with a type label, so meaning is not lost if colors are indistinguishable. The amber artifact color is used conditionally (only when a node is explicitly a generated file/export); the indigo person color is rare (usually one node per diagram). In practice, most diagrams use 4-5 of the seven roles.
+
+### Boundary stroke semantics
+
+**Deviation:** This system assigns distinct meanings to dashed vs. solid boundary strokes (grouping boundary vs. zoom-in frame). No published C4 or architecture guidance defines this distinction.
+
+**Risk:** A reader unfamiliar with this system will see a solid bronze box and have no standard cue for what it means.
+
+**Mitigation:** The legend includes the boundary stroke vocabulary (`╌╌╌ GROUPING BOUNDARY` / `─── ZOOM-IN`) whenever both types appear on a diagram. A solid expansion frame is also titled with its source container name, providing a textual cue even without the legend.
+
+---
+
 ## 10. Limitations and open choices
 There is no single globally enforced standard for informal system diagrams; C4 is intentionally notation independent, and UML is often considered too heavyweight for day-to-day architecture sketches. The conventions above intentionally borrow widely adopted practices from C4, UML, flowcharts, and architecture tooling to create a pragmatic, Excalidraw-friendly subset.[^3][^13][^4][^15][^5]
 
