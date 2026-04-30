@@ -1,4 +1,4 @@
-# Traced AI: Compliance Platform (2024–present) — Container Diagram
+# Traced AI (Apr 2026 – present) / Container Diagram
 
 <!-- Abstraction level: Container (C4)
      Two boundaries rendered side-by-side: client perimeter (left) vs TracedAI cloud (right).
@@ -9,7 +9,7 @@
 
 ```mermaid
 C4Container
-  title Traced AI: Compliance Platform (2024–present)
+  title Traced AI (Apr 2026 – present)
 
   Boundary(client, "Client Perimeter", "on-premise / client machine") {
     System_Ext(aiapp, "AI Application", "Any LLM-using app")
@@ -21,7 +21,7 @@ C4Container
   Boundary(cloud, "TracedAI Cloud", "Fly.io / Supabase / Upstash") {
     Container(ingest, "Ingest API", "Python + FastAPI", "Receives hashes only — no raw data")
     ContainerDb(ledger, "Chained Ledger", "Postgres (Supabase)", "Append-only, cryptographically signed")
-    Container(rules, "Rule Registry", "Redis (Upstash)", "EU AI Act / ISO 42001 / SOC 2 mappings")
+    ContainerDb(rules, "Rule Registry", "Redis (Upstash)", "EU AI Act / ISO 42001 / SOC 2 mappings")
   }
 
   Rel(aiapp, lib, "LLM calls intercepted")
