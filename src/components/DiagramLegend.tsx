@@ -121,8 +121,8 @@ export function DiagramLegend() {
                     <tr><td className="text-foreground font-mono pr-3 py-0.5 align-top">Name</td><td className="text-muted-foreground py-0.5 align-top">node name</td></tr>
                     <tr><td className="text-foreground font-mono pr-3 py-0.5 align-top">&lt;Type&gt;</td><td className="text-muted-foreground py-0.5 align-top">C4 abstraction level (optional)</td></tr>
                     <tr><td className="text-foreground font-mono pr-3 py-0.5 align-top">[Technology]</td><td className="text-muted-foreground py-0.5 align-top">runtime stack</td></tr>
-                    <tr><td className="text-foreground font-mono pr-3 py-0.5 align-top">(status)</td><td className="text-muted-foreground py-0.5 align-top">lifecycle qualifier, e.g. planned, assumed, deprecated</td></tr>
-                    <tr><td className="text-foreground font-mono pr-3 py-1 align-top">out / in</td><td className="text-muted-foreground py-1 align-top">edge label: outbound data / inbound response</td></tr>
+                    <tr><td className="text-foreground font-mono pr-3 py-0.5 align-top">Description (status)</td><td className="text-muted-foreground py-0.5 align-top">node description and lifecycle qualifier, e.g. planned, assumed, deprecated</td></tr>
+                    <tr><td className="text-foreground font-mono pr-3 py-1 align-top">out / in</td><td className="text-muted-foreground py-1 align-top">arrow label: outbound data / inbound response</td></tr>
                   </tbody>
                 </table>
               </div>
