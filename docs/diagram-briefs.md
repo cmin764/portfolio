@@ -589,12 +589,12 @@ Note: edges b) and c) are parallel (same source/target pair). Mermaid renders on
 | clerk | Clerk | External system (auth) | Hosted auth: orgs, roles, JWT; FastAPI middleware verifies tokens |
 | alb | Application Load Balancer | Container (ingress) | AWS ALB; TLS termination |
 | api | Ingest API | Container (service) | Python + FastAPI on ECS Fargate; presigned URLs, status, on-demand avatar; control-plane only |
-| s3uploads | S3 Uploads Bucket | Container (object store) | S3, prefix `org/{orgId}/upload/{uploadId}/`; SSE-KMS; lifecycle: Standard → Standard-IA @30d → Glacier IR @90d; never expire |
-| s3avatars | S3 Avatars Bucket | Container (object store) | S3; key by deterministic seed `hash(orgId, recordId)`; presigned reads |
-| sqs | Ingest Queue | Container (queue) | SQS Standard; consumes S3 ObjectCreated events |
-| dlq | DLQ | Container (queue) | SQS dead-letter for failed parse messages |
+| s3uploads | Uploads Bucket | Container (object store) | AWS S3, SSE-KMS; prefix `org/{orgId}/upload/{uploadId}/`; lifecycle: Standard → Standard-IA @30d → Glacier IR @90d; never expire |
+| s3avatars | Avatars Bucket | Container (object store) | AWS S3; key by deterministic seed `hash(orgId, recordId)`; presigned reads |
+| sqs | Ingest Queue | Container (queue) | AWS SQS Standard; consumes S3 ObjectCreated events |
+| dlq | Dead-Letter Queue | Container (queue) | AWS SQS; captures failed parse messages after max retries |
 | parser | Parser Worker | Container (worker) | Python on ECS Fargate; autoscaled on queue depth; stream-parses, validates email syntax, bulk-inserts valid + invalid rows |
-| mongo | MongoDB Atlas | Container (database) | Sharded by `(orgId, uploadId)`; three collections: `uploads`, `records`, `processing_status` |
+| mongo | MongoDB Atlas | Container (database) | Atlas, sharded cluster; shard key `(orgId, uploadId)`; collections: `uploads`, `records`, `processing_status` |
 | imageapi | Image Gen API | External system | Replicate or OpenAI `gpt-image-1`; identicon-style prompts seeded by `hash(orgId, recordId)` |
 | secrets | Secrets Manager | Container (config) | Clerk backend secret + image API key; IAM-scoped to FastAPI task role |
 
@@ -605,7 +605,7 @@ Note: edges b) and c) are parallel (same source/target pair). Mermaid renders on
 - `dashboard → alb`: HTTPS request with Clerk JWT in header (sync)
 - `alb → api`: forward request (sync)
 - `api → secrets`: fetch Clerk verification key + image API key (sync, cached)
-- `api → s3uploads`: create multipart upload, sign part URLs (sync)
+- `api → s3uploads`: create multipart upload, generate presigned part URLs (sync)
 - `api → mongo`: create `uploads` doc, query `records` (sync)
 - `dashboard → s3uploads`: PUT parts via presigned URLs — resumable multipart (sync per part)
 - `s3uploads → sqs`: ObjectCreated event on CompleteMultipartUpload (async, S3 event notification)

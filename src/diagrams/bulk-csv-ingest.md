@@ -14,20 +14,20 @@ C4Container
 
     Container_Boundary(bcp, "Control Plane") {
       Container(alb, "Load Balancer", "AWS ALB", "TLS termination; routes to Ingest API")
-      Container(api, "Ingest API", "Python + FastAPI, ECS Fargate", "Signs presigned URLs; never proxies file bytes")
+      Container(api, "Ingest API", "Python + FastAPI, ECS Fargate", "Generates presigned URLs; never proxies file bytes")
       ContainerDb(secrets, "Secrets Manager", "AWS Secrets Manager", "Clerk backend key + image API key; IAM-scoped to API task role")
     }
 
-    ContainerDb(s3uploads, "S3 Uploads Bucket", "S3, SSE-KMS", "Prefix org/{orgId}/upload/{uploadId}/; Standard → IA@30d → Glacier IR@90d; never expire")
-    ContainerDb(s3avatars, "S3 Avatars Bucket", "S3", "Key = hash(orgId, recordId); presigned reads; cache layer for identicons")
+    ContainerDb(s3uploads, "Uploads Bucket", "AWS S3, SSE-KMS", "Prefix org/{orgId}/upload/{uploadId}/; Standard → IA@30d → Glacier IR@90d; never expire")
+    ContainerDb(s3avatars, "Avatars Bucket", "AWS S3", "Key = hash(orgId, recordId); presigned reads; cache layer for identicons")
 
     Container_Boundary(bip, "Ingest Plane") {
       ContainerQueue(sqs, "Ingest Queue", "SQS Standard", "Receives ObjectCreated events from S3 on CompleteMultipartUpload")
-      ContainerQueue(dlq, "DLQ", "SQS Dead-Letter Queue", "Captures failed parse messages after max retries")
+      ContainerQueue(dlq, "Dead-Letter Queue", "AWS SQS", "Captures failed parse messages after max retries")
       Container(parser, "Parser Worker", "Python, ECS Fargate", "Autoscaled on queue depth; stream-parses 10GB; bulk-inserts valid + invalid rows with errorCodes")
     }
 
-    ContainerDb(mongo, "MongoDB Atlas", "MongoDB Atlas (sharded)", "Shard key (orgId, uploadId); collections: uploads, records, processing_status")
+    ContainerDb(mongo, "MongoDB Atlas", "Atlas, sharded cluster", "Shard key (orgId, uploadId); collections: uploads, records, processing_status")
 
   }
 
@@ -38,7 +38,7 @@ C4Container
   Rel(dashboard, alb, "request presigned URLs / status / records", "HTTPS + Clerk JWT")
   Rel(alb, api, "forward request")
   Rel(api, secrets, "fetch Clerk key + image API key")
-  Rel(api, s3uploads, "create multipart upload, sign part URLs")
+  Rel(api, s3uploads, "create multipart upload, generate presigned part URLs")
   Rel(api, mongo, "create uploads doc, query records")
   Rel(dashboard, s3uploads, "PUT parts via presigned URLs (resumable)", "HTTPS multipart")
   %% S3 event notification is an active AWS push — justified exception to passive-store rule
