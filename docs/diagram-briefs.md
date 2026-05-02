@@ -671,10 +671,11 @@ Note: edges b) and c) are parallel (same source/target pair). Mermaid renders on
 | spa | alb | sync | request presigned URLs / results / review items (HTTPS + Clerk JWT) |
 | alb | api | sync | forward request |
 | api | secrets | sync | fetch Clerk key + inference key |
-| api | s3raw | sync | issue presigned upload URL |
+| api | s3raw | sync | issue presigned upload URL; issue presigned read URL for moderator review |
 | api | postgres | sync | create submission record; serve results and review items |
-| api | redis | sync | push to priority queue on low-confidence; pop next review item |
-| enterprise_user | s3raw | sync | PUT content via presigned URL (multipart or PUT) |
+| api | redis | sync | pop next review item (claim) |
+| spa | s3raw | sync | PUT content via presigned URL (multipart or PUT) |
+| spa | s3raw | sync | GET content via presigned read URL (moderator review) |
 | s3raw | sqs_video | async | ObjectCreated event (S3 event notification) |
 | s3raw | sqs_img | async | ObjectCreated event (S3 event notification) |
 | s3raw | sqs_text | async | ObjectCreated event (S3 event notification) |
