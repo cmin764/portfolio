@@ -27,7 +27,7 @@ C4Container
       Container(parser, "Parser Worker", "Python, ECS Fargate", "Autoscaled on queue depth; stream-parses 10GB; bulk-inserts valid + invalid rows with errorCodes")
     }
 
-    ContainerDb(mongo, "MongoDB Atlas", "Atlas, sharded cluster", "Shard key (orgId, uploadId); collections: uploads, records, processing_status")
+    ContainerDb(mongo, "Personal Data Store", "MongoDB Atlas, sharded", "Shard key (orgId, uploadId); collections: uploads, records, processing_status")
 
   }
 

@@ -594,7 +594,7 @@ Note: edges b) and c) are parallel (same source/target pair). Mermaid renders on
 | sqs | Ingest Queue | Container (queue) | AWS SQS Standard; consumes S3 ObjectCreated events |
 | dlq | Dead-Letter Queue | Container (queue) | AWS SQS; captures failed parse messages after max retries |
 | parser | Parser Worker | Container (worker) | Python on ECS Fargate; autoscaled on queue depth; stream-parses, validates email syntax, bulk-inserts valid + invalid rows |
-| mongo | MongoDB Atlas | Container (database) | Atlas, sharded cluster; shard key `(orgId, uploadId)`; collections: `uploads`, `records`, `processing_status` |
+| mongo | Personal Data Store | Container (database) | MongoDB Atlas, sharded; shard key `(orgId, uploadId)`; collections: `uploads`, `records`, `processing_status` |
 | imageapi | Image Gen API | External system | Replicate or OpenAI `gpt-image-1`; identicon-style prompts seeded by `hash(orgId, recordId)` |
 | secrets | Secrets Manager | Container (config) | Clerk backend secret + image API key; IAM-scoped to FastAPI task role |
 
