@@ -3,11 +3,11 @@ topic: integration
 source: DeepIce session (2026-04-24)
 ---
 
-Every Excalidraw arrow must include `startBinding` and `endBinding` with a non-zero `gap` (minimum 8px). Without bindings, Excalidraw routes all arrows through the geometric center of each node, causing arrow lines to overlap the text inside boxes and making the diagram unreadable.
+Every Excalidraw arrow must include `startBinding` and `endBinding` with `gap ≥ 8` so arrows run **border-to-border**: the tail leaves the source node's border and the head arrives at the target node's border. Without bindings (or with `gap: 0`), Excalidraw routes every arrow center-to-center — lines pass straight through the interior of both nodes, covering all text inside.
 
-**Why:** Excalidraw's default for unbound arrows is center-to-center routing. A gap value > 0 moves the attachment point to the node's border. This is a rendering concern, not a semantic one, but it affects legibility on every diagram with more than a handful of edges.
+**Why:** Excalidraw's default for unbound arrows is center-to-center routing. A `gap > 0` on both bindings moves the attachment points to the node borders, keeping all arrow lines in the whitespace between boxes. This is a rendering concern, not a semantic one, but it determines whether the diagram is readable at all.
 
-**Anti-pattern:** Omitting `startBinding`/`endBinding` entirely, or setting `gap: 0`. Both produce center-routed lines that pierce through node text.
+**Anti-pattern:** Omitting `startBinding`/`endBinding` entirely, or setting `gap: 0`. Both produce center-routed lines that pierce straight through node interiors and obscure all label text.
 
 **Fix:** Always include on every arrow element:
 ```json

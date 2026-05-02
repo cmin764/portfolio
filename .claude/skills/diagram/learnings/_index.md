@@ -15,7 +15,7 @@ Auto-maintained index. Each entry links to a learning file with context and rati
 - [node-semantics-002 — Only annotate LLM external with "embeddings" when a vector store appears in the diagram](node-semantics-002.md) — source: Candidate Assessment, 2026-04-21
 - [labeling-001 — `/` = req/resp split on edges; `|` = logical OR; never mix](labeling-001.md) — source: Sema4.ai Action Server, 2026-04-22
 - [labeling-002 — Node bracket semantics: `<Type>`, `[Technology]`, `(status)` — distinct symbols, never mixed](labeling-002.md) — source: DeepIce update, 2026-04-28
-- [integration-002 — Always bind arrows with startBinding/endBinding + gap≥8 to attach at node borders, not centers](integration-002.md) — source: DeepIce, 2026-04-24
+- [integration-002 — Bind every arrow with startBinding/endBinding + gap≥8 so arrows run border-to-border, never through node interiors](integration-002.md) — source: DeepIce, 2026-04-24
 - [integration-003 — Strip [async]/[cron]/[async, secondary] meta-tags from Excalidraw labels; stroke+head encodes the meaning](integration-003.md) — source: consolidation, 2026-04-24
 - [node-semantics-003 — Commodity managed hosting = ContainerDb; proprietary SaaS data product = System_Ext + orange](node-semantics-003.md) — source: VONQ Knowledge Base, 2026-04-27
 - [mermaid-syntax-002 — Mermaid C4 drops all but the last Rel() between the same node pair; Excalidraw is authoritative for parallel edges](mermaid-syntax-002.md) — source: Pulsr, 2026-04-27
@@ -24,3 +24,4 @@ Auto-maintained index. Each entry links to a learning file with context and rati
 - [legend-001 — Legend is mandatory; canonical content includes direction rule, all 4 arrow styles, color-role key, and boundary vocabulary](legend-001.md) — source: convention review, 2026-04-29
 - [node-semantics-004 — Queue/stream=red (#ffc9c9/#e03131); DB/cache=orange (#ffd8a8/#e8590c); artifact=sharp-corner rect in amber (#fef9c3/#ca8a04)](node-semantics-004.md) — source: convention review, 2026-04-29
 - [node-semantics-005 — Rounded rects for all roles (DB/queue too); compensate with explicit type label + legend shape disclaimer](node-semantics-005.md) — source: convention review, 2026-04-30
+- [styling-004 — fillStyle must be "solid" on all shapes; "hachure" muddies pastel fills and competes with text](styling-004.md) — source: Bulk CSV Ingest, 2026-05-02
