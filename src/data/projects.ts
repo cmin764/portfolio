@@ -21,7 +21,7 @@ export const PROJECTS: ProjectData[] = [
   {
     id: 'nomoreapply',
     title: 'NoMoreApply',
-    tagline: 'Private engineer community for peer-based job referrals. No recruiters.',
+    tagline: 'Private engineer community for peer-based job referrals (no recruiters)',
     description:
       'Co-founded with Angel Aytov and Cata Waack. A trust-based talent network where engineers refer each other directly to companies they\'ve worked at or know well. Vetting is peer-based, not algorithmic. The services brochure (linked below) was generated with the `/sync-sources` skill: takes scattered raw resources and produces polished **Markdown** sources, assembled into the team PDF brochure.',
     category: 'active-venture',
@@ -314,5 +314,22 @@ export const PROJECTS: ProjectData[] = [
     links: [
       { label: 'Read', url: 'https://cmin764.medium.com/the-alchemy-of-entrepreneurship-5de670f27fa2' },
     ],
+  },
+
+  // Interviews
+  {
+    id: 'bulk-csv-ingest',
+    title: 'Bulk CSV Ingest',
+    tagline: 'Resumable 10GB uploads to S3, parsed into sharded MongoDB, with on-demand AI identicons per row',
+    description:
+      'An AWS interview problem: ingest contact CSV/XLSX files up to 10GB each for 100k concurrent users, validate emails, and let users trigger per-row AI avatar generation from a dashboard. The core design separates control from data: FastAPI on ECS Fargate issues presigned S3 multipart URLs and never touches file bytes. Uploads land in S3, trigger SQS, and fan out to autoscaling Fargate parsers that stream-parse and write to sharded MongoDB Atlas. Multi-tenant isolation threads through every layer via Clerk JWTs, S3 key prefixes, and a compound MongoDB shard key. Avatars are generated on-demand against an external image API with a deterministic seed, then cached in S3.',
+    category: 'interviews',
+    complexity: 'high',
+    status: 'attempted',
+    tags: ['AWS', 'S3', 'ECS Fargate', 'FastAPI', 'Python', 'MongoDB Atlas', 'SQS', 'Clerk', 'CloudFront', 'Multipart Upload', 'System Design'],
+    links: [],
+    diagramFile: 'bulk-csv-ingest.svg',
+    architectureNotes:
+      'C4Container. Control plane (FastAPI on ECS Fargate behind ALB) brokers presigned multipart URLs and never proxies file bytes. User uploads parts directly to S3. S3 fires ObjectCreated into SQS; a Fargate parser worker pool (autoscaled on queue depth) streams the object, validates rows, and bulk-inserts valid + invalid records into MongoDB Atlas sharded by (orgId, uploadId). A DLQ catches poison-pill messages. On-demand avatar: FastAPI calls external image API with a deterministic seed, caches result in a separate S3 avatars bucket. Auth via Clerk JWT verified by FastAPI middleware. Secrets Manager holds Clerk backend secret and image API key. CloudFront serves the React dashboard from a private S3 origin.',
   },
 ];

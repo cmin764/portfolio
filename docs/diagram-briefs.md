@@ -571,3 +571,58 @@ Note: edges b) and c) are parallel (same source/target pair). Mermaid renders on
 - Front-channel (b) vs back-channel (c) is the security-critical split — two visually distinct parallel arrows between Third-party App and App Store.
 - Developer Portal has no direct DB edge — all writes route through the App Store backend (Web UI → API → DB layering).
 - Auth0 has exactly one incoming arrow (SSO login) and zero outgoing — isolated from the OAuth code/token flow.
+
+---
+
+## 13. Bulk CSV Ingest
+
+**C4 level:** Container
+**Primary concern:** control-plane / data-plane split; presigned multipart upload path never touching the API; event-driven parser workers
+**Flow direction:** left-to-right (user → upload path on top; S3 → SQS → parser → DB on bottom)
+
+### Nodes (13)
+
+| Alias | Name | Role | Tech |
+|---|---|---|---|
+| user | End User | Person | Browser; uploads CSV/XLSX, reviews rows, triggers avatar gen |
+| dashboard | Dashboard | Container (SPA) | React + TS, served by CloudFront over private S3 origin |
+| clerk | Clerk | External system (auth) | Hosted auth: orgs, roles, JWT; FastAPI middleware verifies tokens |
+| alb | Application Load Balancer | Container (ingress) | AWS ALB; TLS termination |
+| api | Ingest API | Container (service) | Python + FastAPI on ECS Fargate; presigned URLs, status, on-demand avatar; control-plane only |
+| s3uploads | S3 Uploads Bucket | Container (object store) | S3, prefix `org/{orgId}/upload/{uploadId}/`; SSE-KMS; lifecycle: Standard → Standard-IA @30d → Glacier IR @90d; never expire |
+| s3avatars | S3 Avatars Bucket | Container (object store) | S3; key by deterministic seed `hash(orgId, recordId)`; presigned reads |
+| sqs | Ingest Queue | Container (queue) | SQS Standard; consumes S3 ObjectCreated events |
+| dlq | DLQ | Container (queue) | SQS dead-letter for failed parse messages |
+| parser | Parser Worker | Container (worker) | Python on ECS Fargate; autoscaled on queue depth; stream-parses, validates email syntax, bulk-inserts valid + invalid rows |
+| mongo | MongoDB Atlas | Container (database) | Sharded by `(orgId, uploadId)`; three collections: `uploads`, `records`, `processing_status` |
+| imageapi | Image Gen API | External system | Replicate or OpenAI `gpt-image-1`; identicon-style prompts seeded by `hash(orgId, recordId)` |
+| secrets | Secrets Manager | Container (config) | Clerk backend secret + image API key; IAM-scoped to FastAPI task role |
+
+### Edges
+
+- `user → dashboard`: uses (sync)
+- `dashboard → clerk`: sign-in, fetch JWT (sync)
+- `dashboard → alb`: HTTPS request with Clerk JWT in header (sync)
+- `alb → api`: forward request (sync)
+- `api → secrets`: fetch Clerk verification key + image API key (sync, cached)
+- `api → s3uploads`: create multipart upload, sign part URLs (sync)
+- `api → mongo`: create `uploads` doc, query `records` (sync)
+- `dashboard → s3uploads`: PUT parts via presigned URLs — resumable multipart (sync per part)
+- `s3uploads → sqs`: ObjectCreated event on CompleteMultipartUpload (async, S3 event notification)
+- `parser → sqs`: polls (sync; consumer-pulls-queue per edge-direction convention)
+- `parser → s3uploads`: GET object stream (sync)
+- `parser → mongo`: bulk-insert valid + invalid rows; update `uploads.status`; append `processing_status` (sync)
+- `sqs → dlq`: dead-letter after max retries (async, dashed)
+- `api → imageapi`: generate identicon for `recordId` (sync HTTPS, on-demand, after cache miss)
+- `api → s3avatars`: store image keyed by seed; subsequent calls hit cache (sync)
+- `dashboard → s3avatars`: GET avatar via presigned URL (sync)
+
+### Design constraints worth showing visually
+
+- Three boundaries: one outer `System_Boundary("Bulk CSV Ingest")`; inner `Container_Boundary("Control Plane")` groups `api` + `secrets`; inner `Container_Boundary("Ingest Plane")` groups `sqs` + `dlq` + `parser`. Makes the control/data-plane split visible at a glance.
+- Multi-tenant isolation visible in node labels: S3 prefix `org/{orgId}/upload/{uploadId}/`, MongoDB shard key `(orgId, uploadId)`.
+- Avatar generation is on-demand (no avatar queue, no fan-out worker). FastAPI calls external API only on user click; result cached in S3 by deterministic seed.
+- Default upload path is raw multipart. Optional client-side zstd compression is not drawn (opt-in toggle, not the default path).
+- Validation: email syntax only (RFC 5322 simplified). Structured error codes (`INVALID_EMAIL_SYNTAX`, `MISSING_FIELD`) stored per row — extensible without schema churn.
+- S3 lifecycle annotation on `s3uploads`: Standard → Standard-IA @30d → Glacier IR @90d, never expire.
+- `s3uploads → sqs` is the one passive-store edge; justified by S3 event notifications being an active AWS push (exception to passive-store rule).

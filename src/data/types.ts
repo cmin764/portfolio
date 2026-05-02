@@ -4,7 +4,8 @@ export type Category =
   | 'professional'
   | 'oss-hobby'
   | 'frontend-brand'
-  | 'writing';
+  | 'writing'
+  | 'interviews';
 
 export type Complexity = 'low' | 'medium' | 'high';
 
@@ -13,7 +14,8 @@ export type ProjectStatus =
   | 'shipped'
   | 'stealth'
   | 'in-progress'
-  | 'discontinued';
+  | 'discontinued'
+  | 'attempted';
 
 export interface ProjectLink {
   label: string;

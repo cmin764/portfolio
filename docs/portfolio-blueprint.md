@@ -370,6 +370,14 @@ No Cloudbase card. It was replaced by `gorgias-appstore`.
 
 ---
 
+### Interviews
+
+| id | title | complexity | status | diagram |
+|----|-------|------------|--------|---------|
+| `bulk-csv-ingest` | Bulk CSV Ingest | high | attempted | `bulk-csv-ingest.svg` |
+
+Tags: AWS, S3, ECS Fargate, FastAPI, Python, MongoDB Atlas, SQS, Clerk, CloudFront, Multipart Upload, System Design
+
 ### Writing
 
 | id | title | complexity | status |

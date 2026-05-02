@@ -43,6 +43,7 @@ const STATUS_LABEL: Record<ProjectData['status'], string> = {
   stealth: 'Stealth',
   'in-progress': 'In Progress',
   discontinued: 'Discontinued',
+  attempted: 'Attempted',
 };
 
 export function ProjectCard({ project }: Props) {
