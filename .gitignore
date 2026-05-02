@@ -25,6 +25,3 @@ dist-ssr
 
 # Diagram browser preview (dev only — .md files are committed)
 src/diagrams/*-preview.html
-
-# Claude Code worktrees
-.claude/worktrees/
