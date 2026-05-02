@@ -619,7 +619,7 @@ Note: edges b) and c) are parallel (same source/target pair). Mermaid renders on
 
 ### Design constraints worth showing visually
 
-- Three boundaries: one outer `System_Boundary("Bulk CSV Ingest")`; inner `Container_Boundary("Control Plane")` groups `api` + `secrets`; inner `Container_Boundary("Ingest Plane")` groups `sqs` + `dlq` + `parser`. Makes the control/data-plane split visible at a glance.
+- Three boundaries: one outer `System_Boundary("Bulk CSV Ingest")`; inner `Container_Boundary("Control Plane")` groups `alb`, `api`, and `secrets`; inner `Container_Boundary("Ingest Plane")` groups `sqs` + `dlq` + `parser`. Makes the control/data-plane split visible at a glance.
 - Multi-tenant isolation visible in node labels: S3 prefix `org/{orgId}/upload/{uploadId}/`, MongoDB shard key `(orgId, uploadId)`.
 - Avatar generation is on-demand (no avatar queue, no fan-out worker). FastAPI calls external API only on user click; result cached in S3 by deterministic seed.
 - Default upload path is raw multipart. Optional client-side zstd compression is not drawn (opt-in toggle, not the default path).

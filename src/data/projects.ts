@@ -329,6 +329,7 @@ export const PROJECTS: ProjectData[] = [
     tags: ['AWS', 'S3', 'ECS Fargate', 'FastAPI', 'Python', 'MongoDB Atlas', 'SQS', 'Clerk', 'CloudFront', 'Multipart Upload', 'System Design'],
     links: [],
     diagramFile: 'bulk-csv-ingest.svg',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=5pxiv7ZnzxOjPvx7A6wY7,hjvp-qgYtPh1OvnYIGGZdg',
     architectureNotes:
       'C4Container. Control plane (FastAPI on ECS Fargate behind ALB) brokers presigned multipart URLs and never proxies file bytes. User uploads parts directly to S3. S3 fires ObjectCreated into SQS; a Fargate parser worker pool (autoscaled on queue depth) streams the object, validates rows, and bulk-inserts valid + invalid records into MongoDB Atlas sharded by (orgId, uploadId). A DLQ catches poison-pill messages. On-demand avatar: FastAPI calls external image API with a deterministic seed, caches result in a separate S3 avatars bucket. Auth via Clerk JWT verified by FastAPI middleware. Secrets Manager holds Clerk backend secret and image API key. CloudFront serves the React dashboard from a private S3 origin. User/org identity lives entirely in Clerk (sign-up, org membership, roles); MongoDB stores application data only. Day-two extension: add a Postgres organizations table keyed on clerkOrgId for billing, quotas, or org-level config that exceeds Clerk metadata limits.',
   },
