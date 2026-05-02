@@ -374,6 +374,7 @@ No Cloudbase card. It was replaced by `gorgias-appstore`.
 
 | id | title | complexity | status | diagram |
 |----|-------|------------|--------|---------|
+| `content-moderation` | Content Moderation Platform | high | attempted | `content-moderation.svg` |
 | `bulk-csv-ingest` | Bulk CSV Ingest | high | attempted | `bulk-csv-ingest.svg` |
 
 Tags: AWS, S3, ECS Fargate, FastAPI, Python, MongoDB Atlas, SQS, Clerk, CloudFront, Multipart Upload, System Design

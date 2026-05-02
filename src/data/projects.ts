@@ -318,13 +318,28 @@ export const PROJECTS: ProjectData[] = [
 
   // Interviews
   {
+    id: 'content-moderation',
+    title: 'Content Moderation Platform',
+    tagline: 'Multi-modal harmful-content classification with per-modality SQS workers, GPU inference, and human-in-the-loop fallback for low-confidence cases',
+    description:
+      'A system-design interview problem: build a platform that classifies user-submitted video, image, text, and audio as harmful or not, at scale, with a human fallback for the edge cases models cannot confidently resolve. The architecture serves two audiences from one product: enterprise clients uploading content, and internal trust-and-safety teams reviewing low-confidence results. Key design choices: separate the control plane from the data path so the API never touches content bytes; fan-out classification work per modality so each queue and worker pool scales independently; use a confidence threshold to route uncertain results to a human review queue with automatic SLA escalation. The stack was deliberately simplified from the original brief: Kafka, Spark, and MongoDB were each evaluated and dropped in favor of lighter equivalents that match the actual workload shape, with Kafka kept as the documented upgrade path if throughput demands it.',
+    category: 'interviews',
+    complexity: 'high',
+    status: 'attempted',
+    tags: ['AWS', 'FastAPI', 'Python', 'SQS', 'Torch Serve', 'PostgreSQL', 'Redis', 'S3', 'ECS Fargate', 'EKS', 'Lambda', 'Clerk', 'Prometheus', 'OpenSearch', 'System Design', 'ML Inference'],
+    links: [],
+    diagramFile: 'content-moderation.svg',
+    architectureNotes:
+      'C4Container. Single-platform dual audience: one React SPA serves both enterprise uploaders and on-call support engineers, via Clerk role-gated routes. Control plane (FastAPI on ECS Fargate behind ALB) issues presigned S3 multipart URLs and never proxies content bytes. Object key prefix encodes modality: s3://content/{video|image|text|audio}/{orgId}/{entityId}. S3 ObjectCreated events route to per-modality SQS queues with DLQs; classifier worker pools on Fargate (one per modality, autoscaled on queue depth) consume, fetch the blob, call Torch Serve on an EKS GPU node group, and write to Aurora Postgres into a moderation_results table with a JSONB column for per-modality detail. Below a confidence threshold: insert pending_reviews row + push id to a Redis priority queue. Moderator UI claims the next item via REST; decision writes back to Postgres. An EventBridge-scheduled Lambda escalates stalled reviews to on-call via PagerDuty, then to the manager if still unclaimed past SLA. A compressed copy of each analyzed entity is retained for the customer dashboard so users see the original beside its resolution. Auth via Clerk JWT verified by FastAPI middleware; Secrets Manager holds Clerk and inference keys. Models are versioned in an S3 model registry that Torch Serve loads from; training is out-of-band (dashed/secondary). Prometheus + Grafana for runtime metrics (queue depth, inference latency, manual review SLA); OpenSearch for logs and analytics (per-modality success ratios, model drift, system load). Trade-offs vs the source brief: Kafka and Spark were considered and dropped — workload is per-entity stateless work, not stream aggregation, and SQS gives S3-native ingestion fan-out at lower ops cost; Kafka is the upgrade path when throughput or multi-consumer fan-out demands it. MongoDB was dropped in favor of Postgres + JSONB. gRPC entity search was dropped because the API queries Postgres directly. Celery was dropped because two REST endpoints + a scheduled Lambda cover the manual-review state machine.',
+  },
+  {
     id: 'bulk-csv-ingest',
     title: 'Bulk CSV Ingest',
     tagline: 'Resumable 10GB uploads to S3, parsed into sharded MongoDB, with on-demand AI identicons per row',
     description:
       'An AWS interview problem: ingest contact CSV/XLSX files up to 10GB each for 100k concurrent users, validate emails, and let users trigger per-row AI avatar generation from a dashboard. The core design separates control from data: FastAPI on ECS Fargate issues presigned S3 multipart URLs and never touches file bytes. Uploads land in S3, trigger SQS, and fan out to autoscaling Fargate parsers that stream-parse and write to sharded MongoDB Atlas. Multi-tenant isolation threads through every layer via Clerk JWTs, S3 key prefixes, and a compound MongoDB shard key. Avatars are generated on-demand against an external image API with a deterministic seed, then cached in S3.',
     category: 'interviews',
-    complexity: 'high',
+    complexity: 'medium',
     status: 'attempted',
     tags: ['AWS', 'S3', 'ECS Fargate', 'FastAPI', 'Python', 'MongoDB Atlas', 'SQS', 'Clerk', 'CloudFront', 'Multipart Upload', 'System Design'],
     links: [],

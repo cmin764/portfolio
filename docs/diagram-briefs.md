@@ -626,3 +626,86 @@ Note: edges b) and c) are parallel (same source/target pair). Mermaid renders on
 - Validation: email syntax only (RFC 5322 simplified). Structured error codes (`INVALID_EMAIL_SYNTAX`, `MISSING_FIELD`) stored per row — extensible without schema churn.
 - S3 lifecycle annotation on `s3uploads`: Standard → Standard-IA @30d → Glacier IR @90d, never expire.
 - `s3uploads → sqs` is the one passive-store edge; justified by S3 event notifications being an active AWS push (exception to passive-store rule).
+
+---
+
+## 14. Content Moderation Platform
+
+**C4 level:** Container
+**Primary concern:** Per-modality fan-out and human-in-the-loop escalation path
+**Flow direction:** Left-to-right (clients on left, classification and observability on right)
+
+### Nodes
+
+| Alias | Name | Role | Tech |
+|-------|------|------|------|
+| enterprise_user | Enterprise User | Person | Browser / mobile |
+| moderator | Support Engineer | Person | Browser |
+| clerk | Clerk | External system | Auth SaaS, JWT |
+| pagerduty | PagerDuty / SNS | External system | Alerting SaaS |
+| spa | React SPA | Container (UI) | React + TS, CloudFront / S3 |
+| alb | Load Balancer | Container (service) | AWS ALB |
+| api | Ingest API | Container (service) | Python + FastAPI, ECS Fargate |
+| secrets | Secrets Manager | Container (store) | AWS Secrets Manager |
+| s3raw | Content Bucket | Container (store) | AWS S3, SSE-KMS |
+| postgres | Moderation DB | Container (store) | Aurora PostgreSQL |
+| redis | Review Queue | Container (store) | AWS ElastiCache Redis |
+| sqs_video | Video Queue | Container (queue) | AWS SQS Standard |
+| sqs_img | Image Queue | Container (queue) | AWS SQS Standard |
+| sqs_text | Text Queue | Container (queue) | AWS SQS Standard |
+| sqs_audio | Audio Queue | Container (queue) | AWS SQS Standard |
+| workers | Classifier Workers | Container (service) | Python, ECS Fargate |
+| torchserve | Torch Serve | Container (service) | PyTorch, EKS GPU node group |
+| model_registry | Model Registry | Container (store) | AWS S3 |
+| prometheus | Prometheus + Grafana | Container (service) | Prometheus / Grafana |
+| opensearch | OpenSearch | Container (service) | AWS OpenSearch Service |
+| escalation | Escalation Lambda | Container (service) | AWS Lambda + EventBridge |
+
+### Edges
+
+| From | To | Sync/Async | Label |
+|------|----|------------|-------|
+| enterprise_user | spa | sync | uses |
+| moderator | spa | sync | reviews low-confidence items |
+| spa | clerk | sync | sign-in, fetch JWT |
+| spa | alb | sync | request presigned URLs / results / review items (HTTPS + Clerk JWT) |
+| alb | api | sync | forward request |
+| api | secrets | sync | fetch Clerk key + inference key |
+| api | s3raw | sync | issue presigned upload URL |
+| api | postgres | sync | create submission record; serve results and review items |
+| api | redis | sync | push to priority queue on low-confidence; pop next review item |
+| enterprise_user | s3raw | sync | PUT content via presigned URL (multipart or PUT) |
+| s3raw | sqs_video | async | ObjectCreated event (S3 event notification) |
+| s3raw | sqs_img | async | ObjectCreated event (S3 event notification) |
+| s3raw | sqs_text | async | ObjectCreated event (S3 event notification) |
+| s3raw | sqs_audio | async | ObjectCreated event (S3 event notification) |
+| workers | sqs_video | async | polls |
+| workers | sqs_img | async | polls |
+| workers | sqs_text | async | polls |
+| workers | sqs_audio | async | polls |
+| workers | s3raw | sync | GET content blob |
+| workers | torchserve | sync | POST blob for classification (HTTPS internal) |
+| workers | postgres | sync | write moderation_results; insert pending_reviews on low confidence |
+| workers | redis | async | push entity id to priority queue on low confidence |
+| torchserve | model_registry | async (secondary) | load model artifacts (S3 GetObject) |
+| escalation | postgres | sync (cron) | query pending_reviews past SLA |
+| escalation | pagerduty | async | page on-call + manager |
+| workers | prometheus | async (secondary) | emit metrics |
+| api | opensearch | async (secondary) | ship logs + analytics |
+
+### Design Constraints
+
+- **Single SPA, dual audience:** one React app serves enterprise users (upload, track results) and support engineers (Moderator UI), differentiated via Clerk role-gated routes. `support_engineer` role unlocks the review list; `enterprise_user` role sees own submissions only.
+- **Control vs data plane:** FastAPI issues presigned S3 URLs and never proxies content bytes. Enterprise users PUT directly to S3.
+- **S3 key scheme:** `content/{modality}/{orgId}/{entityId}/` where modality is `video|image|text|audio`. This drives per-prefix S3 event routing to the correct SQS queue without SNS fan-out.
+- **Per-modality SQS queues:** four separate SQS Standard queues (`submissions-video`, `submissions-image`, `submissions-text`, `submissions-audio`), each with its own DLQ. Worker pools autoscale on queue depth via ECS Service Auto Scaling.
+- **Why SQS over Kafka:** workload is per-entity stateless work (fetch blob → call inference → write row), no windowing or aggregation. SQS gives S3-native event ingestion, built-in DLQ, and zero broker ops. Kafka is the documented upgrade path when throughput demands multi-consumer fan-out or replay.
+- **Why Postgres over MongoDB:** `moderation_results` uses a JSONB column for per-modality detail; relational schema covers all read patterns (by submission, by org, by status). One datastore, one consistency boundary.
+- **Why no gRPC entity search:** the Ingest API queries Postgres directly. A separate gRPC service adds protobuf overhead and a duplicate read path with no scale benefit at this scope.
+- **Why no Spark:** per-entity stateless work does not need windowing, joins, or aggregation. Python workers on ECS Fargate fit the shape.
+- **Confidence threshold path:** if inference confidence < threshold, worker inserts a `pending_reviews` row in Postgres and pushes the entity id to the Redis priority queue. Moderator UI claims the next item via REST (Redis ZPOPMAX + Postgres advisory lock). Decision writes back to Postgres.
+- **Escalation:** EventBridge-scheduled Lambda runs every minute. Queries `pending_reviews` past SLA → pages on-call via PagerDuty/SNS. Manager escalated if still unclaimed past a second SLA.
+- **Compressed snapshots:** a compressed copy of each analyzed entity is written to `s3raw` for the customer dashboard (users see original alongside resolution).
+- **Model registry:** Torch Serve loads model artifacts from a versioned S3 model registry. Training pipeline is out-of-band (drawn with dashed/secondary edges); not in the runtime path.
+- **Observability:** Prometheus + Grafana for runtime metrics (queue depth, inference latency, manual review SLA); OpenSearch for logs and analytics (per-modality success ratios, model drift, system load).
+- **Out of scope:** training pipeline topology, multi-region replication, CDN for content delivery to end users.
