@@ -68,7 +68,7 @@ C4Container
   Rel(workers, torchserve, "POST blob for classification", "HTTPS internal")
   Rel(workers, postgres, "write moderation_results; insert pending_reviews on low confidence")
   Rel(workers, redis, "push entity id to priority queue on low confidence [async]")
-  Rel(torchserve, model_registry, "load model artifacts [async, secondary]", "S3 GetObject")
+  Rel(torchserve, model_registry, "load model artifacts", "S3 GetObject")
   Rel(escalation, postgres, "query pending_reviews past SLA [cron]")
   Rel(escalation, pagerduty, "page on-call + manager [async]")
   Rel(workers, prometheus, "emit metrics [async, secondary]")

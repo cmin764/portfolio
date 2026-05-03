@@ -688,7 +688,7 @@ Note: edges b) and c) are parallel (same source/target pair). Mermaid renders on
 | workers | torchserve | sync | POST blob for classification (HTTPS internal) |
 | workers | postgres | sync | write moderation_results; insert pending_reviews on low confidence |
 | workers | redis | async | push entity id to priority queue on low confidence |
-| torchserve | model_registry | async (secondary) | load model artifacts (S3 GetObject) |
+| torchserve | model_registry | sync | load model artifacts (S3 GetObject) |
 | escalation | postgres | sync (cron) | query pending_reviews past SLA |
 | escalation | pagerduty | async | page on-call + manager |
 | workers | prometheus | async (secondary) | emit metrics |
