@@ -364,6 +364,7 @@ Follow `.claude/skills/diagram/references/integration-checklist.md` step by step
    - **Artifact/generated file: non-rounded rectangle** (`"type": "rectangle"`, `"roundness": null`, sharp 90° corners) with amber palette (`#ffec99` fill, `#f08c00` stroke/text). Sharp corners signal "passive output, not a runtime actor." Mermaid: `System_Ext` with amber override.
    - **Queue/stream/topic: rounded rectangle** with red palette (`#ffc9c9` fill, `#e03131` stroke/text). Same shape as active containers; differentiated by color only. Mermaid: `ContainerQueue`.
    - Use **pastel fills** from `color-palette.md` (not saturated): `#a5d8ff` UI, `#96f2d7` service, `#ffd8a8` DB/cache, `#ffc9c9` queue/stream, `#e9ecef` external
+   - `"fillStyle": "solid"` on every shape — nodes, boundaries, and legend. Never `"hachure"`; flat color reads cleaner for structured architecture diagrams.
    - Text color = border color (same pairing as Mermaid: teal service nodes use `#099268` text, indigo person nodes use `#748ffc` text, etc.)
    - Use bound text elements (`containerId`) for all node labels; inline `label` shorthand is stripped by `export_to_excalidraw`
    - Set `"boundElements"` arrays on shapes pointing to their text and arrow IDs
@@ -402,7 +403,7 @@ Follow `.claude/skills/diagram/references/integration-checklist.md` step by step
    - Arrow stroke color: `#1e1e1e` for all edges, no exceptions
    - Arrow label: bound text element with `containerId` pointing to the arrow id
 
-   **Arrow endpoint binding (mandatory):** Every arrow must use `startBinding` and `endBinding` with a non-zero `gap` so the arrowhead attaches to the node's border, not its center. Without this, Excalidraw routes all arrows through the center of each box, overlapping text and making the diagram illegible.
+   **Arrow endpoint binding (mandatory):** Every arrow must use `startBinding` and `endBinding` with `gap ≥ 8` so arrows run **border-to-border** between nodes — tail leaves the source border, head arrives at the target border. Without bindings (or with `gap: 0`), Excalidraw routes every arrow center-to-center, drawing lines straight through the interior of both nodes and making all text illegible.
 
    ```json
    "startBinding": { "elementId": "<source-node-id>", "focus": 0, "gap": 8 },

@@ -571,3 +571,142 @@ Note: edges b) and c) are parallel (same source/target pair). Mermaid renders on
 - Front-channel (b) vs back-channel (c) is the security-critical split — two visually distinct parallel arrows between Third-party App and App Store.
 - Developer Portal has no direct DB edge — all writes route through the App Store backend (Web UI → API → DB layering).
 - Auth0 has exactly one incoming arrow (SSO login) and zero outgoing — isolated from the OAuth code/token flow.
+
+---
+
+## 13. Bulk CSV Ingest
+
+**C4 level:** Container
+**Primary concern:** control-plane / data-plane split; presigned multipart upload path never touching the API; event-driven parser workers
+**Flow direction:** left-to-right (user → upload path on top; S3 → SQS → parser → DB on bottom)
+
+### Nodes (13)
+
+| Alias | Name | Role | Tech |
+|---|---|---|---|
+| user | End User | Person | Browser; uploads CSV/XLSX, reviews rows, triggers avatar gen |
+| dashboard | Dashboard | Container (SPA) | React + TS, served by CloudFront over private S3 origin |
+| clerk | Clerk | External system (auth) | Hosted auth: orgs, roles, JWT; FastAPI middleware verifies tokens |
+| alb | Application Load Balancer | Container (ingress) | AWS ALB; TLS termination |
+| api | Ingest API | Container (service) | Python + FastAPI on ECS Fargate; presigned URLs, status, on-demand avatar; control-plane only |
+| s3uploads | Uploads Bucket | Container (object store) | AWS S3, SSE-KMS; prefix `org/{orgId}/upload/{uploadId}/`; lifecycle: Standard → Standard-IA @30d → Glacier IR @90d; never expire |
+| s3avatars | Avatars Bucket | Container (object store) | AWS S3; key by deterministic seed `hash(orgId, recordId)`; presigned reads |
+| sqs | Ingest Queue | Container (queue) | AWS SQS Standard; consumes S3 ObjectCreated events |
+| dlq | Dead-Letter Queue | Container (queue) | AWS SQS; captures failed parse messages after max retries |
+| parser | Parser Worker | Container (worker) | Python on ECS Fargate; autoscaled on queue depth; stream-parses, validates email syntax, bulk-inserts valid + invalid rows |
+| mongo | Personal Data Store | Container (database) | MongoDB Atlas, sharded; shard key `(orgId, uploadId)`; collections: `uploads`, `records`, `processing_status` |
+| imageapi | Image Gen API | External system | Replicate or OpenAI `gpt-image-1`; identicon-style prompts seeded by `hash(orgId, recordId)` |
+| secrets | Secrets Manager | Container (config) | Clerk backend secret + image API key; IAM-scoped to FastAPI task role |
+
+### Edges
+
+- `user → dashboard`: uses (sync)
+- `dashboard → clerk`: sign-in, fetch JWT (sync)
+- `dashboard → alb`: HTTPS request with Clerk JWT in header (sync)
+- `alb → api`: forward request (sync)
+- `api → secrets`: fetch Clerk verification key + image API key (sync, cached)
+- `api → s3uploads`: create multipart upload, generate presigned part URLs (sync)
+- `api → mongo`: create `uploads` doc, query `records` (sync)
+- `dashboard → s3uploads`: PUT parts via presigned URLs — resumable multipart (sync per part)
+- `s3uploads → sqs`: ObjectCreated event on CompleteMultipartUpload (async, S3 event notification)
+- `parser → sqs`: polls (sync; consumer-pulls-queue per edge-direction convention)
+- `parser → s3uploads`: GET object stream (sync)
+- `parser → mongo`: bulk-insert valid + invalid rows; update `uploads.status`; append `processing_status` (sync)
+- `sqs → dlq`: dead-letter after max retries (async, dashed)
+- `api → imageapi`: generate identicon for `recordId` (sync HTTPS, on-demand, after cache miss)
+- `api → s3avatars`: store image keyed by seed; subsequent calls hit cache (sync)
+- `dashboard → s3avatars`: GET avatar via presigned URL (sync)
+
+### Design constraints worth showing visually
+
+- Three boundaries: one outer `System_Boundary("Bulk CSV Ingest")`; inner `Container_Boundary("Control Plane")` groups `alb`, `api`, and `secrets`; inner `Container_Boundary("Ingest Plane")` groups `sqs` + `dlq` + `parser`. Makes the control/data-plane split visible at a glance.
+- Multi-tenant isolation visible in node labels: S3 prefix `org/{orgId}/upload/{uploadId}/`, MongoDB shard key `(orgId, uploadId)`.
+- Avatar generation is on-demand (no avatar queue, no fan-out worker). FastAPI calls external API only on user click; result cached in S3 by deterministic seed.
+- Default upload path is raw multipart. Optional client-side zstd compression is not drawn (opt-in toggle, not the default path).
+- Validation: email syntax only (RFC 5322 simplified). Structured error codes (`INVALID_EMAIL_SYNTAX`, `MISSING_FIELD`) stored per row — extensible without schema churn.
+- S3 lifecycle annotation on `s3uploads`: Standard → Standard-IA @30d → Glacier IR @90d, never expire.
+- `s3uploads → sqs` is the one passive-store edge; justified by S3 event notifications being an active AWS push (exception to passive-store rule).
+
+---
+
+## 14. Content Moderation Platform
+
+**C4 level:** Container
+**Primary concern:** Per-modality fan-out and human-in-the-loop escalation path
+**Flow direction:** Left-to-right (clients on left, classification and observability on right)
+
+### Nodes
+
+| Alias | Name | Role | Tech |
+|-------|------|------|------|
+| enterprise_user | Enterprise User | Person | Browser / mobile |
+| moderator | Support Engineer | Person | Browser |
+| clerk | Clerk | External system | Auth SaaS, JWT |
+| pagerduty | PagerDuty / SNS | External system | Alerting SaaS |
+| spa | React SPA | Container (UI) | React + TS, CloudFront / S3 |
+| alb | Load Balancer | Container (service) | AWS ALB |
+| api | Ingest API | Container (service) | Python + FastAPI, ECS Fargate |
+| secrets | Secrets Manager | Container (store) | AWS Secrets Manager |
+| s3raw | Content Bucket | Container (store) | AWS S3, SSE-KMS |
+| postgres | Moderation DB | Container (store) | Aurora PostgreSQL |
+| redis | Review Queue | Container (store) | AWS ElastiCache Redis |
+| sqs_video | Video Queue | Container (queue) | AWS SQS Standard |
+| sqs_img | Image Queue | Container (queue) | AWS SQS Standard |
+| sqs_text | Text Queue | Container (queue) | AWS SQS Standard |
+| sqs_audio | Audio Queue | Container (queue) | AWS SQS Standard |
+| workers | Classifier Workers | Container (service) | Python, ECS Fargate |
+| torchserve | Torch Serve | Container (service) | PyTorch, EKS GPU node group |
+| model_registry | Model Registry | Container (store) | AWS S3 |
+| prometheus | Prometheus + Grafana | Container (service) | Prometheus / Grafana |
+| opensearch | OpenSearch | Container (service) | AWS OpenSearch Service |
+| escalation | Escalation Lambda | Container (service) | AWS Lambda + EventBridge |
+
+### Edges
+
+| From | To | Sync/Async | Label |
+|------|----|------------|-------|
+| enterprise_user | spa | sync | uses |
+| moderator | spa | sync | reviews low-confidence items |
+| spa | clerk | sync | sign-in, fetch JWT |
+| spa | alb | sync | request presigned URLs / results / review items (HTTPS + Clerk JWT) |
+| alb | api | sync | forward request |
+| api | secrets | sync | fetch Clerk key + inference key |
+| api | s3raw | sync | issue presigned upload URL; issue presigned read URL for moderator review |
+| api | postgres | sync | create submission record; serve results and review items |
+| api | redis | sync | pop next review item (claim) |
+| spa | s3raw | sync | PUT content via presigned URL (multipart or PUT) |
+| spa | s3raw | sync | GET content via presigned read URL (moderator review) |
+| s3raw | sqs_video | async | ObjectCreated event (S3 event notification) |
+| s3raw | sqs_img | async | ObjectCreated event (S3 event notification) |
+| s3raw | sqs_text | async | ObjectCreated event (S3 event notification) |
+| s3raw | sqs_audio | async | ObjectCreated event (S3 event notification) |
+| workers | sqs_video | async | polls |
+| workers | sqs_img | async | polls |
+| workers | sqs_text | async | polls |
+| workers | sqs_audio | async | polls |
+| workers | s3raw | sync | GET content blob |
+| workers | torchserve | sync | POST blob for classification (HTTPS internal) |
+| workers | postgres | sync | write moderation_results; insert pending_reviews on low confidence |
+| workers | redis | async | push entity id to priority queue on low confidence |
+| torchserve | model_registry | sync | load model artifacts (S3 GetObject) |
+| escalation | postgres | sync (cron) | query pending_reviews past SLA |
+| escalation | pagerduty | async | page on-call + manager |
+| workers | prometheus | async (secondary) | emit metrics |
+| api | opensearch | async (secondary) | ship logs + analytics |
+
+### Design Constraints
+
+- **Single SPA, dual audience:** one React app serves enterprise users (upload, track results) and support engineers (Moderator UI), differentiated via Clerk role-gated routes. `support_engineer` role unlocks the review list; `enterprise_user` role sees own submissions only.
+- **Control vs data plane:** FastAPI issues presigned S3 URLs and never proxies content bytes. Enterprise users PUT directly to S3.
+- **S3 key scheme:** `content/{modality}/{orgId}/{entityId}/` where modality is `video|image|text|audio`. This drives per-prefix S3 event routing to the correct SQS queue without SNS fan-out.
+- **Per-modality SQS queues:** four separate SQS Standard queues (`submissions-video`, `submissions-image`, `submissions-text`, `submissions-audio`), each with its own DLQ. Worker pools autoscale on queue depth via ECS Service Auto Scaling.
+- **Why SQS over Kafka:** workload is per-entity stateless work (fetch blob → call inference → write row), no windowing or aggregation. SQS gives S3-native event ingestion, built-in DLQ, and zero broker ops. Kafka is the documented upgrade path when throughput demands multi-consumer fan-out or replay.
+- **Why Postgres over MongoDB:** `moderation_results` uses a JSONB column for per-modality detail; relational schema covers all read patterns (by submission, by org, by status). One datastore, one consistency boundary.
+- **Why no gRPC entity search:** the Ingest API queries Postgres directly. A separate gRPC service adds protobuf overhead and a duplicate read path with no scale benefit at this scope.
+- **Why no Spark:** per-entity stateless work does not need windowing, joins, or aggregation. Python workers on ECS Fargate fit the shape.
+- **Confidence threshold path:** if inference confidence < threshold, worker inserts a `pending_reviews` row in Postgres and pushes the entity id to the Redis priority queue. Moderator UI claims the next item via REST (Redis ZPOPMAX + Postgres advisory lock). Decision writes back to Postgres.
+- **Escalation:** EventBridge-scheduled Lambda runs every minute. Queries `pending_reviews` past SLA → pages on-call via PagerDuty/SNS. Manager escalated if still unclaimed past a second SLA.
+- **Compressed snapshots:** a compressed copy of each analyzed entity is written to `s3raw` for the customer dashboard (users see original alongside resolution).
+- **Model registry:** Torch Serve loads model artifacts from a versioned S3 model registry. Training pipeline is out-of-band (drawn with dashed/secondary edges); not in the runtime path.
+- **Observability:** Prometheus + Grafana for runtime metrics (queue depth, inference latency, manual review SLA); OpenSearch for logs and analytics (per-modality success ratios, model drift, system load).
+- **Out of scope:** training pipeline topology, multi-region replication, CDN for content delivery to end users.

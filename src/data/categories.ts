@@ -39,9 +39,15 @@ export const CATEGORIES: CategoryMeta[] = [
     order: 5,
   },
   {
+    id: 'interviews',
+    label: 'Interviews',
+    description: 'System-design problems answered as architecture exercises',
+    order: 6,
+  },
+  {
     id: 'writing',
     label: 'Writing',
     description: 'Published essays on tech, AI, engineering, and entrepreneurship',
-    order: 6,
+    order: 7,
   },
 ];
