@@ -46,7 +46,7 @@ export const PROJECTS: ProjectData[] = [
     category: 'startup-trial',
     complexity: 'high',
     status: 'stealth',
-    period: 'Apr 2026 – present',
+    period: '2026–present',
     tags: ['Python', 'FastAPI', 'PostgreSQL', 'Redis', 'Next.js', 'TypeScript', 'Fly.io', 'Vercel', 'Supabase', 'Upstash', 'Compliance', 'EU AI Act'],
     links: [
       { label: 'In stealth. Talk to me.', url: 'https://cal.com/wandercode/discovery-call' },
@@ -133,7 +133,7 @@ export const PROJECTS: ProjectData[] = [
   },
   {
     id: 'a5-gto-engine',
-    title: 'GTO / Reinforcement Learning Poker Engine',
+    title: 'AceGuardian',
     tagline: 'ML/AI system combining game theory optimal play and RL strategies for competitive online poker',
     description:
       'A5 Labs builds AI for competitive online gaming. Maintained and contributed to a micro-service mesh combining a Python/FastAPI orchestration layer with a C++ RL inference server (Drogon framework). The Python side has three services: a GTO service, a Strategy service, and a glue service routing between them under response-time constraints. Built an analysis benchmark for detecting regressions and measuring quality of strategy improvements, automated via Bitbucket CI data-science scripting.',
@@ -151,7 +151,7 @@ export const PROJECTS: ProjectData[] = [
   },
   {
     id: 'gorgias-appstore',
-    title: 'Gorgias App Store',
+    title: 'App Store',
     tagline: 'OAuth2 developer platform enabling third-party apps inside e-commerce support automation',
     description:
       'Gorgias is an e-commerce helpdesk targeting Shopify merchants. Led the Developer Experience team and built the technical foundation for the App Store: a Developer Portal for app registration and review, and an OAuth2 server (Flask + authlib) that issues tokens to third-party integrations. Auth0 handles merchant SSO login separately. External developers publish apps connecting their services to the Gorgias helpdesk platform, scoped per merchant account. Improved the REST API and developer docs.',
@@ -171,10 +171,10 @@ export const PROJECTS: ProjectData[] = [
   },
   {
     id: 'comfy-grpc',
-    title: 'gRPC Smart Building APIs',
+    title: 'Smart Buildings',
     tagline: 'Language-agnostic microservices backbone for IoT smart building systems via gRPC with reverse-proxy transcoding',
     description:
-      'Comfy (acquired by Siemens ~2020) built software for smart buildings. Designed and implemented a gRPC-based API layer with a reverse-proxy transcoder (gRPC-gateway pattern) allowing HTTP/REST clients to consume gRPC services without rewriting. Enabled polyglot microservices: services written in Go, Python, and Node.js all communicated through a single typed interface. Protobuf spec-first development let FE and BE teams work in parallel, with mock data returned from the gateway until backend logic was ready. Also built a geolocation service for BMW campus navigation in Germany, with Mapbox-compliant APIs backed by PostGIS.',
+      'Comfy (acquired by Siemens ~2020) built software for smart buildings, with a gRPC-based API layer at the core of its infrastructure. Designed and implemented that gRPC API layer with a reverse-proxy transcoder (gRPC-gateway pattern) allowing HTTP/REST clients to consume gRPC services without rewriting. Enabled polyglot microservices: services written in Go, Python, and Node.js all communicated through a single typed interface. Protobuf spec-first development let FE and BE teams work in parallel, with mock data returned from the gateway until backend logic was ready. Also built a geolocation service for BMW campus navigation in Germany, with Mapbox-compliant APIs backed by PostGIS.',
     category: 'professional',
     complexity: 'high',
     status: 'shipped',
@@ -193,16 +193,16 @@ export const PROJECTS: ProjectData[] = [
   // OSS / Hobby
   {
     id: 'robocorp-rpa',
-    title: 'RPA Framework & Automation Libraries',
+    title: 'Dev Tools',
     tagline: 'Open-source Python automation libraries enabling enterprise RPA at scale',
     description:
-      'Core contributor to Robocorp\'s open-source RPA framework, the Python-native successor to Robot Framework for enterprise automation. Built and maintained libraries for web automation, desktop automation, OCR, document processing, and data pipelines. These libraries are the foundation that hundreds of enterprise customers use to automate their workflows. Led library design, API surface, versioning, and contributor onboarding.',
+      'Built and maintained Robocorp\'s open-source RPA framework and the robocorp-* / rpaframework-* automation library suite, the Python-native successor to Robot Framework for enterprise automation. Libraries covered web automation, desktop automation, OCR, document processing, and data pipelines, and are the foundation hundreds of enterprise customers rely on. Led library design, API surface, versioning, and contributor onboarding.',
     category: 'oss-hobby',
     complexity: 'medium',
     status: 'shipped',
     tags: ['Python', 'Robot Framework', 'RPA', 'Selenium', 'Playwright', 'OCR', 'Automation', 'PyPI', 'Open Source'],
-    company: 'Robocorp / Sema4.ai',
-    period: '2021-2024',
+    company: 'Robocorp',
+    period: '2021-2023',
     links: [
       { label: 'Org', url: 'https://github.com/robocorp' },
       { label: 'Portal', url: 'https://robocorp.com/portal' },
@@ -214,7 +214,7 @@ export const PROJECTS: ProjectData[] = [
   },
   {
     id: 'sema4ai-action-server',
-    title: 'Action Server + AI Actions',
+    title: 'Action Server',
     tagline: 'MCP-like FastAPI server giving GPT "hands and legs": pluggable business logic executed post-reasoning',
     description:
       'Before MCP was standardized, Sema4.ai (formerly Robocorp) built their own protocol for exposing callable actions to LLMs. Action Server is a **FastAPI**-based server that hosts AI Actions: discrete, type-safe Python functions annotated with `@action` or `@tool` and described in a `package.yaml`. GPT can discover and invoke them. Each action is a pluggable unit of business logic: read a spreadsheet, query a database, trigger a workflow, post to Slack. The gallery of actions became a reference implementation used by enterprise customers. Led the engineering effort from architecture to production.',
