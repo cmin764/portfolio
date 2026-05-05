@@ -181,7 +181,10 @@ export const PROJECTS: ProjectData[] = [
     tags: ['gRPC', 'Go', 'Python', 'Node.js', 'Protocol Buffers', 'REST', 'Microservices', 'IoT', 'Kubernetes', 'PostGIS', 'Mapbox'],
     company: 'Comfy (→ Siemens)',
     period: '2019-2020',
-    links: [],
+    links: [
+      { label: 'Rebrand', url: 'https://www.enlightedinc.com/comfy-evolves-into-enlighted-connect/' },
+      { label: 'Product', url: 'https://www.siemens.com/en-us/products/building-x/' },
+    ],
     diagramFile: 'comfy-grpc.svg',
     diagramExcalidrawUrl: 'https://excalidraw.com/#json=mkgHQEkI6yhU1gNYdrWnX,WaJar2R8DyUqCS-FKznOiw',
     architectureNotes:
