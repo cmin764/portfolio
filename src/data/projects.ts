@@ -5,9 +5,9 @@ export const PROJECTS: ProjectData[] = [
   {
     id: 'wandercode',
     title: 'Wandercode',
-    tagline: 'Fractional AI Product Strategy for B2B companies',
+    tagline: 'Fractional AI Product Strategy for outlier companies',
     description:
-      'Owner and operator of Wandercode, an embedded consulting practice helping B2B startups build intelligent products and adopt AI-driven engineering. Methodology: Blugen (blueprint-first code generation). Services: technical audits, AI product development, workshops. Results-based pricing, not hourly.',
+      'Owner and operator of Wandercode, an embedded consulting practice helping outlier startups build intelligent products and adopt AI-driven engineering. Methodology: Blugen (blueprint-first code generation). Services: technical audits, AI product development, workshops. Results-based pricing, not hourly.',
     category: 'active-venture',
     complexity: 'medium',
     status: 'active',

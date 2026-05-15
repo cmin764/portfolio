@@ -63,12 +63,12 @@ export function Footer() {
             </div>
             <div className="flex items-center gap-4 text-xs text-muted-foreground">
               <a
-                href={LINKS.cvPdfUrl}
+                href={LINKS.cvMdUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-foreground transition-colors"
               >
-                <span className="font-bold">CV</span> <span className="italic">as PDF</span>
+                <span className="font-bold">CV</span> <span className="italic">as MD</span>
               </a>
               <a
                 href={LINKS.wandercodeUrl}
