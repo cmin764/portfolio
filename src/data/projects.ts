@@ -13,7 +13,7 @@ export const PROJECTS: ProjectData[] = [
     status: 'active',
     tags: ['TypeScript', 'React', 'Vite', 'Tailwind', 'AI Strategy', 'Consulting'],
     links: [
-      { label: 'Site', url: 'https://www.wandercode.ltd/' },
+      { label: 'Site', url: 'https://www.wandercode.ltd/about' },
       { label: 'Repo', url: 'https://github.com/cmin764/wandercode' },
     ],
     architectureNotes: undefined,
