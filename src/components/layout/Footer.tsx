@@ -71,7 +71,7 @@ export function Footer() {
                 <span className="font-bold">CV</span> <span className="italic">as MD</span>
               </a>
               <a
-                href={LINKS.wandercodeUrl}
+                href={LINKS.wandercodeRootUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 hover:text-foreground transition-colors"
