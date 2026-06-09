@@ -323,10 +323,10 @@ Cards are defined in `src/data/projects.ts`. Editing content: change that file o
 | `traced-ai` | Traced AI | high | stealth |
 | `truestory` | TrueStory | medium | discontinued |
 
-**traced-ai links:** "In stealth. Talk to me." (cal.com)
+**traced-ai links:** Site (tracedai.co), Org (Traced-AI on GitHub), "In stealth. Talk to me." (cal.eu)
 **truestory links:** Org (savvybit), Deck, Blog
 
-Notable: `traced-ai` has no repo link by design (stealth). Architecture details in `diagram-briefs.md` section 1.
+Notable: `traced-ai` has no repo link by design (stealth). SDK on PyPI. Stack includes Clerk (auth), Stripe (billing), Mailgun, Sentry, GitHub Actions. Marketing site (`traced-ai-site` card) uses Vite + React 19 + Tailwind v4 SPA, not Next.js. Dashboard is Next.js (SaaS tier). Architecture details in `diagram-briefs.md` section 1.
 
 ---
 

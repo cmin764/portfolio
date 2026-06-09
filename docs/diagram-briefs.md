@@ -35,32 +35,36 @@ Each brief is complementary to `portfolio-blueprint.md` (which has the narrative
 | Name | Role | Tech |
 |------|------|------|
 | AI Application | External system (customer's code) | Any LLM-using app |
-| traced-ai library | Container (library/SDK) | Python, monkey-patches LLM clients at import time |
+| traced-ai SDK | Container (library/SDK) | Python (PyPI), auto-patches OpenAI + Anthropic clients at import time |
 | Local SQLite | Database | Raw I/O store; never leaves client machine |
-| Self-hosted Dashboard | Container (web app) | Next.js + shadcn/ui on tracedai.co (SaaS tier) or Docker image (enterprise tier) |
-| FastAPI Ingest API | Container (API) | Python + FastAPI on Fly.io; receives hashes only |
-| Chained Ledger | Database | Append-only, cryptographically signed; Supabase (Postgres) |
-| Rule Registry | Database / data store | EU AI Act / ISO 42001 / SOC 2 mappings; Upstash (Redis) |
+| Dashboard | Container (web app) | Next.js + FastAPI SQLite-reader sidecar (docker-compose, enterprise) or tracedai.co (SaaS, Vercel) |
+| Ingest API | Container (API) | Python + FastAPI, Fly.io Frankfurt (EU data residency); hashes + metadata only |
+| Chained Ledger | Database | Append-only, sha256(prev_hash\|\|payload) chain; Supabase Postgres |
+| Rule Registry | Database / data store | EU AI Act / ISO 42001 / SOC 2 mappings; versioned in Postgres, cached in Redis (Upstash) |
+| Clerk | External system (System_Ext) | Proprietary SaaS, consumed via API, not deployed by us — auth, API-key management, email-gating, RBAC, SSO on Enterprise |
 
 ### Key edges
 
-- AI Application → traced-ai library: `LLM call intercepted` (sync, monkey-patch at import time)
-- traced-ai library → Local SQLite: `raw I/O written` (sync, append-only write)
-- traced-ai library → FastAPI Ingest API: `hash(in) + hash(out) + rationale` (async, HTTPS, outbound only, 32 bytes per event)
-- FastAPI Ingest API → Rule Registry: `rule lookup on ingest` (sync)
-- FastAPI Ingest API → Chained Ledger: `appends signed entry` (sync, with rule references baked in)
-- traced-ai library → Rule Registry: `pulls signed rule packages` (async, periodic, verified on client before apply)
-- Self-hosted Dashboard → Local SQLite: `reads raw I/O` (sync, local only, no network)
+- AI Application → traced-ai SDK: `LLM call intercepted` (sync, monkey-patch at import time)
+- traced-ai SDK → Local SQLite: `raw I/O written` (sync, append-only write)
+- traced-ai SDK → Ingest API: `sha256(in) + sha256(out) + rationale + reviewer identity + metadata` (async, HTTPS, batched)
+- Ingest API → Rule Registry: `rule lookup on ingest` (sync)
+- Ingest API → Chained Ledger: `appends signed entry` (sync, with rule references baked in)
+- traced-ai SDK → Rule Registry: `pulls signed rule packages` (async, periodic, verified on client before apply)
+- Dashboard → Local SQLite: `reads raw I/O` (sync, local only, no network)
+- Dashboard → Clerk: `auth + RBAC` (sync, SaaS tier only)
 
 ### Design constraints worth showing visually
 
 - **Hard boundary line** between client perimeter (left) and cloud (right). Label it "no raw data crosses this boundary".
-- Only one edge crosses from client to cloud: the hash + rationale payload.
+- Only one edge crosses from client to cloud: the hash + rationale + reviewer identity payload (hashes only, never raw decisions).
 - Only one edge crosses from cloud to client: signed rule update packages.
-- Dashboard reads directly from local SQLite. Never from cloud.
+- Dashboard reads directly from local SQLite. Never from cloud data stores.
+- Clerk sits inside the cloud boundary; it services the SaaS dashboard tier and API key issuance.
+- Privacy guarantee note: the cloud ledger holds only 32-byte hashes; raw decisions stay client-side; auditor verification requires both halves.
 - Three deployment tiers (annotate as callout or legend):
-  - SaaS: dashboard on Vercel (tracedai.co)
-  - Enterprise: dashboard as Docker image, no inbound ports
+  - SaaS: dashboard on Vercel (tracedai.co), Clerk auth
+  - Enterprise: dashboard as Docker image (docker-compose.yml, Next.js + FastAPI sidecar), no inbound ports
   - Air-gapped: signed rule packages delivered offline
 
 ---

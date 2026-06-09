@@ -40,19 +40,21 @@ export const PROJECTS: ProjectData[] = [
   {
     id: 'traced-ai',
     title: 'Traced AI',
-    tagline: 'AI audit trail for compliance: proof that the AI decided correctly, when, and under which rule',
+    tagline: 'Audit infrastructure for high-risk AI: every decision traced to a human, every record cryptographically sealed',
     description:
-      'Built for regulated industries (banking, healthcare, defense) where "the AI decided" is not an acceptable answer. The **traced-ai** library auto-patches LLM clients ([OpenAI](https://openai.com), [Anthropic](https://anthropic.com), etc.) at import time. Raw inputs and outputs are written to a local SQLite store that never leaves the client perimeter. *SHA-256* hashes of every I/O pair, plus the rationale string, are sent to an append-only chained ledger in the cloud. The dashboard ships as a Docker image for self-hosted deployments or as a hosted app on tracedai.co, backed by [Supabase](https://supabase.com) for managed Postgres and [Upstash](https://upstash.com) for Redis. Deployed on [Fly.io](https://fly.io). The rule registry (EU AI Act, ISO 42001, SOC 2 mappings) is the moat: it translates regulatory text into concrete logging requirements per decision type, updated from real auditor interactions.',
+      'Every AI decision that affects a person\'s life needs a named human behind it and a record that can\'t be rewritten after the fact. Traced AI is the infrastructure that makes that real.\n\nThe **traced-ai** SDK ([PyPI](https://pypi.org/project/traced-ai/), Python) patches [OpenAI](https://openai.com) and [Anthropic](https://anthropic.com) clients at import time with a single `init()` call. On every LLM call it writes raw input and output to a local SQLite store on the client machine, then asynchronously batches `sha256(input)`, `sha256(output)`, a developer-supplied rationale string, the reviewer identity, and metadata (model, deployment, timestamp, trace ID) to the ingest API over HTTPS. Raw data never crosses the wire.\n\nThe ingest API (FastAPI on [Fly.io](https://fly.io), Frankfurt, EU data residency) authenticates via API key (bcrypt-hashed at rest), applies a sliding-window rate limit in [Upstash](https://upstash.com) Redis, and appends each event to an append-only [Supabase](https://supabase.com) Postgres ledger as `sha256(prev_hash || payload)`. That chain makes retroactive tampering detectable by anyone who runs a verification pass.\n\nThe rule registry lives in the same backend: lawyer-supervised, versioned in Postgres, cached in Redis. It maps EU AI Act Articles 12, 14, and 72, ISO 42001, and SOC 2 to per-domain logging requirements, pushed to self-hosted clients as signed packages. Audit exports are structured per Article (12, 17, 72, 86), cryptographically signed, formatted for drop-in use in auditor procedures.\n\nThe dashboard ships in two forms: a cloud-hosted Next.js app at tracedai.co ([Vercel](https://vercel.com), [Clerk](https://clerk.com) for auth, RBAC, SSO on Enterprise) or a Docker image (Next.js + FastAPI SQLite-reader sidecar in a `docker-compose.yml`) for enterprise clients who need everything on-prem. Both read the local SQLite store directly. Hashes still flow to the cloud ledger regardless of tier.\n\nThe privacy guarantee is architectural, not contractual. Traced AI\'s servers process 32-byte hashes. Actual decisions stay on the client side. Auditor verification requires both halves, which is why neither party can unilaterally falsify the record.\n\nOne-person startup, pre-revenue. Built in the open, before it\'s obvious.',
     category: 'startup-trial',
     complexity: 'high',
     status: 'stealth',
     period: '2026–present',
-    tags: ['Python', 'FastAPI', 'PostgreSQL', 'Redis', 'Next.js', 'TypeScript', 'Fly.io', 'Vercel', 'Supabase', 'Upstash', 'Compliance', 'EU AI Act'],
+    tags: ['Python', 'FastAPI', 'PostgreSQL', 'Redis', 'Next.js', 'TypeScript', 'Docker', 'Fly.io', 'Vercel', 'Supabase', 'Upstash', 'Clerk', 'Stripe', 'Compliance', 'EU AI Act'],
     links: [
+      { label: 'Site', url: 'https://www.traced-ai.com/' },
+      { label: 'Org', url: 'https://github.com/Traced-AI' },
       { label: 'In stealth. Talk to me.', url: 'https://cal.com/wandercode/discovery-call' },
     ],
     architectureNotes:
-      'Client perimeter: AI application + traced-ai library → local SQLite (raw I/O) → self-hosted dashboard (Docker image or tracedai.co, reads local store only). Backend on Fly.io: FastAPI ingest API (receives hashes only) → a) rule lookup in rule registry (EU AI Act / ISO / SOC 2), b) appends signed entry to chained ledger. Library periodically pulls signed rule packages from rule registry. Data stores: Supabase (Postgres), Upstash (Redis). Cross-zone outbound only: hash(in) + hash(out) + rationale string. Raw data never crosses the network.',
+      'Client perimeter: AI application + traced-ai SDK (PyPI) → local SQLite (raw I/O, never leaves). SDK batches sha256(input) + sha256(output) + rationale + reviewer identity + metadata to Fly.io ingest API (Frankfurt, EU data residency) over HTTPS. Ingest API: API-key auth (bcrypt), Upstash sliding-window rate limit, appends sha256(prev_hash || payload) to Supabase Postgres append-only ledger. Rule registry in Postgres (versioned) + Redis cache (Upstash): lawyer-supervised, maps EU AI Act Articles 12/14/72, ISO 42001, SOC 2 to logging requirements per decision type; served to SDK as signed packages. Dashboard: SaaS on Vercel (Clerk auth, RBAC, SSO on Enterprise) or Docker image (Next.js + FastAPI SQLite-reader sidecar, docker-compose.yml) — reads local SQLite only. Audit exports per Article (12, 17, 72, 86), cryptographically signed. Billing: Stripe (events-as-credits, EU VAT). Ops: Mailgun (transactional), Sentry (errors), GitHub Actions (CI/CD), Tally.so + Cal.eu (pre-launch).',
     diagramFile: 'traced-ai.svg',
     diagramExcalidrawUrl: 'https://excalidraw.com/#json=SB1QPfIqUtb3kO5jcGZIz,-AVwb8XwY09W5jJmhLJNMQ',
   },
@@ -300,6 +302,21 @@ export const PROJECTS: ProjectData[] = [
     links: [
       { label: 'Site', url: 'https://www.nomadsnest.live/' },
       { label: 'Repo', url: 'https://github.com/cmin764/nomads-nest' },
+    ],
+  },
+
+  {
+    id: 'traced-ai-site',
+    title: 'Traced AI website',
+    tagline: 'Marketing site for the AI audit infrastructure startup',
+    description:
+      'Static SPA for [Traced AI](https://www.traced-ai.com). Built with Vite 8, React 19, TypeScript 6, and Tailwind CSS v4. Tailwind v4\'s CSS-first `@theme` tokens eliminated the need for a component library; React 19\'s native metadata hoisting replaced react-helmet; no backend was needed because Tally handles waitlist storage and email notifications. Next.js was explicitly ruled out: no SSR, API routes, or server runtime needed for a static landing page.\n\n[React Router 7](https://reactrouter.com) handles the handful of marketing and legal routes in declarative SPA mode. The [Cal.eu](https://cal.eu) booking link on `/thank-you` is a plain outbound link, keeping it outside the domain\'s cookie scope and off the privacy policy. Deployed on [Vercel](https://vercel.com) with Vercel Analytics (cookieless, no GDPR consent banner required). Font pairing: League Spartan (display), Montserrat (body), JetBrains Mono (mono), each loaded with `font-display: swap`. Repo is private.',
+    category: 'frontend-brand',
+    complexity: 'low',
+    status: 'active',
+    tags: ['TypeScript', 'React', 'Vite', 'Tailwind CSS v4', 'React Router', 'Vercel', 'Vercel Analytics', 'Tally.so'],
+    links: [
+      { label: 'Site', url: 'https://www.traced-ai.com/' },
     ],
   },
 
