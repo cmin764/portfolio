@@ -314,7 +314,7 @@ export const PROJECTS: ProjectData[] = [
     category: 'frontend-brand',
     complexity: 'low',
     status: 'active',
-    tags: ['TypeScript', 'React', 'Vite', 'Tailwind CSS v4', 'React Router', 'Vercel', 'Tally.so'],
+    tags: ['TypeScript', 'React', 'Vite', 'Tailwind', 'React Router', 'Vercel'],
     links: [
       { label: 'Site', url: 'https://www.traced-ai.com/' },
     ],
