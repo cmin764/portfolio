@@ -28,7 +28,7 @@ export default function Index() {
           Systems thinker.<br />AI product builder.
         </h1>
         <p className="text-lg text-muted-foreground max-w-2xl">
-          Fractional AI Product Strategist helping outlier startups build intelligent products.
+          Fractional AI Product Strategist helping startups and high-growth companies build intelligent products.
           Discover my work below, diagrams included.
         </p>
         <div className="flex flex-wrap gap-3 pt-2">

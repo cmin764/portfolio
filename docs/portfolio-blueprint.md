@@ -4,7 +4,7 @@
 
 ## What We Built
 
-A curated portfolio site for Cosmin Poieana (cmin764), Fractional AI Product Strategist. Goal: make outlier startups want to collaborate. Not a resume — a proof of systems thinking. Excalidraw architecture diagrams are the differentiator; most developer portfolios just show README excerpts.
+A curated portfolio site for Cosmin Poieana (cmin764), Fractional AI Product Strategist. Goal: make startups and high-growth companies want to collaborate. Not a resume — a proof of systems thinking. Excalidraw architecture diagrams are the differentiator; most developer portfolios just show README excerpts.
 
 Lives at `github.com/cmin764/portfolio`, served at `cmin764.github.io/portfolio`. The `cmin764` profile repo stays untouched (pure markdown, no build tooling). The existing CV PDF at `cmin764.github.io/cmin764/cv.pdf` is unaffected.
 
@@ -55,8 +55,9 @@ base path:   /portfolio/   (set in vite.config.ts: base: '/portfolio/')
 4. Professional Work
 5. Open Source
 6. Frontend & Brand
-7. Writing
-8. Footer
+7. Interviews
+8. Writing
+9. Footer
 
 ---
 
@@ -124,12 +125,14 @@ export default App;
 export const LINKS = {
   portfolioUrl: 'https://cmin764.github.io/portfolio/',
   cvPdfUrl: 'https://cmin764.github.io/cmin764/cv.pdf',
-  wandercodeUrl: 'https://wandercode.ltd',
+  cvMdUrl: 'https://github.com/cmin764/cmin764/blob/main/cv.md',
+  wandercodeUrl: 'https://www.wandercode.ltd/about',
+  wandercodeRootUrl: 'https://www.wandercode.ltd',
   calUrl: 'https://cal.com/wandercode/discovery-call',
   linkedinUrl: 'https://linkedin.com/in/cmin764',
   githubUrl: 'https://github.com/cmin764',
-  mediumUrl: 'https://cmin764.medium.com',
   hobbyProjectsUrl: 'https://github.com/stars/cmin764/lists/portfolio',
+  mediumUrl: 'https://cmin764.medium.com',
   email: 'cmin764@gmail.com',
 };
 ```
@@ -145,7 +148,8 @@ export type Category =
   | 'professional'
   | 'oss-hobby'
   | 'frontend-brand'
-  | 'writing';
+  | 'writing'
+  | 'interviews';
 
 export type Complexity = 'low' | 'medium' | 'high';
 
@@ -154,7 +158,8 @@ export type ProjectStatus =
   | 'shipped'
   | 'stealth'
   | 'in-progress'
-  | 'discontinued';
+  | 'discontinued'
+  | 'attempted';
 
 export interface ProjectLink {
   label: string;
@@ -173,9 +178,10 @@ export interface ProjectData {
   company?: string;
   period?: string;
   links: ProjectLink[];
-  diagramFile?: string;       // e.g. "traced-ai.svg" (iteration 2)
+  diagramFile?: string;
+  diagramExcalidrawUrl?: string;
   highlights?: string[];
-  architectureNotes?: string; // diagram source only; never rendered in UI
+  architectureNotes?: string;
 }
 ```
 
@@ -190,7 +196,8 @@ export const CATEGORIES: CategoryMeta[] = [
   { id: 'professional',    label: 'Professional Work', description: 'Client engagements: no source code, architecture diagrams tell the story', order: 3 },
   { id: 'oss-hobby',       label: 'Open Source',       description: 'Selected technical showcases',                                            order: 4 },
   { id: 'frontend-brand',  label: 'Frontend & Brand',  description: 'Product and design builds',                                               order: 5 },
-  { id: 'writing',         label: 'Writing',           description: 'Published essays on tech, AI, engineering, and entrepreneurship',          order: 6 },
+  { id: 'interviews',      label: 'Interviews',        description: 'System-design problems answered as architecture exercises',                order: 6 },
+  { id: 'writing',         label: 'Writing',           description: 'Published essays on tech, AI, engineering, and entrepreneurship',          order: 7 },
 ];
 ```
 
@@ -204,8 +211,9 @@ portfolio/
     workflows/
       deploy.yml
   public/
-    favicon.svg
-    diagrams/           (iteration 2 — not yet populated)
+    favicon-light.svg
+    favicon-dark.svg
+    diagrams/           (SVGs committed for all diagram-enabled cards)
   src/
     components/
       layout/
@@ -217,6 +225,7 @@ portfolio/
       ComplexityBadge.tsx
       FilterBar.tsx
       ProjectCard.tsx   collapsed + expanded state in one component (no separate ProjectDetail)
+      DiagramViewer.tsx, DiagramLegend.tsx
       ScrollToTop.tsx
       TechTag.tsx
     data/
@@ -337,7 +346,7 @@ Notable: `traced-ai` has no repo link by design (stealth). SDK on PyPI. Stack in
 | `vonq-meeting-assistant` | Meeting Assistant | VONQ | 2025-2026 | high |
 | `vonq-knowledge-base` | Knowledge Base & Careers Agent | VONQ | 2025-2026 | high |
 | `vonq-candidate-assessment` | Candidate Assessment & Language Evaluator | VONQ | 2025-2026 | high |
-| `a5-gto-engine` | GTO / Reinforcement Learning Poker Engine | A5 Labs | 2025 | high |
+| `a5-gto-engine` | AceGuardian | A5 Labs | 2025 | high |
 | `sema4ai-action-server` | Action Server + AI Actions | Sema4.ai | 2023-2024 | high |
 | `robocorp-rpa` | RPA Framework & Automation Libraries | Robocorp / Sema4.ai | 2021-2024 | high |
 | `gorgias-appstore` | Gorgias App Store | Gorgias | 2021 | medium |
@@ -356,8 +365,8 @@ No Cloudbase card. It was replaced by `gorgias-appstore`.
 
 | id | title | complexity | status |
 |----|-------|------------|--------|
-| `deep-ice` | DeepIce | medium | shipped |
-| `pulsr` | Pulsr | high | in-progress |
+| `deep-ice` | DeepIce | low | in-progress |
+| `pulsr` | Pulsr | medium | in-progress |
 
 ---
 
@@ -365,8 +374,9 @@ No Cloudbase card. It was replaced by `gorgias-appstore`.
 
 | id | title | complexity |
 |----|-------|------------|
-| `wandercode-site` | Wandercode website | medium |
-| `nomads-nest` | Nomad's Nest website | medium |
+| `wandercode-site` | Wandercode website | low |
+| `nomads-nest` | Nomad's Nest website | low |
+| `traced-ai-site` | Traced AI website | low |
 
 ---
 
@@ -397,8 +407,8 @@ Phase 1 (scaffold) and Phase 2 (data + components) are shipped.
 
 ### Phase 3 — Pending
 
-- [ ] OG / Twitter Card meta tags in `index.html`
-- [ ] `og-image.png` in `public/`
+- [x] OG / Twitter Card meta tags in `index.html`
+- [x] `og-image.png` in `public/`
 - [ ] Responsive testing: 375px / 768px / 1024px / 1440px
 - [ ] Dark mode verification
 - [ ] Accessibility: keyboard nav, `aria-expanded` on collapsibles
@@ -406,7 +416,7 @@ Phase 1 (scaffold) and Phase 2 (data + components) are shipped.
 
 ---
 
-### Iteration 2 — Architecture Diagrams (not started)
+### Iteration 2 — Architecture Diagrams (in progress)
 
 After Phase 3, generate Excalidraw diagrams per project. Source material for each diagram is in `docs/diagram-briefs.md` (node/edge tables) and `architectureNotes` on each `ProjectData` entry.
 
@@ -461,7 +471,9 @@ Covering professional work (VONQ, Sema4.ai, A5 Labs), active ventures (Wandercod
 |-----|-----|
 | `portfolioUrl` | https://cmin764.github.io/portfolio/ |
 | `cvPdfUrl` | https://cmin764.github.io/cmin764/cv.pdf |
-| `wandercodeUrl` | https://wandercode.ltd |
+| `cvMdUrl` | https://github.com/cmin764/cmin764/blob/main/cv.md |
+| `wandercodeUrl` | https://www.wandercode.ltd/about |
+| `wandercodeRootUrl` | https://www.wandercode.ltd |
 | `calUrl` | https://cal.com/wandercode/discovery-call |
 | `linkedinUrl` | https://linkedin.com/in/cmin764 |
 | `githubUrl` | https://github.com/cmin764 |
