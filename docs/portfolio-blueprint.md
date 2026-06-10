@@ -4,7 +4,7 @@
 
 ## What We Built
 
-A curated portfolio site for Cosmin Poieana (cmin764), Fractional AI Product Strategist. Goal: make outlier companies want to collaborate. Not a resume — a proof of systems thinking. Excalidraw architecture diagrams are the differentiator; most developer portfolios just show README excerpts.
+A curated portfolio site for Cosmin Poieana (cmin764), Fractional AI Product Strategist. Goal: make outlier startups want to collaborate. Not a resume — a proof of systems thinking. Excalidraw architecture diagrams are the differentiator; most developer portfolios just show README excerpts.
 
 Lives at `github.com/cmin764/portfolio`, served at `cmin764.github.io/portfolio`. The `cmin764` profile repo stays untouched (pure markdown, no build tooling). The existing CV PDF at `cmin764.github.io/cmin764/cv.pdf` is unaffected.
 
