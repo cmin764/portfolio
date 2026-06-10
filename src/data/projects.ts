@@ -29,7 +29,7 @@ export const PROJECTS: ProjectData[] = [
     status: 'active',
     tags: ['Community', 'HR Tech', 'Claude Code', 'Automation', 'TypeScript'],
     links: [
-      { label: 'Site', url: 'https://nomoreapply.com' },
+      { label: 'Site', url: 'https://nomoreapply.com/' },
       { label: 'Services', url: 'https://nomoreapply.github.io/services/' },
       { label: 'Org', url: 'https://github.com/NoMoreApply' },
     ],
