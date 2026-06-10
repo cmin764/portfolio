@@ -69,6 +69,7 @@ src/
     ui/             # shadcn primitives — never edit
     layout/         # Header, Footer, Layout
     ProjectCard.tsx, CategorySection.tsx, ComplexityBadge.tsx, TechTag.tsx, FilterBar.tsx
+    DiagramViewer.tsx, DiagramLegend.tsx
   hooks/            # useTheme, useDocumentTitle, useFilter
   lib/              # cn() + constants
   pages/            # Index (single scrollable page), NotFound

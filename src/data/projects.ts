@@ -5,13 +5,13 @@ export const PROJECTS: ProjectData[] = [
   {
     id: 'wandercode',
     title: 'Wandercode',
-    tagline: 'Fractional AI Product Strategy for outlier companies',
+    tagline: 'Fractional AI Product Strategy for startups and high-growth companies',
     description:
-      'Owner and operator of Wandercode, an embedded consulting practice helping outlier startups build intelligent products and adopt AI-driven engineering. Methodology: Blugen (blueprint-first code generation). Services: technical audits, AI product development, workshops. Results-based pricing, not hourly.',
+      'Owner and operator of Wandercode, a one-person fractional AI practice for startups and high-growth companies: senior AI product and engineering work without a full-time hire. Pitch is "Results as a Service", not hourly consulting. Backed by 18+ years of Python and tech-lead stints at Sema4.ai, Robocorp, Gorgias, and A5 Labs. Methodology: Blugen (blueprint-first code generation). Services: technical audits, AI product development, workshops. The About page also surfaces Traced AI, a pre-revenue audit-infrastructure side project, as proof the practice builds, not just advises.',
     category: 'active-venture',
     complexity: 'medium',
     status: 'active',
-    tags: ['TypeScript', 'React', 'Vite', 'Tailwind', 'AI Strategy', 'Consulting'],
+    tags: ['Product Strategy', 'AI Engineering', 'Python', 'Fractional', 'Startups', 'Consulting'],
     links: [
       { label: 'Site', url: 'https://www.wandercode.ltd/' },
       { label: 'Repo', url: 'https://github.com/cmin764/wandercode' },
@@ -29,7 +29,7 @@ export const PROJECTS: ProjectData[] = [
     status: 'active',
     tags: ['Community', 'HR Tech', 'Claude Code', 'Automation', 'TypeScript'],
     links: [
-      { label: 'Site', url: 'https://nomoreapply.com' },
+      { label: 'Site', url: 'https://nomoreapply.com/' },
       { label: 'Services', url: 'https://nomoreapply.github.io/services/' },
       { label: 'Org', url: 'https://github.com/NoMoreApply' },
     ],
@@ -40,19 +40,20 @@ export const PROJECTS: ProjectData[] = [
   {
     id: 'traced-ai',
     title: 'Traced AI',
-    tagline: 'AI audit trail for compliance: proof that the AI decided correctly, when, and under which rule',
+    tagline: 'Audit infrastructure for high-risk AI: every decision traced to a human, every record cryptographically sealed',
     description:
-      'Built for regulated industries (banking, healthcare, defense) where "the AI decided" is not an acceptable answer. The **traced-ai** library auto-patches LLM clients ([OpenAI](https://openai.com), [Anthropic](https://anthropic.com), etc.) at import time. Raw inputs and outputs are written to a local SQLite store that never leaves the client perimeter. *SHA-256* hashes of every I/O pair, plus the rationale string, are sent to an append-only chained ledger in the cloud. The dashboard ships as a Docker image for self-hosted deployments or as a hosted app on tracedai.co, backed by [Supabase](https://supabase.com) for managed Postgres and [Upstash](https://upstash.com) for Redis. Deployed on [Fly.io](https://fly.io). The rule registry (EU AI Act, ISO 42001, SOC 2 mappings) is the moat: it translates regulatory text into concrete logging requirements per decision type, updated from real auditor interactions.',
+      'High-risk AI decisions need a named human accountable and a record that can\'t be rewritten. The **traced-ai** Python SDK patches [OpenAI](https://openai.com) and [Anthropic](https://anthropic.com) clients at import time: raw I/O stays on the client, only SHA-256 hashes and reviewer identity cross the wire to an append-only [Supabase](https://supabase.com) ledger on [Fly.io](https://fly.io) (Frankfurt). Chained entries make retroactive tampering detectable by any verifier. The moat is a lawyer-supervised rule registry mapping EU AI Act Articles, ISO 42001, and SOC 2 to per-decision logging requirements, pushed to clients as signed packages. Dashboard ships as SaaS ([Vercel](https://vercel.com) + [Clerk](https://clerk.com)) or a self-hosted Docker image. One-person startup, pre-revenue.',
     category: 'startup-trial',
     complexity: 'high',
     status: 'stealth',
     period: '2026–present',
-    tags: ['Python', 'FastAPI', 'PostgreSQL', 'Redis', 'Next.js', 'TypeScript', 'Fly.io', 'Vercel', 'Supabase', 'Upstash', 'Compliance', 'EU AI Act'],
+    tags: ['Python', 'FastAPI', 'PostgreSQL', 'Redis', 'Next.js', 'TypeScript', 'Docker', 'Fly.io', 'Vercel', 'Supabase', 'Upstash', 'Clerk', 'Stripe', 'Compliance', 'EU AI Act'],
     links: [
-      { label: 'In stealth. Talk to me.', url: 'https://cal.com/wandercode/discovery-call' },
+      { label: 'Site', url: 'https://www.traced-ai.com/' },
+      { label: 'Org', url: 'https://github.com/Traced-AI' },
     ],
     architectureNotes:
-      'Client perimeter: AI application + traced-ai library → local SQLite (raw I/O) → self-hosted dashboard (Docker image or tracedai.co, reads local store only). Backend on Fly.io: FastAPI ingest API (receives hashes only) → a) rule lookup in rule registry (EU AI Act / ISO / SOC 2), b) appends signed entry to chained ledger. Library periodically pulls signed rule packages from rule registry. Data stores: Supabase (Postgres), Upstash (Redis). Cross-zone outbound only: hash(in) + hash(out) + rationale string. Raw data never crosses the network.',
+      'Client perimeter: AI application + traced-ai SDK (PyPI) → local SQLite (raw I/O, never leaves). SDK batches sha256(input) + sha256(output) + rationale + reviewer identity + metadata to Fly.io ingest API (Frankfurt, EU data residency) over HTTPS. Ingest API: API-key auth (bcrypt), Upstash sliding-window rate limit, appends sha256(prev_hash || payload) to Supabase Postgres append-only ledger. Rule registry in Postgres (versioned) + Redis cache (Upstash): lawyer-supervised, maps EU AI Act Articles 12/14/72, ISO 42001, SOC 2 to logging requirements per decision type; served to SDK as signed packages. Dashboard: SaaS on Vercel (Clerk auth, RBAC, SSO on Enterprise) or Docker image (Next.js + FastAPI SQLite-reader sidecar, docker-compose.yml) — reads local SQLite only. Audit exports per Article (12, 17, 72, 86), cryptographically signed. Billing: Stripe (events-as-credits, EU VAT). Ops: Mailgun (transactional), Sentry (errors), GitHub Actions (CI/CD), Tally.so + Cal.eu (pre-launch).',
     diagramFile: 'traced-ai.svg',
     diagramExcalidrawUrl: 'https://excalidraw.com/#json=SB1QPfIqUtb3kO5jcGZIz,-AVwb8XwY09W5jJmhLJNMQ',
   },
@@ -136,7 +137,7 @@ export const PROJECTS: ProjectData[] = [
     title: 'AceGuardian',
     tagline: 'ML/AI system combining game theory optimal play and RL strategies for competitive online poker',
     description:
-      'A5 Labs builds AI for competitive online gaming. Maintained and contributed to a micro-service mesh combining a Python/FastAPI orchestration layer with a C++ RL inference server (Drogon framework). The Python side has three services: a GTO service, a Strategy service, and a glue service routing between them under response-time constraints. Built an analysis benchmark for detecting regressions and measuring quality of strategy improvements, automated via Bitbucket CI data-science scripting.',
+      'A5 Labs builds AI for competitive online gaming. Led the engineering effort on the ML/AI stack as tech lead. Maintained and contributed to a micro-service mesh combining a Python/FastAPI orchestration layer with a C++ RL inference server (Drogon framework). The Python side has three services: a GTO service, a Strategy service, and a glue service routing between them under response-time constraints. Built an analysis benchmark for detecting regressions and measuring quality of strategy improvements, automated via Bitbucket CI data-science scripting.',
     category: 'professional',
     complexity: 'high',
     status: 'shipped',
@@ -277,11 +278,11 @@ export const PROJECTS: ProjectData[] = [
     title: 'Wandercode website',
     tagline: 'Company site for the consultancy, built with the same stack I recommend to clients',
     description:
-      'The public-facing site for Wandercode, deployed on Vercel. Built to practice what I preach: fast, accessible, and maintainable. Stack: Vite + React + TypeScript + Tailwind + shadcn/ui, managed with bun. Uses a `/frontend-review` skill for agentic self-review before merging.',
+      'Marketing SPA for [Wandercode](https://www.wandercode.ltd): Vite 8 + React 19 + Tailwind 3.4 + shadcn/ui, managed with bun. Scheduling runs through [Cal.com](https://cal.com): a popup on every CTA and an inline embed on the contact page. Cookieless [Vercel Analytics](https://vercel.com/docs/analytics), a system-font stack (no web-font CDN), and GitHub/LinkedIn brand icons inlined as SVG after lucide-react v1 dropped them. Per-route canonical tags via a small useCanonical hook. Deployed on [Vercel](https://vercel.com). Uses a `/frontend-review` skill for agentic self-review before merging.',
     category: 'frontend-brand',
     complexity: 'low',
     status: 'active',
-    tags: ['TypeScript', 'React', 'Vite', 'Tailwind', 'shadcn/ui', 'React Router', 'Vercel'],
+    tags: ['TypeScript', 'React', 'Vite', 'Tailwind', 'shadcn/ui', 'Vercel'],
     links: [
       { label: 'Site', url: 'https://www.wandercode.ltd/' },
       { label: 'Repo', url: 'https://github.com/cmin764/wandercode' },
@@ -292,14 +293,29 @@ export const PROJECTS: ProjectData[] = [
     title: "Nomad's Nest website",
     tagline: 'Short-term rental site for a self-catering apartment in Cyprus, built for digital nomads',
     description:
-      'A Next.js site for a short-term rental property in Cyprus. 10+ page types: marketing, gallery with per-room sub-pages, booking, check-in guide, and legal. Framer Motion for scroll-triggered animations, lightbox gallery, reviews carousel, transport modal. Deployed on Vercel, managed with bun. Uses a `/frontend-review` skill for agentic self-review before merging.',
+      'Next.js 16 site (server components, typed routes) for a short-term rental in Ayia Napa, Cyprus, on Tailwind v4 + shadcn/ui, managed with bun. Two flows ship in one artifact: public marketing, gallery, and booking, plus private guest pages (check-in directions, house guide, landmarks, safety) that stay hidden from first-time visitors and are shared directly by the host. [Framer Motion](https://www.framer.com/motion/) scroll animations, an embla reviews carousel, and a keyboard-navigable lightbox gallery. Cormorant + Raleway via next/font, cookieless [Vercel Analytics](https://vercel.com/docs/analytics). Deployed on [Vercel](https://vercel.com) Hobby. Uses a `/frontend-review` skill for agentic self-review before merging.',
     category: 'frontend-brand',
     complexity: 'low',
     status: 'active',
-    tags: ['TypeScript', 'Next.js', 'Tailwind', 'shadcn/ui', 'Framer Motion', 'Vercel Analytics', 'Vercel'],
+    tags: ['TypeScript', 'Next.js', 'Tailwind', 'shadcn/ui', 'Vercel'],
     links: [
       { label: 'Site', url: 'https://www.nomadsnest.live/' },
       { label: 'Repo', url: 'https://github.com/cmin764/nomads-nest' },
+    ],
+  },
+
+  {
+    id: 'traced-ai-site',
+    title: 'Traced AI website',
+    tagline: 'Marketing site for the AI audit infrastructure startup',
+    description:
+      'Static SPA for [Traced AI](https://www.traced-ai.com): Vite 8 + React 19 + Tailwind v4 (CSS-first tokens, no component library needed). Waitlist via [Tally.so](https://tally.so), zero backend; on submit, a [Cal.eu](https://cal.eu) link offers an optional discovery call. Cookieless [Vercel Analytics](https://vercel.com/docs/analytics) for page views. Deployed on [Vercel](https://vercel.com). Repo is private.',
+    category: 'frontend-brand',
+    complexity: 'low',
+    status: 'active',
+    tags: ['TypeScript', 'React', 'Vite', 'Tailwind', 'Vercel'],
+    links: [
+      { label: 'Site', url: 'https://www.traced-ai.com/' },
     ],
   },
 

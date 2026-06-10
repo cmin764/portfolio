@@ -29,6 +29,10 @@ export function useTheme() {
       root.classList.remove("light", "dark");
       root.classList.add(resolved);
       setResolvedTheme(resolved);
+      const favicon = document.getElementById("favicon") as HTMLLinkElement | null;
+      if (favicon) {
+        favicon.href = `${import.meta.env.BASE_URL}favicon-${resolved}.svg`;
+      }
     };
 
     if (theme === "system") {
