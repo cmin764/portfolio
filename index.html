@@ -20,7 +20,11 @@
     <meta name="author" content="Cosmin Poieana" />
     <link rel="canonical" href="https://cmin764.github.io/portfolio/" />
 
-    <link rel="icon" type="image/svg+xml" href="/portfolio/favicon.svg" />
+    <link id="favicon" rel="icon" type="image/svg+xml" href="/portfolio/favicon-light.svg" />
+    <script>
+      if (document.documentElement.classList.contains('dark'))
+        document.getElementById('favicon').href = '/portfolio/favicon-dark.svg';
+    </script>
 
     <!-- Open Graph -->
     <meta property="og:title" content="Portfolio | Cosmin Poieana" />
