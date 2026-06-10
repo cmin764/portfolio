@@ -7,11 +7,11 @@ export const PROJECTS: ProjectData[] = [
     title: 'Wandercode',
     tagline: 'Fractional AI Product Strategy for outlier companies',
     description:
-      'Owner and operator of Wandercode, an embedded consulting practice helping outlier startups build intelligent products and adopt AI-driven engineering. Methodology: Blugen (blueprint-first code generation). Services: technical audits, AI product development, workshops. Results-based pricing, not hourly.',
+      'Owner and operator of Wandercode, a one-person fractional AI practice for B2B startups: senior AI product and engineering work without a full-time hire. Pitch is "Results as a Service", not hourly consulting. Backed by 18+ years of Python and tech-lead stints at Sema4.ai, Robocorp, and Gorgias. Methodology: Blugen (blueprint-first code generation). Services: technical audits, AI product development, workshops. The About page also surfaces Traced AI, a pre-revenue audit-infrastructure side project, as proof the practice builds, not just advises.',
     category: 'active-venture',
     complexity: 'medium',
     status: 'active',
-    tags: ['TypeScript', 'React', 'Vite', 'Tailwind', 'AI Strategy', 'Consulting'],
+    tags: ['Product Strategy', 'AI Engineering', 'Python', 'Fractional', 'Startups', 'Consulting'],
     links: [
       { label: 'Site', url: 'https://www.wandercode.ltd/' },
       { label: 'Repo', url: 'https://github.com/cmin764/wandercode' },
@@ -278,11 +278,11 @@ export const PROJECTS: ProjectData[] = [
     title: 'Wandercode website',
     tagline: 'Company site for the consultancy, built with the same stack I recommend to clients',
     description:
-      'The public-facing site for Wandercode, deployed on Vercel. Built to practice what I preach: fast, accessible, and maintainable. Stack: Vite + React + TypeScript + Tailwind + shadcn/ui, managed with bun. Uses a `/frontend-review` skill for agentic self-review before merging.',
+      'Marketing SPA for [Wandercode](https://www.wandercode.ltd): Vite 8 + React 19 + Tailwind 3.4 + shadcn/ui, managed with bun. Scheduling runs through [Cal.com](https://cal.com): a popup on every CTA and an inline embed on the contact page. Cookieless [Vercel Analytics](https://vercel.com/docs/analytics), a system-font stack (no web-font CDN), and GitHub/LinkedIn brand icons inlined as SVG after lucide-react v1 dropped them. Per-route canonical tags via a small useCanonical hook. Deployed on [Vercel](https://vercel.com). Uses a `/frontend-review` skill for agentic self-review before merging.',
     category: 'frontend-brand',
     complexity: 'low',
     status: 'active',
-    tags: ['TypeScript', 'React', 'Vite', 'Tailwind', 'shadcn/ui', 'React Router', 'Vercel'],
+    tags: ['TypeScript', 'React', 'Vite', 'Tailwind', 'shadcn/ui', 'Vercel'],
     links: [
       { label: 'Site', url: 'https://www.wandercode.ltd/' },
       { label: 'Repo', url: 'https://github.com/cmin764/wandercode' },
@@ -293,11 +293,11 @@ export const PROJECTS: ProjectData[] = [
     title: "Nomad's Nest website",
     tagline: 'Short-term rental site for a self-catering apartment in Cyprus, built for digital nomads',
     description:
-      'A Next.js site for a short-term rental property in Cyprus. 10+ page types: marketing, gallery with per-room sub-pages, booking, check-in guide, and legal. Framer Motion for scroll-triggered animations, lightbox gallery, reviews carousel, transport modal. Deployed on Vercel, managed with bun. Uses a `/frontend-review` skill for agentic self-review before merging.',
+      'Next.js 16 site (server components, typed routes) for a short-term rental in Ayia Napa, Cyprus, on Tailwind v4 + shadcn/ui, managed with bun. Two flows ship in one artifact: public marketing, gallery, and booking, plus private guest pages (check-in directions, house guide, landmarks, safety) that stay hidden from first-time visitors and are shared directly by the host. [Framer Motion](https://www.framer.com/motion/) scroll animations, an embla reviews carousel, and a keyboard-navigable lightbox gallery. Cormorant + Raleway via next/font, cookieless [Vercel Analytics](https://vercel.com/docs/analytics). Deployed on [Vercel](https://vercel.com) Hobby. Uses a `/frontend-review` skill for agentic self-review before merging.',
     category: 'frontend-brand',
     complexity: 'low',
     status: 'active',
-    tags: ['TypeScript', 'Next.js', 'Tailwind', 'shadcn/ui', 'Framer Motion', 'Vercel Analytics', 'Vercel'],
+    tags: ['TypeScript', 'Next.js', 'Tailwind', 'shadcn/ui', 'Vercel'],
     links: [
       { label: 'Site', url: 'https://www.nomadsnest.live/' },
       { label: 'Repo', url: 'https://github.com/cmin764/nomads-nest' },
@@ -309,7 +309,7 @@ export const PROJECTS: ProjectData[] = [
     title: 'Traced AI website',
     tagline: 'Marketing site for the AI audit infrastructure startup',
     description:
-      'Static SPA for [Traced AI](https://www.traced-ai.com): Vite + React 19 + Tailwind v4 (CSS-first tokens, no component library needed). Waitlist via [Tally.so](https://tally.so), zero backend; on submit, a [Cal.eu](https://cal.eu) link offers an optional discovery call. Deployed on [Vercel](https://vercel.com). Repo is private.',
+      'Static SPA for [Traced AI](https://www.traced-ai.com): Vite 8 + React 19 + Tailwind v4 (CSS-first tokens, no component library needed). Waitlist via [Tally.so](https://tally.so), zero backend; on submit, a [Cal.eu](https://cal.eu) link offers an optional discovery call. Cookieless [Vercel Analytics](https://vercel.com/docs/analytics) for page views. Deployed on [Vercel](https://vercel.com). Repo is private.',
     category: 'frontend-brand',
     complexity: 'low',
     status: 'active',
