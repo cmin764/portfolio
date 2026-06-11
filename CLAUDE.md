@@ -14,7 +14,7 @@ bun run typecheck
 ## Stack
 
 - **React 19** + TypeScript 5, **Vite 8**, `@vitejs/plugin-react` (not `-swc`, no SWC plugins in use)
-- **Tailwind CSS 3.4** — HSL color tokens as CSS custom properties in `src/index.css`, `darkMode: ["class"]`
+- **Tailwind CSS 3.4**: HSL color tokens as CSS custom properties in `src/index.css`, `darkMode: ["class"]`
 - **shadcn/ui** — primitives in `src/components/ui/`, never edit directly
 - **React Router DOM 7** — single route in `src/App.tsx`, `basename="/portfolio"`
 - **lucide-react 1.x** — brand icons (`Github`, `Linkedin`, `Medium`) were removed in v1; use inline SVGs for those, lucide for everything else
