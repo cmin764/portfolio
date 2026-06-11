@@ -117,6 +117,16 @@ Run `/diagram "Project Name"` to generate a C4 architecture diagram for any proj
 
 **After Excalidraw export:** ask for the shareable URL (`https://excalidraw.com/#json=...`) and save it as `diagramExcalidrawUrl` in `src/data/projects.ts`. This makes the SVG clickable, linking it back to the live editable diagram.
 
+**Backing up Excalidraw scenes:** Excalidraw's storage is ephemeral. Run the backup script to download a local `.excalidraw` file from any project's `diagramExcalidrawUrl`:
+
+```bash
+node scripts/download-excalidraw.mjs \
+  "https://excalidraw.com/#json=<id>,<key>" \
+  public/diagrams/<project-id>.excalidraw
+```
+
+Backed-up files live in `public/diagrams/<id>.excalidraw` (committed alongside the SVGs). The script handles AES-GCM decryption and pako decompression client-side using the key from the URL fragment.
+
 **Commit discipline:** always two commits per diagram — skill/learnings changes first, then the diagram artifacts (SVG, projects.ts, diagram source, brief). Keeps learning evolution separate from project work in git history.
 
 **Style guide sync:** whenever you update `docs/system-design.md`, `.claude/skills/diagram/SKILL.md`, or any learnings file, check `docs/diagram-style-guide.md` and `src/components/DiagramLegend.tsx` for stale content and update them in the same commit. The pipeline is: research → `system-design.md` + skill/learnings → `diagram-style-guide.md` + `DiagramLegend.tsx` (conventions layer), then per-diagram: briefs → Mermaid sources → Excalidraw exports → backpropagate to briefs + Mermaid if the export reveals deviations. Every layer must stay in sync.
