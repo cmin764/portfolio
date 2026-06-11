@@ -16,14 +16,13 @@ export const PROJECTS: ProjectData[] = [
       { label: 'Site', url: 'https://www.wandercode.ltd/' },
       { label: 'Repo', url: 'https://github.com/cmin764/wandercode' },
     ],
-    architectureNotes: undefined,
   },
   {
     id: 'nomoreapply',
     title: 'NoMoreApply',
     tagline: 'Private engineer community for peer-based job referrals (no recruiters)',
     description:
-      'Co-founded with Angel Aytov and Cata Waack. A trust-based talent network where engineers refer each other directly to companies they\'ve worked at or know well. Vetting is peer-based, not algorithmic. The services brochure (linked below) was generated with the `/sync-sources` skill: takes scattered raw resources and produces polished **Markdown** sources, assembled into the team PDF brochure.',
+      'Co-founded with Angel Aytov and Cata Waack. A trust-based talent network where engineers refer each other directly to companies they\'ve worked at or know well. Vetting is peer-based, not algorithmic. The services brochure (linked below) was generated with the `/sync-sources` skill: takes scattered raw resources and produces polished Markdown sources, assembled into the team PDF brochure.',
     category: 'active-venture',
     complexity: 'medium',
     status: 'active',
@@ -33,7 +32,6 @@ export const PROJECTS: ProjectData[] = [
       { label: 'Services', url: 'https://nomoreapply.github.io/services/' },
       { label: 'Org', url: 'https://github.com/NoMoreApply' },
     ],
-    architectureNotes: undefined,
   },
 
   // Startup Trials
@@ -89,7 +87,7 @@ export const PROJECTS: ProjectData[] = [
     status: 'shipped',
     tags: ['Python', 'Django', 'Recall.ai', 'Google Meet', 'OpenAI', 'ElevenLabs', 'WebSocket', 'AI Agents'],
     company: 'VONQ',
-    period: '2025-2026',
+    period: '2025–2026',
     links: [],
     diagramFile: 'vonq-meeting-assistant.svg',
     diagramExcalidrawUrl: 'https://excalidraw.com/#json=xbIm4bAe4sVKXbuSTg1R9,dNL8ZKhwVkkjrMvaqXEeWA',
@@ -107,7 +105,7 @@ export const PROJECTS: ProjectData[] = [
     status: 'shipped',
     tags: ['Python', 'Django', 'Firecrawl', 'RAG', 'Pinecone', 'OpenAI', 'LLM', 'React', 'AI Agents'],
     company: 'VONQ',
-    period: '2025-2026',
+    period: '2025–2026',
     links: [],
     diagramFile: 'vonq-knowledge-base.svg',
     diagramExcalidrawUrl: 'https://excalidraw.com/#json=OF5K2y8CG7m_HinJ8gYnu,73JNhJqrqjYYLmGtdnX-lQ',
@@ -125,7 +123,7 @@ export const PROJECTS: ProjectData[] = [
     status: 'shipped',
     tags: ['Python', 'Django', 'Retell', 'AI Agents', 'Audio Processing', 'React', 'Assessment', 'PDF', 'VONQ EQO'],
     company: 'VONQ',
-    period: '2025-2026',
+    period: '2025–2026',
     links: [],
     diagramFile: 'vonq-candidate-assessment.svg',
     diagramExcalidrawUrl: 'https://excalidraw.com/#json=zXa48TAkrMZ_Rt3rs2YgV,xjIHAfcJsg-gYVCD4FMZkA',
@@ -181,7 +179,7 @@ export const PROJECTS: ProjectData[] = [
     status: 'shipped',
     tags: ['gRPC', 'Go', 'Python', 'Node.js', 'Protocol Buffers', 'REST', 'Microservices', 'IoT', 'Kubernetes', 'PostGIS', 'Mapbox'],
     company: 'Comfy (→ Siemens)',
-    period: '2019-2020',
+    period: '2019–2020',
     links: [
       { label: 'Rebrand', url: 'https://www.enlightedinc.com/comfy-evolves-into-enlighted-connect/' },
       { label: 'Product', url: 'https://www.siemens.com/en-us/products/building-x/' },
@@ -203,7 +201,7 @@ export const PROJECTS: ProjectData[] = [
     status: 'shipped',
     tags: ['Python', 'Robot Framework', 'RPA', 'Selenium', 'Playwright', 'OCR', 'Automation', 'PyPI', 'Open Source'],
     company: 'Robocorp',
-    period: '2021-2023',
+    period: '2021–2023',
     links: [
       { label: 'Org', url: 'https://github.com/robocorp' },
       { label: 'Portal', url: 'https://robocorp.com/portal' },
@@ -224,7 +222,7 @@ export const PROJECTS: ProjectData[] = [
     status: 'shipped',
     tags: ['Python', 'FastAPI', 'LLM', 'OpenAI', 'MCP', 'Plugin Architecture', 'Pydantic', 'Docker'],
     company: 'Sema4.ai',
-    period: '2023-2024',
+    period: '2023–2024',
     links: [
       { label: 'Server', url: 'https://github.com/Sema4AI/actions' },
       { label: 'Gallery', url: 'https://github.com/Sema4AI/gallery' },
@@ -309,7 +307,7 @@ export const PROJECTS: ProjectData[] = [
     title: 'Traced AI website',
     tagline: 'Marketing site for the AI audit infrastructure startup',
     description:
-      'Static SPA for [Traced AI](https://www.traced-ai.com): Vite 8 + React 19 + Tailwind v4 (CSS-first tokens, no component library needed). Waitlist via [Tally.so](https://tally.so), zero backend; on submit, a [Cal.eu](https://cal.eu) link offers an optional discovery call. Cookieless [Vercel Analytics](https://vercel.com/docs/analytics) for page views. Deployed on [Vercel](https://vercel.com). Repo is private.',
+      'Static SPA for [Traced AI](https://www.traced-ai.com): Vite 8 + React 19 + Tailwind v4 (CSS-first tokens, no component library needed). Waitlist via [Tally.so](https://tally.so), zero backend; on submit, a [Cal.eu](https://cal.eu) link offers an optional discovery call. Cookieless [Vercel Analytics](https://vercel.com/docs/analytics) for page views. Deployed on [Vercel](https://vercel.com). Repo is private. Uses a `/frontend-review` skill for agentic self-review before merging.',
     category: 'frontend-brand',
     complexity: 'low',
     status: 'active',
