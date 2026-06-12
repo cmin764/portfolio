@@ -287,8 +287,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: oven-sh/setup-bun@v2
-        with:
-          cache: true
       - run: bun install --frozen-lockfile
       - run: bun run typecheck
       - run: bun run build
@@ -319,8 +317,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: oven-sh/setup-bun@v2
-        with:
-          cache: true
       - run: bun install
       - run: bun run build
       - uses: actions/upload-pages-artifact@v5

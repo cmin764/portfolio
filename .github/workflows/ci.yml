@@ -14,8 +14,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: oven-sh/setup-bun@v2
-        with:
-          cache: true
       - run: bun install --frozen-lockfile
       - run: bun run typecheck
       - run: bun run build
