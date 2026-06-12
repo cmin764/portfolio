@@ -214,7 +214,7 @@ portfolio/
   public/
     favicon-light.svg
     favicon-dark.svg
-    diagrams/           (SVGs committed for all diagram-enabled cards)
+    diagrams/           (per diagram: <id>.svg + <id>.excalidraw local backup)
   src/
     components/
       layout/
@@ -233,6 +233,7 @@ portfolio/
       types.ts
       categories.ts
       projects.ts
+    diagrams/           (Mermaid source per diagram: <id>.md)
     hooks/
       useDocumentTitle.ts
       useFilter.ts
@@ -251,8 +252,11 @@ portfolio/
     portfolio-blueprint.md   (this file)
     agent-context.md
     system-design.md         Excalidraw / C4 diagramming guidelines
+    diagram-style-guide.md   color / shape / arrow conventions across diagrams
     diagram-briefs.md        per-project node/edge tables for Excalidraw generation
     traced_ai_architecture_decision_v2.html
+  scripts/
+    download-excalidraw.mjs  fetches + decrypts an Excalidraw scene URL to a local .excalidraw backup
   index.html
   package.json
   tsconfig.json
@@ -453,6 +457,7 @@ All 14 diagrams shipped. Each exists as:
 - Mermaid source: `src/diagrams/<id>.md`
 - Exported SVG: `public/diagrams/<id>.svg` (transparent bg, `dark:invert` in `DiagramViewer.tsx`)
 - Excalidraw URL: `diagramExcalidrawUrl` on each `ProjectData` entry in `projects.ts`
+- Local backup: `public/diagrams/<id>.excalidraw` (Excalidraw's remote storage is ephemeral; regenerate with `node scripts/download-excalidraw.mjs <url> <path>`)
 
 To generate a new or revised diagram, run `/diagram "Project Name"`. The skill reads `docs/diagram-briefs.md` and the card's `architectureNotes`, drafts Mermaid, iterates, exports to Excalidraw, then backpropagates corrections to briefs + Mermaid source.
 
