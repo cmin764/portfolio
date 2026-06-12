@@ -15,7 +15,7 @@ See [docs/diagram-style-guide.md](docs/diagram-style-guide.md) for the color, sh
 - **Startup Trials**: Traced AI (AI audit trail), TrueStory (news aggregator)
 - **Professional**: VONQ AI features (meeting assistant, knowledge base, candidate assessment), A5 Labs poker engine, Gorgias App Store, Comfy gRPC APIs
 - **OSS / Hobby**: Robocorp RPA Framework, Sema4.ai Action Server, DeepIce, Pulsr
-- **Frontend**: Wandercode site, Nomad's Nest site
+- **Frontend**: Wandercode site, Nomad's Nest site, Traced AI site
 - **Writing**: The Alchemy of Entrepreneurship
 
 ## Run locally

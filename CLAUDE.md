@@ -14,7 +14,7 @@ bun run typecheck
 ## Stack
 
 - **React 19** + TypeScript 5, **Vite 8**, `@vitejs/plugin-react` (not `-swc`, no SWC plugins in use)
-- **Tailwind CSS 3.4** — HSL color tokens as CSS custom properties in `src/index.css`, `darkMode: ["class"]`
+- **Tailwind CSS 3.4**: HSL color tokens as CSS custom properties in `src/index.css`, `darkMode: ["class"]`
 - **shadcn/ui** — primitives in `src/components/ui/`, never edit directly
 - **React Router DOM 7** — single route in `src/App.tsx`, `basename="/portfolio"`
 - **lucide-react 1.x** — brand icons (`Github`, `Linkedin`, `Medium`) were removed in v1; use inline SVGs for those, lucide for everything else
@@ -115,7 +115,15 @@ Run `/diagram "Project Name"` to generate a C4 architecture diagram for any proj
 - Preview files: `*-preview.html` (gitignored)
 - Learnings: `.claude/skills/diagram/learnings/` (auto-maintained, applied on next run)
 
-**After Excalidraw export:** ask for the shareable URL (`https://excalidraw.com/#json=...`) and save it as `diagramExcalidrawUrl` in `src/data/projects.ts`. This makes the SVG clickable, linking it back to the live editable diagram.
+**After Excalidraw export:** ask for the shareable URL (`https://excalidraw.com/#json=...`), save it as `diagramExcalidrawUrl` in `src/data/projects.ts`, then immediately back it up locally:
+
+```bash
+node scripts/download-excalidraw.mjs \
+  "https://excalidraw.com/#json=<id>,<key>" \
+  public/diagrams/<project-id>.excalidraw
+```
+
+Excalidraw's remote storage is ephemeral. The `.excalidraw` file is the source of truth for the diagram and must be committed alongside the SVG. All current project diagrams already have a backup in `public/diagrams/`. The script fetches the encrypted scene from Excalidraw's API and decrypts it locally using the AES-128-GCM key embedded in the URL fragment.
 
 **Commit discipline:** always two commits per diagram — skill/learnings changes first, then the diagram artifacts (SVG, projects.ts, diagram source, brief). Keeps learning evolution separate from project work in git history.
 

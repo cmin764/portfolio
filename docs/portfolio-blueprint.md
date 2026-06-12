@@ -209,11 +209,12 @@ export const CATEGORIES: CategoryMeta[] = [
 portfolio/
   .github/
     workflows/
+      ci.yml
       deploy.yml
   public/
     favicon-light.svg
     favicon-dark.svg
-    diagrams/           (SVGs committed for all diagram-enabled cards)
+    diagrams/           (per diagram: <id>.svg + <id>.excalidraw local backup)
   src/
     components/
       layout/
@@ -232,6 +233,7 @@ portfolio/
       types.ts
       categories.ts
       projects.ts
+    diagrams/           (Mermaid source per diagram: <id>.md)
     hooks/
       useDocumentTitle.ts
       useFilter.ts
@@ -250,8 +252,11 @@ portfolio/
     portfolio-blueprint.md   (this file)
     agent-context.md
     system-design.md         Excalidraw / C4 diagramming guidelines
+    diagram-style-guide.md   color / shape / arrow conventions across diagrams
     diagram-briefs.md        per-project node/edge tables for Excalidraw generation
     traced_ai_architecture_decision_v2.html
+  scripts/
+    download-excalidraw.mjs  fetches + decrypts an Excalidraw scene URL to a local .excalidraw backup
   index.html
   package.json
   tsconfig.json
@@ -265,7 +270,33 @@ portfolio/
 
 ---
 
-## GitHub Actions Workflow (current action versions)
+## GitHub Actions Workflows (current action versions)
+
+**`.github/workflows/ci.yml`** — runs on every PR to main:
+
+```yaml
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - run: bun run typecheck
+      - run: bun run build
+```
+
+**`.github/workflows/deploy.yml`** — runs on push to main:
 
 ```yaml
 name: Deploy portfolio to GitHub Pages
@@ -282,7 +313,7 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -292,7 +323,7 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       - run: bun install
       - run: bun run build
-      - uses: actions/upload-pages-artifact@v4
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: dist
 
@@ -343,18 +374,14 @@ Notable: `traced-ai` has no repo link by design (stealth). SDK on PyPI. Stack in
 
 | id | title | company | period | complexity |
 |----|-------|---------|--------|------------|
-| `vonq-meeting-assistant` | Meeting Assistant | VONQ | 2025-2026 | high |
-| `vonq-knowledge-base` | Knowledge Base & Careers Agent | VONQ | 2025-2026 | high |
-| `vonq-candidate-assessment` | Candidate Assessment & Language Evaluator | VONQ | 2025-2026 | high |
+| `vonq-meeting-assistant` | Meeting Assistant | VONQ | 2025–2026 | high |
+| `vonq-knowledge-base` | Knowledge Base & Careers Agent | VONQ | 2025–2026 | high |
+| `vonq-candidate-assessment` | Candidate Assessment & Language Evaluator | VONQ | 2025–2026 | high |
 | `a5-gto-engine` | AceGuardian | A5 Labs | 2025 | high |
-| `sema4ai-action-server` | Action Server + AI Actions | Sema4.ai | 2023-2024 | high |
-| `robocorp-rpa` | RPA Framework & Automation Libraries | Robocorp / Sema4.ai | 2021-2024 | high |
 | `gorgias-appstore` | Gorgias App Store | Gorgias | 2021 | medium |
-| `comfy-grpc` | gRPC Smart Building APIs | Comfy (→ Siemens) | 2019-2020 | high |
+| `comfy-grpc` | gRPC Smart Building APIs | Comfy (→ Siemens) | 2019–2020 | high |
 
 All professional cards have empty `links: []` except:
-- `sema4ai-action-server`: Server (github.com/Sema4AI/actions), Gallery (github.com/Sema4AI/gallery)
-- `robocorp-rpa`: Org (github.com/robocorp), Portal (robocorp.com/portal)
 - `gorgias-appstore`: Docs (developers.gorgias.com)
 
 No Cloudbase card. It was replaced by `gorgias-appstore`.
@@ -363,10 +390,18 @@ No Cloudbase card. It was replaced by `gorgias-appstore`.
 
 ### Open Source
 
-| id | title | complexity | status |
-|----|-------|------------|--------|
-| `deep-ice` | DeepIce | low | in-progress |
-| `pulsr` | Pulsr | medium | in-progress |
+| id | title | company | period | complexity | status |
+|----|-------|---------|--------|------------|--------|
+| `sema4ai-action-server` | Action Server | Sema4.ai | 2023–2024 | high | shipped |
+| `robocorp-rpa` | Dev Tools | Robocorp | 2021–2023 | medium | shipped |
+| `deep-ice` | DeepIce | | | low | in-progress |
+| `pulsr` | Pulsr | | 2025–present | medium | in-progress |
+
+OSS cards with links:
+- `sema4ai-action-server`: Server (github.com/Sema4AI/actions), Gallery (github.com/Sema4AI/gallery)
+- `robocorp-rpa`: Org (github.com/robocorp), Portal (robocorp.com/portal)
+- `deep-ice`: Repo (github.com/cmin764/deep-ice)
+- `pulsr`: Repo (github.com/cmin764/pulsr)
 
 ---
 
@@ -416,36 +451,34 @@ Phase 1 (scaffold) and Phase 2 (data + components) are shipped.
 
 ---
 
-### Iteration 2 — Architecture Diagrams (in progress)
+### Iteration 2 — Architecture Diagrams: complete
 
-After Phase 3, generate Excalidraw diagrams per project. Source material for each diagram is in `docs/diagram-briefs.md` (node/edge tables) and `architectureNotes` on each `ProjectData` entry.
+All 14 diagrams shipped. Each exists as:
+- Mermaid source: `src/diagrams/<id>.md`
+- Exported SVG: `public/diagrams/<id>.svg` (transparent bg, `dark:invert` in `DiagramViewer.tsx`)
+- Excalidraw URL: `diagramExcalidrawUrl` on each `ProjectData` entry in `projects.ts`
+- Local backup: `public/diagrams/<id>.excalidraw` (Excalidraw's remote storage is ephemeral; regenerate with `node scripts/download-excalidraw.mjs <url> <path>`)
 
-**How to generate:**
-- Use `configs/system-design.excalidrawlib` from the `cmin764/configs` repo
-- OR generate Excalidraw JSON via AI, then load into excalidraw.com
-- Export each as SVG with transparent background
-- Commit `.excalidraw` source to `src/diagrams/<id>.excalidraw`
-- Commit exported SVG to `public/diagrams/<id>.svg`
-- Set `diagramFile: '<id>.svg'` on the entry in `projects.ts`
+To generate a new or revised diagram, run `/diagram "Project Name"`. The skill reads `docs/diagram-briefs.md` and the card's `architectureNotes`, drafts Mermaid, iterates, exports to Excalidraw, then backpropagates corrections to briefs + Mermaid source.
 
-**Dark mode:** `dark:invert` CSS class on the `<img>` in `DiagramViewer.tsx` (component not yet built). Or export two variants and swap on theme.
+**Shipped diagrams:**
 
-**Diagram priority:**
-
-| # | Project | C4 level |
-|---|---------|----------|
-| 1 | Traced AI | Container |
-| 2 | VONQ Meeting Assistant | Container |
-| 3 | Sema4.ai Action Server | Container |
-| 4 | A5 GTO Engine | Container |
-| 5 | VONQ Knowledge Base | Container |
-| 6 | VONQ Candidate Assessment | Container |
-| 7 | TrueStory | Container |
-| 8 | Pulsr | Container |
-| 9 | DeepIce | Component |
-| 10 | Robocorp RPA | Container |
-| 11 | Comfy gRPC | Container |
-| 12 | Gorgias App Store | Container |
+| Project | id | C4 level |
+|---------|----|----------|
+| Traced AI | `traced-ai` | Container |
+| TrueStory | `truestory` | Container |
+| VONQ Meeting Assistant | `vonq-meeting-assistant` | Container |
+| VONQ Knowledge Base | `vonq-knowledge-base` | Container |
+| VONQ Candidate Assessment | `vonq-candidate-assessment` | Container |
+| AceGuardian (A5 Labs) | `a5-gto-engine` | Container |
+| Action Server (Sema4.ai) | `sema4ai-action-server` | Container |
+| Dev Tools (Robocorp) | `robocorp-rpa` | Container |
+| App Store (Gorgias) | `gorgias-appstore` | Container |
+| Smart Buildings (Comfy) | `comfy-grpc` | Container |
+| DeepIce | `deep-ice` | Component |
+| Pulsr | `pulsr` | Container |
+| Content Moderation | `content-moderation` | Container |
+| Bulk CSV Ingest | `bulk-csv-ingest` | Container |
 
 ---
 
