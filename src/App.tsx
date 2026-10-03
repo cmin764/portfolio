@@ -5,7 +5,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
-  <BrowserRouter basename="/portfolio/">
+  <BrowserRouter basename={import.meta.env.BASE_URL}>
     <ScrollToTop />
     <Layout>
       <Routes>

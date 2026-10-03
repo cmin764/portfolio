@@ -2,24 +2,29 @@ import { useState, useEffect } from "react";
 
 type Theme = "light" | "dark" | "system";
 
+// Storage can throw (blocked in strict privacy modes) and hold stray values.
+function readStoredTheme(): Theme | null {
+  try {
+    const v = localStorage.getItem("theme");
+    return v === "light" || v === "dark" ? v : null;
+  } catch {
+    return null;
+  }
+}
+
 function getSystemTheme(): "light" | "dark" {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof window !== "undefined") {
-      return (localStorage.getItem("theme") as Theme) || "system";
-    }
-    return "system";
+    return typeof window !== "undefined" ? (readStoredTheme() ?? "system") : "system";
   });
 
   // Stored in state so the Header icon updates when the OS theme changes while in system mode
   const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">(() => {
     if (typeof window === "undefined") return "light";
-    const stored = localStorage.getItem("theme") as Theme | null;
-    if (stored === "light" || stored === "dark") return stored;
-    return getSystemTheme();
+    return readStoredTheme() ?? getSystemTheme();
   });
 
   useEffect(() => {
@@ -37,7 +42,7 @@ export function useTheme() {
 
     if (theme === "system") {
       applyTheme(getSystemTheme());
-      localStorage.removeItem("theme");
+      try { localStorage.removeItem("theme"); } catch { /* storage blocked */ }
 
       // Only subscribe to OS changes when in system mode
       const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
@@ -47,7 +52,7 @@ export function useTheme() {
       return () => mediaQuery.removeEventListener("change", handleChange);
     } else {
       applyTheme(theme);
-      localStorage.setItem("theme", theme);
+      try { localStorage.setItem("theme", theme); } catch { /* storage blocked */ }
     }
   }, [theme]);
 

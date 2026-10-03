@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useRef } from "react";
 import { cn } from "@/lib/utils";
 
 const NODE_ROLES = [
@@ -12,19 +12,13 @@ const NODE_ROLES = [
 ] as const;
 
 export function DiagramLegend() {
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open]);
+  // Native modal dialog: focus trap, Escape, and focus restore come from the browser.
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   return (
     <>
       <button
-        onClick={() => setOpen(true)}
+        onClick={() => dialogRef.current?.showModal()}
         className={cn(
           "text-xs text-muted-foreground hover:text-foreground transition-colors",
           "flex items-center gap-1 mt-2"
@@ -38,22 +32,17 @@ export function DiagramLegend() {
         Legend
       </button>
 
-      {open && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Diagram legend"
-        >
-          <div
-            className="absolute inset-0 bg-background/80 backdrop-blur-sm"
-            onClick={() => setOpen(false)}
-          />
-          <div className="relative bg-card border border-border rounded-lg shadow-lg max-w-md w-full p-5 space-y-5 max-h-[90vh] overflow-y-auto">
+      <dialog
+        ref={dialogRef}
+        aria-label="Diagram legend"
+        onClick={(e) => e.target === e.currentTarget && e.currentTarget.close()}
+        className="m-auto w-[calc(100%-2rem)] max-w-md max-h-[90vh] overflow-y-auto rounded-lg border border-border bg-card p-0 text-card-foreground shadow-lg backdrop:bg-background/80 backdrop:backdrop-blur-sm"
+      >
+          <div className="p-5 space-y-5">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold">Reading this diagram</h2>
               <button
-                onClick={() => setOpen(false)}
+                onClick={() => dialogRef.current?.close()}
                 className="text-muted-foreground hover:text-foreground transition-colors"
                 aria-label="Close legend"
               >
@@ -142,8 +131,7 @@ export function DiagramLegend() {
               </ul>
             </section>
           </div>
-        </div>
-      )}
+      </dialog>
     </>
   );
 }

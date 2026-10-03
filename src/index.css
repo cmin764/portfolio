@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -22,7 +20,7 @@
     --secondary-foreground: 220 20% 10%;
 
     --muted: 220 14% 96%;
-    --muted-foreground: 220 10% 50%;
+    --muted-foreground: 220 10% 42%;
 
     --accent: 220 14% 92%;
     --accent-foreground: 220 20% 10%;
@@ -89,6 +87,11 @@
 @layer base {
   * {
     @apply border-border;
+  }
+
+  /* Clears the 4rem sticky header for hash navigation. */
+  [id] {
+    scroll-margin-top: 5rem;
   }
 
   body {

@@ -123,7 +123,7 @@ The CSS custom properties in `src/index.css` use HSL format. Light and dark valu
 --foreground: 220 20% 10%;     /* near-black */
 --card: 0 0% 100%;
 --muted: 220 14% 96%;
---muted-foreground: 220 10% 50%;
+--muted-foreground: 220 10% 42%;
 --border: 220 14% 90%;
 --primary: 220 20% 10%;        /* same as foreground */
 --cta: 220 20% 7%;             /* custom CTA background */
@@ -139,7 +139,7 @@ The CSS custom properties in `src/index.css` use HSL format. Light and dark valu
 
 Font: Inter (Google Fonts). Use only semantic color tokens (`bg-background`, `text-foreground`, `text-muted-foreground`, `border-border`, `bg-card`, `bg-muted`). Never hard-code `bg-white` or `text-gray-700` — they break in dark mode.
 
-Dark mode strategy: `darkMode: ["class"]` in `tailwind.config.ts`. The `dark` class is toggled on `<html>` by `useTheme`. There's an inline script in `index.html` that reads `localStorage` before React mounts to prevent a flash of the wrong theme — copy this from wandercode's `index.html`.
+Dark mode strategy: `darkMode: ["class"]` in `tailwind.config.ts`. The `dark` class is toggled on `<html>` by `useTheme`. `public/theme-init.js` (loaded blocking from `index.html`) reads `localStorage` before React mounts to prevent a flash of the wrong theme. It is external, not inline, because the meta CSP in `index.html` disallows inline scripts.
 
 ---
 
