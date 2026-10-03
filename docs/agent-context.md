@@ -16,14 +16,14 @@ His operating style: blueprint first, then execution. He will review your output
 
 ## Local Environment
 
-All repos live at `/Users/cmin/Work/cmin764/`. The key ones for this project:
+All repos live at `~/Work/cmin764/`. The key ones for this project:
 
 | Path | Purpose |
 |------|---------|
-| `/Users/cmin/Work/cmin764/wandercode` | Primary reference — port theme, layout, hooks, CLAUDE.md rules |
-| `/Users/cmin/Work/cmin764/nomads-nest` | Secondary reference — typed data file pattern |
-| `/Users/cmin/Work/cmin764/cmin764` | Profile repo — update README.md after portfolio ships |
-| `/Users/cmin/Work/cmin764/configs` | Excalidraw library for diagrams (iteration 2) |
+| `~/Work/cmin764/wandercode` | Primary reference — port theme, layout, hooks, CLAUDE.md rules |
+| `~/Work/cmin764/nomads-nest` | Secondary reference — typed data file pattern |
+| `~/Work/cmin764/cmin764` | Profile repo — update README.md after portfolio ships |
+| `~/Work/cmin764/configs` | Excalidraw library for diagrams (iteration 2) |
 
 The `portfolio` repo doesn't exist yet. You'll create it locally, then push. See Phase 1 in the blueprint.
 
