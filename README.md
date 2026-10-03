@@ -28,3 +28,7 @@ bun dev
 ## Contact
 
 [cal.com/wandercode/discovery-call](https://cal.com/wandercode/discovery-call)
+
+## License
+
+All rights reserved, public for reference only. See [LICENSE](./LICENSE).
