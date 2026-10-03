@@ -191,27 +191,6 @@ export const PROJECTS: ProjectData[] = [
   },
   // OSS / Hobby
   {
-    id: 'pulsr',
-    title: 'Pulsr',
-    period: '2025–present',
-    tagline: 'Pipeline orchestration API for AI agents: ZenML-like infra for harnessing and scaling agents',
-    description:
-      'Built to solve the problem of coordinating multiple AI agents across a DAG of steps with state management, retry logic, and observability. Inspired by ZenML and Prefect but focused on AI agent workflows rather than ML training pipelines. Agents are registered as pipeline steps, dependencies are declared explicitly, and execution is orchestrated via a FastAPI control plane.',
-    category: 'oss-hobby',
-    complexity: 'medium',
-    status: 'in-progress',
-    tags: ['Python', 'FastAPI', 'MLOps', 'AI Agents', 'DAG', 'Orchestration', 'Pipeline', 'async'],
-    links: [
-      { label: 'Repo', url: 'https://github.com/cmin764/pulsr' },
-    ],
-    architectureNotes:
-      'Developer triggers pipeline run via REST API → Executor Service selects a Worker Agent → Worker Agent routes each step to a pluggable Execution Backend (Local subprocess or Docker container) and polls for completion → all state (pipelines, runs, steps, artifacts) persisted in a single SQLite DB',
-    diagramFile: 'pulsr.svg',
-    diagramExcalidrawUrl: 'https://excalidraw.com/#json=h7_u9DQNbw0r6uxv7ZyLH,LjyBiXM-29nE-X_XV-qaOQ',
-  },
-
-  // Frontend & Brand
-  {
     id: 'sema4ai-action-server',
     title: 'Action Server',
     tagline: 'MCP-like FastAPI server giving GPT "hands and legs": pluggable business logic executed post-reasoning',
@@ -253,6 +232,27 @@ export const PROJECTS: ProjectData[] = [
     architectureNotes:
       'Developer → RCC CLI (builds env, rcc pull/run/cloud push) + robocorp-tasks (@task decorator) → Automation Libraries (robocorp-*: browser/windows/workitems/vault/storage/log; rpaframework-*: pdf/recognition/aws/google/openai/hubspot/windows) → Target Systems; robocorp-log → log.html + artifacts [async]; Control Room schedules + triggers RCC [async]; robocorp.com/portal feeds example-* repos to Developer + RCC',
   },
+  {
+    id: 'pulsr',
+    title: 'Pulsr',
+    period: '2025–present',
+    tagline: 'Pipeline orchestration API for AI agents: ZenML-like infra for harnessing and scaling agents',
+    description:
+      'Built to solve the problem of coordinating multiple AI agents across a DAG of steps with state management, retry logic, and observability. Inspired by ZenML and Prefect but focused on AI agent workflows rather than ML training pipelines. Agents are registered as pipeline steps, dependencies are declared explicitly, and execution is orchestrated via a FastAPI control plane.',
+    category: 'oss-hobby',
+    complexity: 'medium',
+    status: 'in-progress',
+    tags: ['Python', 'FastAPI', 'MLOps', 'AI Agents', 'DAG', 'Orchestration', 'Pipeline', 'async'],
+    links: [
+      { label: 'Repo', url: 'https://github.com/cmin764/pulsr' },
+    ],
+    architectureNotes:
+      'Developer triggers pipeline run via REST API → Executor Service selects a Worker Agent → Worker Agent routes each step to a pluggable Execution Backend (Local subprocess or Docker container) and polls for completion → all state (pipelines, runs, steps, artifacts) persisted in a single SQLite DB',
+    diagramFile: 'pulsr.svg',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=h7_u9DQNbw0r6uxv7ZyLH,LjyBiXM-29nE-X_XV-qaOQ',
+  },
+
+  // Frontend & Brand
   {
     id: 'deep-ice',
     title: 'DeepIce',
