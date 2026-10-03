@@ -191,26 +191,26 @@ export const PROJECTS: ProjectData[] = [
   },
   // OSS / Hobby
   {
-    id: 'robocorp-rpa',
-    title: 'Dev Tools',
-    tagline: 'Open-source Python automation libraries enabling enterprise RPA at scale',
+    id: 'pulsr',
+    title: 'Pulsr',
+    period: '2025–present',
+    tagline: 'Pipeline orchestration API for AI agents: ZenML-like infra for harnessing and scaling agents',
     description:
-      'Built and maintained Robocorp\'s open-source RPA framework and the robocorp-* / rpaframework-* automation library suite, the Python-native successor to Robot Framework for enterprise automation. Libraries covered web automation, desktop automation, OCR, document processing, and data pipelines, and are the foundation hundreds of enterprise customers rely on. Led library design, API surface, versioning, and contributor onboarding.',
+      'Built to solve the problem of coordinating multiple AI agents across a DAG of steps with state management, retry logic, and observability. Inspired by ZenML and Prefect but focused on AI agent workflows rather than ML training pipelines. Agents are registered as pipeline steps, dependencies are declared explicitly, and execution is orchestrated via a FastAPI control plane.',
     category: 'oss-hobby',
     complexity: 'medium',
-    status: 'shipped',
-    tags: ['Python', 'Robot Framework', 'RPA', 'Selenium', 'Playwright', 'OCR', 'Automation', 'PyPI', 'Open Source'],
-    company: 'Robocorp',
-    period: '2021–2023',
+    status: 'in-progress',
+    tags: ['Python', 'FastAPI', 'MLOps', 'AI Agents', 'DAG', 'Orchestration', 'Pipeline', 'async'],
     links: [
-      { label: 'Org', url: 'https://github.com/robocorp' },
-      { label: 'Portal', url: 'https://robocorp.com/portal' },
+      { label: 'Repo', url: 'https://github.com/cmin764/pulsr' },
     ],
-    diagramFile: 'robocorp-rpa.svg',
-    diagramExcalidrawUrl: 'https://excalidraw.com/#json=c5J5N4GACWRUiIGcJcOrW,0ugltc1pWjiQtrf3MTWiIA',
     architectureNotes:
-      'Developer → RCC CLI (builds env, rcc pull/run/cloud push) + robocorp-tasks (@task decorator) → Automation Libraries (robocorp-*: browser/windows/workitems/vault/storage/log; rpaframework-*: pdf/recognition/aws/google/openai/hubspot/windows) → Target Systems; robocorp-log → log.html + artifacts [async]; Control Room schedules + triggers RCC [async]; robocorp.com/portal feeds example-* repos to Developer + RCC',
+      'Developer triggers pipeline run via REST API → Executor Service selects a Worker Agent → Worker Agent routes each step to a pluggable Execution Backend (Local subprocess or Docker container) and polls for completion → all state (pipelines, runs, steps, artifacts) persisted in a single SQLite DB',
+    diagramFile: 'pulsr.svg',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=h7_u9DQNbw0r6uxv7ZyLH,LjyBiXM-29nE-X_XV-qaOQ',
   },
+
+  // Frontend & Brand
   {
     id: 'sema4ai-action-server',
     title: 'Action Server',
@@ -233,6 +233,27 @@ export const PROJECTS: ProjectData[] = [
     diagramExcalidrawUrl: 'https://excalidraw.com/#json=VI6ctFzzTysEXExIBwlXG,mssCYSqHaaao4pX6Pn6uqw',
   },
   {
+    id: 'robocorp-rpa',
+    title: 'Dev Tools',
+    tagline: 'Open-source Python automation libraries enabling enterprise RPA at scale',
+    description:
+      'Built and maintained Robocorp\'s open-source RPA framework and the robocorp-* / rpaframework-* automation library suite, the Python-native successor to Robot Framework for enterprise automation. Libraries covered web automation, desktop automation, OCR, document processing, and data pipelines, and are the foundation hundreds of enterprise customers rely on. Led library design, API surface, versioning, and contributor onboarding.',
+    category: 'oss-hobby',
+    complexity: 'medium',
+    status: 'shipped',
+    tags: ['Python', 'Robot Framework', 'RPA', 'Selenium', 'Playwright', 'OCR', 'Automation', 'PyPI', 'Open Source'],
+    company: 'Robocorp',
+    period: '2021–2023',
+    links: [
+      { label: 'Org', url: 'https://github.com/robocorp' },
+      { label: 'Portal', url: 'https://robocorp.com/portal' },
+    ],
+    diagramFile: 'robocorp-rpa.svg',
+    diagramExcalidrawUrl: 'https://excalidraw.com/#json=c5J5N4GACWRUiIGcJcOrW,0ugltc1pWjiQtrf3MTWiIA',
+    architectureNotes:
+      'Developer → RCC CLI (builds env, rcc pull/run/cloud push) + robocorp-tasks (@task decorator) → Automation Libraries (robocorp-*: browser/windows/workitems/vault/storage/log; rpaframework-*: pdf/recognition/aws/google/openai/hubspot/windows) → Target Systems; robocorp-log → log.html + artifacts [async]; Control Room schedules + triggers RCC [async]; robocorp.com/portal feeds example-* repos to Developer + RCC',
+  },
+  {
     id: 'deep-ice',
     title: 'DeepIce',
     tagline: 'Idiomatic async Python web server template, showing how I approach backend development from scratch',
@@ -251,42 +272,6 @@ export const PROJECTS: ProjectData[] = [
       'HTTP request → FastAPI router → service layer → SQLModel async session → PostgreSQL. CARD payments enqueued to Redis → ARQ worker confirms or cancels order. Alembic runs migrations at startup. Sentry for error tracking.',
   },
   {
-    id: 'pulsr',
-    title: 'Pulsr',
-    period: '2025–present',
-    tagline: 'Pipeline orchestration API for AI agents: ZenML-like infra for harnessing and scaling agents',
-    description:
-      'Built to solve the problem of coordinating multiple AI agents across a DAG of steps with state management, retry logic, and observability. Inspired by ZenML and Prefect but focused on AI agent workflows rather than ML training pipelines. Agents are registered as pipeline steps, dependencies are declared explicitly, and execution is orchestrated via a FastAPI control plane.',
-    category: 'oss-hobby',
-    complexity: 'medium',
-    status: 'in-progress',
-    tags: ['Python', 'FastAPI', 'MLOps', 'AI Agents', 'DAG', 'Orchestration', 'Pipeline', 'async'],
-    links: [
-      { label: 'Repo', url: 'https://github.com/cmin764/pulsr' },
-    ],
-    architectureNotes:
-      'Developer triggers pipeline run via REST API → Executor Service selects a Worker Agent → Worker Agent routes each step to a pluggable Execution Backend (Local subprocess or Docker container) and polls for completion → all state (pipelines, runs, steps, artifacts) persisted in a single SQLite DB',
-    diagramFile: 'pulsr.svg',
-    diagramExcalidrawUrl: 'https://excalidraw.com/#json=h7_u9DQNbw0r6uxv7ZyLH,LjyBiXM-29nE-X_XV-qaOQ',
-  },
-
-  // Frontend & Brand
-  {
-    id: 'wandercode-site',
-    title: 'Wandercode website',
-    tagline: 'Company site for the consultancy, built with the same stack I recommend to clients',
-    description:
-      'Marketing SPA for [Wandercode](https://www.wandercode.ltd): Vite 8 + React 19 + Tailwind 3.4 + shadcn/ui, managed with bun. Scheduling runs through [Cal.com](https://cal.com): a popup on every CTA and an inline embed on the contact page. Cookieless [Vercel Analytics](https://vercel.com/docs/analytics), a system-font stack (no web-font CDN), and GitHub/LinkedIn brand icons inlined as SVG after lucide-react v1 dropped them. Per-route canonical tags via a small useCanonical hook. Deployed on [Vercel](https://vercel.com). Uses a `/frontend-review` skill for agentic self-review before merging.',
-    category: 'frontend-brand',
-    complexity: 'low',
-    status: 'active',
-    tags: ['TypeScript', 'React', 'Vite', 'Tailwind', 'shadcn/ui', 'Vercel'],
-    links: [
-      { label: 'Site', url: 'https://www.wandercode.ltd/' },
-      { label: 'Repo', url: 'https://github.com/cmin764/wandercode' },
-    ],
-  },
-  {
     id: 'nomads-nest',
     title: "Nomad's Nest website",
     tagline: 'Short-term rental site for a self-catering apartment in Cyprus, built for digital nomads',
@@ -302,6 +287,21 @@ export const PROJECTS: ProjectData[] = [
     ],
   },
 
+  {
+    id: 'wandercode-site',
+    title: 'Wandercode website',
+    tagline: 'Company site for the consultancy, built with the same stack I recommend to clients',
+    description:
+      'Marketing SPA for [Wandercode](https://www.wandercode.ltd): Vite 8 + React 19 + Tailwind 3.4 + shadcn/ui, managed with bun. Scheduling runs through [Cal.com](https://cal.com): a popup on every CTA and an inline embed on the contact page. Cookieless [Vercel Analytics](https://vercel.com/docs/analytics), a system-font stack (no web-font CDN), and GitHub/LinkedIn brand icons inlined as SVG after lucide-react v1 dropped them. Per-route canonical tags via a small useCanonical hook. Deployed on [Vercel](https://vercel.com). Uses a `/frontend-review` skill for agentic self-review before merging.',
+    category: 'frontend-brand',
+    complexity: 'low',
+    status: 'active',
+    tags: ['TypeScript', 'React', 'Vite', 'Tailwind', 'shadcn/ui', 'Vercel'],
+    links: [
+      { label: 'Site', url: 'https://www.wandercode.ltd/' },
+      { label: 'Repo', url: 'https://github.com/cmin764/wandercode' },
+    ],
+  },
   {
     id: 'traced-ai-site',
     title: 'Traced AI website',
