@@ -1,37 +1,30 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <script>
-      (function() {
-        const theme = localStorage.getItem('theme');
-        if (theme === 'dark') {
-          document.documentElement.classList.add('dark');
-        } else if (theme === 'light') {
-          document.documentElement.classList.remove('dark');
-        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          document.documentElement.classList.add('dark');
-        }
-      })();
-    </script>
+    <!-- Blocking on purpose: sets theme and favicon before first paint. External so CSP can drop inline scripts. -->
+    <script src="/theme-init.js"></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Portfolio | Cosmin Poieana</title>
     <meta name="description" content="Fractional AI Product Strategist. 13+ years Python. Two exits. Building intelligent products for startups and high-growth companies." />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'none'" />
     <meta name="author" content="Cosmin Poieana" />
     <link rel="canonical" href="https://cmin764.github.io/portfolio/" />
 
-    <link id="favicon" rel="icon" type="image/svg+xml" href="/portfolio/favicon-light.svg" />
-    <script>
-      if (document.documentElement.classList.contains('dark'))
-        document.getElementById('favicon').href = '/portfolio/favicon-dark.svg';
-    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
 
+    <link id="favicon" rel="icon" type="image/svg+xml" href="/portfolio/favicon-light.svg" />
     <!-- Open Graph -->
     <meta property="og:title" content="Portfolio | Cosmin Poieana" />
     <meta property="og:description" content="Fractional AI Product Strategist. 13+ years Python. Two exits. Building intelligent products for startups and high-growth companies." />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://cmin764.github.io/portfolio/og-image.png" />
     <meta property="og:url" content="https://cmin764.github.io/portfolio/" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Cosmin Poieana, Fractional AI Product Strategist" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />

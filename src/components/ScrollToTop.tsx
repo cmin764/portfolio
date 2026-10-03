@@ -11,7 +11,11 @@ export function ScrollToTop() {
   useEffect(() => {
     if (!hash) return;
     const raf = requestAnimationFrame(() => {
-      document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: "smooth" });
+      // JS-driven smooth scroll bypasses the CSS reduced-motion block.
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      document
+        .getElementById(hash.slice(1))
+        ?.scrollIntoView({ behavior: reduce ? "auto" : "smooth" });
     });
     return () => cancelAnimationFrame(raf);
   }, [hash]);

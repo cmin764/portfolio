@@ -31,15 +31,20 @@ export function Header() {
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1 text-base font-semibold tracking-tight hover:text-foreground transition-colors"
-          aria-label="Download CV as PDF"
+          aria-label="Download CV as PDF (opens in new tab)"
         >
           Cosmin Poieana <Download className="h-3 w-3 text-muted-foreground" />
         </a>
 
-        <div className="flex items-center gap-3">
+        <nav aria-label="Primary" className="flex items-center gap-3">
           <Link
             to="/"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            onClick={() =>
+              window.scrollTo({
+                top: 0,
+                behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+              })
+            }
             className={cn(
               "text-sm font-medium hover:text-foreground transition-colors",
               location.pathname === "/" ? "text-foreground" : "text-muted-foreground"
@@ -52,6 +57,7 @@ export function Header() {
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-0.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            aria-label="Wandercode (opens in new tab)"
           >
             Wandercode <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
@@ -62,7 +68,7 @@ export function Header() {
           >
             <ThemeIcon className="h-5 w-5" />
           </button>
-        </div>
+        </nav>
       </div>
     </header>
   );
