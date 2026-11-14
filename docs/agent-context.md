@@ -6,7 +6,7 @@
 
 ## Who You're Building For
 
-**Cosmin Poieana** — Fractional AI Product Strategist, 13+ years Python, digital nomad, two prior company exits (Fashwell→Apple, Comfy→Siemens). He thinks in systems, moves fast, and hates speculative complexity. YAGNI is a hard constraint, not a suggestion. If it doesn't serve the current phase, don't build it.
+**Cosmin Poieana** — Fractional AI Product Strategist, 14+ years Python, digital nomad, two prior company exits (Fashwell→Apple, Comfy→Siemens). He thinks in systems, moves fast, and hates speculative complexity. YAGNI is a hard constraint, not a suggestion. If it doesn't serve the current phase, don't build it.
 
 His operating style: blueprint first, then execution. He will review your output critically. He'll accept an unusual architectural choice without pushback if it's well-reasoned, but he'll push back immediately on anything that looks like generic AI output or over-engineering.
 
@@ -255,7 +255,7 @@ No JSON files. No markdown. Pure TypeScript with exported typed constants.
 - Comfy → Siemens: Jul 2019 – Dec 2020 (acquired ~2020)
 - Cloudbase: Oct 2014 – Dec 2015
 
-**VONQ context:** Recruitment marketing platform distributing to 5,000+ channels via deep ATS integrations. Cosmin was embedded fractionally across multiple product streams. The Meeting Assistant was novel — first of its kind at VONQ. The AI Adoption work is worth calling out in its own highlight: "drove team-wide adoption by example, not mandate — battle-tested AI-generated code against manual craft, weeks compressed to minutes as demonstrated fact."
+**VONQ context:** Recruitment marketing platform distributing to 5,000+ channels via deep ATS integrations. Cosmin was embedded full-time across multiple product streams. The Meeting Assistant was novel — first of its kind at VONQ. The AI Adoption work is worth calling out in its own highlight: "drove team-wide adoption by example, not mandate — battle-tested AI-generated code against manual craft, weeks compressed to minutes as demonstrated fact."
 
 **Sema4.ai context:** This is the rebrand/evolution of Robocorp. Action Server and AI Actions predate the MCP standard — they solved the same problem (giving LLMs callable tools) before the protocol was formalized. Good differentiating detail for the card.
 
