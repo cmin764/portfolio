@@ -7,7 +7,7 @@ export const PROJECTS: ProjectData[] = [
     title: 'Wandercode',
     tagline: 'Fractional AI Product Strategy for startups and high-growth companies',
     description:
-      'Owner and operator of Wandercode, a one-person fractional AI practice for startups and high-growth companies: senior AI product and engineering work without a full-time hire. Pitch is "Results as a Service", not hourly consulting. Backed by 18+ years of Python and tech-lead stints at Sema4.ai, Robocorp, Gorgias, and A5 Labs. Methodology: Blugen (blueprint-first code generation). Services: technical audits, AI product development, workshops. The About page also surfaces Traced AI, a pre-revenue audit-infrastructure side project, as proof the practice builds, not just advises.',
+      'Owner and operator of Wandercode, a one-person fractional AI practice for startups and high-growth companies: senior AI product and engineering work without a full-time hire. Pitch is "Results as a Service", not hourly consulting. Backed by Python since 2007 (14+ years professional), startups since 2014, and lead stints at Sema4.ai, Robocorp, and Gorgias. Methodology: Blugen (blueprint-first code generation). Services: technical audits, AI product development, workshops. The About page also surfaces Traced AI, a pre-revenue audit-infrastructure side project, as proof the practice builds, not just advises.',
     category: 'active-venture',
     complexity: 'medium',
     status: 'active',
@@ -135,7 +135,7 @@ export const PROJECTS: ProjectData[] = [
     title: 'AceGuardian',
     tagline: 'ML/AI system combining game theory optimal play and RL strategies for competitive online poker',
     description:
-      'A5 Labs builds AI for competitive online gaming. Led the engineering effort on the ML/AI stack as tech lead. Maintained and contributed to a micro-service mesh combining a Python/FastAPI orchestration layer with a C++ RL inference server (Drogon framework). The Python side has three services: a GTO service, a Strategy service, and a glue service routing between them under response-time constraints. Built an analysis benchmark for detecting regressions and measuring quality of strategy improvements, automated via Bitbucket CI data-science scripting.',
+      'A5 Labs builds AI for competitive online gaming. Embedded full-time on the ML/AI stack as a contractor. Maintained and contributed to a micro-service mesh combining a Python/FastAPI orchestration layer with a C++ RL inference server (Drogon framework). The Python side has three services: a GTO service, a Strategy service, and a glue service routing between them under response-time constraints. Built an analysis benchmark for detecting regressions and measuring quality of strategy improvements, automated via Bitbucket CI data-science scripting.',
     category: 'professional',
     complexity: 'high',
     status: 'shipped',
